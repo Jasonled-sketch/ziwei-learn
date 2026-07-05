@@ -410,6 +410,11 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .cs-cinfo{font-size:12px;color:var(--muted);line-height:1.5}
 .cs-cdate{font-size:10.5px;color:var(--muted2)}
 .cs-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.fhrows{display:grid;gap:7px;margin-top:10px}
+.fhrow{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.fhstar{font-family:"Noto Serif TC",serif;font-size:15px;color:var(--text)}
+.fharr{color:var(--muted2)}
+.fhself{color:var(--gold);font-size:12px}
 .miaopick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .miaobtn{padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:15px;font-weight:700;cursor:pointer;transition:.14s}
 .miaobtn:active{transform:scale(.95)}
@@ -749,7 +754,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v3.7";
+const APP_VERSION = "v3.8";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1266,7 +1271,7 @@ const BRIGHT_LEVELS=[
 const V3PLAN = [
  {em:"✅",t:"自動排盤",d:"已完成！首頁「🪐 自動排盤」輸入生日，就排出你的命盤（主星·廟旺·四化·大限·神煞）。", done:true},
  {em:"✅",t:"廟旺利陷亮度系統",d:"已完成！「學習」頁 →「🔆 廟旺利陷亮度」查每顆星在 12 宮的亮度。", done:true},
- {em:"🌀",t:"飛星四化 · 自化",d:"北派進階：宮干飛化、自化，讓四化在宮位間流動串連，看出事件的來龍去脈。（排盤已就緒，可接著做）"},
+ {em:"✅",t:"飛星四化 · 自化",d:"已完成！「學習」頁 →「🌀 飛星四化」看概念；排盤點任一宮就顯示它宮干飛出的四化落點＋自化。", done:true},
  {em:"🔢",t:"144 種星宮組合全收錄",d:"從 24 組雙星，擴充到完整的星宮組合圖鑑，一顆星在每個宮位的差異全解。"},
 ];
 
@@ -1497,6 +1502,7 @@ function render(){touchStreak();const v=view();
  else if(CUR==="shensha")v.innerHTML=viewShensha();
  else if(CUR==="miao")v.innerHTML=viewMiao();
  else if(CUR==="chart")v.innerHTML=viewChart();
+ else if(CUR==="feixing")v.innerHTML=viewFeixing();
  else if(CUR==="quiz")v.innerHTML=viewQuizHub();
  else if(CUR==="wrong")v.innerHTML=viewWrong();
  else if(CUR==="me")v.innerHTML=viewMe();
@@ -1539,7 +1545,8 @@ function viewHome(){
    <div class="tile" onclick="go('frame')"><div class="em">🗺️</div><div><h3>框架與格局<span class="newdot">NEW</span></h3><p>三大框架＋常見格局</p></div><div class="bar thin mini"><i style="width:${pct('frame')}%"></i></div></div>
    <div class="tile" onclick="go('daxian')"><div class="em">⏳</div><div><h3>大限流年<span class="newdot">NEW</span></h3><p>先天、大限、流年觀念</p></div><div class="bar thin mini"><i style="width:${pct('daxian')}%"></i></div></div>
    <div class="tile" onclick="go('shensha')"><div class="em">🎖️</div><div><h3>神煞十二神<span class="newdot">NEW</span></h3><p>青龍長生那類·附例子</p></div><div class="bar thin mini"><i style="width:${pct('shensha')}%"></i></div></div>
-   <div class="tile" onclick="go('miao')"><div class="em">🔆</div><div><h3>廟旺利陷<span class="newdot">NEW</span></h3><p>星曜在12宮的亮度</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">工具</div></div>
+   <div class="tile" onclick="go('miao')"><div class="em">🔆</div><div><h3>廟旺利陷</h3><p>星曜在12宮的亮度</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">工具</div></div>
+   <div class="tile" onclick="go('feixing')"><div class="em">🌀</div><div><h3>飛星四化<span class="newdot">NEW</span></h3><p>宮位互相牽動·自化</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">進階</div></div>
    <div class="tile big" onclick="go('quiz')"><div class="em">✍️</div><div><h3>開始測驗</h3><p>120 題題庫 · 章節 · 隨機 · 錯題重練${wrongN?` · 待複習 ${wrongN} 題`:""}</p></div><div class="arrow">›</div></div>
  </div>`;
 }
@@ -1558,6 +1565,7 @@ function viewLearn(){
   {r:"shensha",em:"🎖️",n:"神煞十二神",d:"命盤角落那些會轉動的字（青龍、長生…）附例子",cat:"shensha",tot:SHENSHA.length},
   {r:"miao",em:"🔆",n:"廟旺利陷亮度",d:"查每顆星在 12 宮的亮度（燈泡有亮有暗）",tool:true},
   {r:"chart",em:"🪐",n:"自動排盤",d:"輸入生日排出你的命盤，主星廟旺四化大限神煞全都有",tool:true},
+  {r:"feixing",em:"🌀",n:"飛星四化·自化",d:"北派進階：宮位之間怎麼互相牽動（排盤點宮可看）",tool:true},
  ];
  return `<div class="eyebrow">學習中心</div><h2 class="title">星曜研習</h2>
  <p class="lead">建議依序：宮位（舞台）→ 主星（演員）→ 四化（劇情）→ 輔星（配角）→ 雙星（合演）→ 框架格局（劇本）→ 大限流年（時間軸）。點卡片閱讀，讀完標記「已學會」可累積經驗值。</p>
@@ -1986,7 +1994,11 @@ function renderChart(a){
  }else{
    cap=`<div class="note">👆 點任一宮，會畫出它的<b style="color:var(--cyan)">三合</b>與<b style="color:var(--red)">對宮</b>連線。星旁小字是廟旺、彩標是四化（<span style="color:var(--green)">祿</span><span style="color:var(--purple)">權</span><span style="color:var(--cyan)">科</span><span style="color:var(--red)">忌</span>），底排是長生·博士十二神＋大限。</div>`;
  }
- return `<div class="cs-wrap"><div class="cs-grid">${cells}${center}${sanfangSvg(sel,a)}</div></div>${cap}
+ let fhPanel="";
+ if(sel!=null){const fh=feihuaOf(a,sel);const nm2=b=>a.palaces.find(x=>x.earthlyBranch===b).name;
+   if(fh)fhPanel=`<div class="note" style="border-color:var(--cyan)"><b style="color:var(--cyan)">🌀 ${nm2(selB)}（宮干 ${esc(a.palaces[sel].heavenlyStem)}）飛出的四化：</b><div class="fhrows">${fh.map(r=>`<div class="fhrow"><span class="chip ${r.color}" style="min-width:44px;justify-content:center">化${r.label}</span><b class="fhstar">${esc(r.star)}</b><span class="fharr">→</span><span>${esc(r.locName)}${r.self?' <b class="fhself">⚡自化</b>':''}</span></div>`).join("")}</div><div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.7">「<b style="color:var(--gold)">⚡自化</b>」＝這化落在本宮自己就有的星上，能量會自動引動、較留不住。這是北派看「宮位互相牽動」的招式，詳見「🌀 飛星四化」單元。</div></div>`;
+ }
+ return `<div class="cs-wrap"><div class="cs-grid">${cells}${center}${sanfangSvg(sel,a)}</div></div>${cap}${fhPanel}
  <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">📐 三方四正是怎麼來的？（公式）</b><br>地支有<b>四組三合</b>：申子辰、寅午戌、亥卯未、巳酉丑（三個地支排成 120° 三角）；還有<b>六沖</b>：子↔午、丑↔未、寅↔申、卯↔酉、辰↔戌、巳↔亥（正對面 180°）。<br>「<b>三方</b>」＝本宮＋同一組三合的另兩宮（三角形的另兩個角）；「<b>四正</b>」＝再加上對宮（正對面那宮）。四宮一起看＝三方四正。</div>`;
 }
 function sanfangSvg(sel,a){
@@ -2004,6 +2016,26 @@ function sanfangSvg(sel,a){
  </svg>`;
 }
 function chartSanfang(idx){SFX.tap();CHART_SEL=(CHART_SEL===idx?null:idx);const el=document.getElementById("chartOut");if(el)el.innerHTML=renderChart(CHART);}
+/* 宮干飛星四化：該宮宮干→四化四星→落在哪個宮（含自化偵測） */
+function feihuaOf(a,idx){
+ const p=a.palaces[idx];const gh=GANHUA[p.heavenlyStem];if(!gh)return null;
+ const findP=name=>{for(let i=0;i<a.palaces.length;i++){if([...a.palaces[i].majorStars,...a.palaces[i].minorStars].some(s=>s.name===name))return i;}return -1;};
+ return [["祿","lu","green"],["權","quan","purple"],["科","ke","cyan"],["忌","ji","red"]].map(function(r){
+   const star=gh[r[1]];const loc=findP(star);
+   return {label:r[0],color:r[2],star:star,loc:loc,locName:loc>=0?a.palaces[loc].name:"(未入盤)",self:loc===idx};
+ });
+}
+/* ======================= 飛星四化·自化（v3 功能三，概念） ======================= */
+function viewFeixing(){
+ return `<div class="eyebrow">進階 · 北派</div><h2 class="title">飛星四化 · 自化</h2>
+ <p class="lead">生年四化是「老天先天給你的」；飛星四化是「宮位之間互相牽動」的後天結構。這是北派看盤的關鍵招式，用最白話帶你懂。</p>
+ <div class="cardlist">
+   <div class="card" style="padding:14px 15px;border-left:4px solid var(--purple)"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 5px;color:var(--purple)">① 什麼是宮干四化</h4><div style="font-size:13.5px;color:var(--muted);line-height:1.75">每個宮位除了有星，還有自己的「天干」（宮干）。這個宮干會讓四顆星產生祿、權、科、忌——等於<b>每個宮都有自己的一組四化</b>。</div></div>
+   <div class="card" style="padding:14px 15px;border-left:4px solid var(--cyan)"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 5px;color:var(--cyan)">② 飛星（飛化）</h4><div style="font-size:13.5px;color:var(--muted);line-height:1.75">這四化會像<b>射箭</b>一樣「飛」到那四顆星所在的宮位。比喻：命宮往外射出四條線（祿權科忌），射中哪些宮，就代表<b>命宮的能量牽動到那些宮</b>——看出「這個宮如何影響別的宮」。</div></div>
+   <div class="card" style="padding:14px 15px;border-left:4px solid var(--gold)"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 5px;color:var(--gold)">③ 自化（⚡）</h4><div style="font-size:13.5px;color:var(--muted);line-height:1.75">如果飛出的化，剛好落在「<b>自己宮位裡本來就有的星</b>」上，叫「自化」。比喻：箭還沒射出去，就自己引爆了。自化代表這個宮的特質會<b>自動發生、比較留不住</b>。</div></div>
+ </div>
+ <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">怎麼看你自己的飛化？</b><br>去「🪐 排盤」<b>點任一宮</b>，命盤下面就會列出「這個宮的宮干飛出的四化，各自落在哪個宮、有沒有自化」，一目了然。</div>`;
+}
 
 /* ======================= 十天干四化查表器 ======================= */
 function ganhuaTool(){
