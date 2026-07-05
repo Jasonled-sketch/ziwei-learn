@@ -367,6 +367,19 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .figname::before{content:"🎭 ";font-size:15px}
 .figrole{font-size:12px;color:var(--purple);font-weight:700;margin-bottom:8px}
 .figdesc{font-size:13.5px;color:var(--text);line-height:1.7}
+.ssrow{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.ssname{flex:none;width:52px;font-family:"Noto Serif TC",serif;font-weight:900;font-size:17px;color:var(--gold);line-height:1.3}
+.ssbody{flex:1;min-width:0}
+.ssm{font-size:13.5px;color:var(--text);line-height:1.6}
+.ssex{font-size:12px;color:var(--muted);margin-top:2px}
+.glancecard{text-align:center}
+.glance-visual{margin-bottom:8px}
+.starimg{max-width:190px;width:62%;border-radius:16px;border:1px solid var(--line2);display:inline-block;box-shadow:var(--sh)}
+.glance-name{font-family:"Noto Serif TC",serif;font-weight:900;font-size:21px;color:var(--gold);margin:6px 0 12px}
+.glance-rows{text-align:left;display:grid;gap:8px}
+.glance-rows>div{display:flex;gap:10px;align-items:baseline;padding:10px 13px;background:var(--panel);border:1px solid var(--line);border-radius:11px}
+.glance-rows span{flex:none;width:86px;font-size:12px;color:var(--muted)}
+.glance-rows b{flex:1;font-size:14px;color:var(--text);font-weight:700;line-height:1.5}
 .minorgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
 .minorcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
 .minorcard b{font-family:"Noto Serif TC",serif;font-size:14px;color:var(--text);display:block;margin-bottom:2px}
@@ -957,6 +970,7 @@ const MINOR = [
  {g:"科文貴曜", name:"天官", key:"與天福成對，主貴氣、爵祿、有官格"},
  {g:"科文貴曜", name:"天福", key:"與天官成對，主福蔭、貴人、享福"},
  {g:"科文貴曜", name:"天貴", key:"科名貴顯，利考試、受賞識提拔"},
+ {g:"科文貴曜", name:"恩光", key:"與天貴成對，主科名、受賞識、獲提拔恩寵"},
  {g:"科文貴曜", name:"天才", key:"主聰明、才智、反應靈敏"},
  {g:"科文貴曜", name:"天壽", key:"主壽元、穩重、老成持重"},
  {g:"科文貴曜", name:"天巫", key:"主升遷、繼承、與宗教玄學有緣"},
@@ -1052,6 +1066,78 @@ const DAXIAN = [
  {id:"dx3", title:"疊宮的概念", em:"🔲", body:"大限的命宮會疊在本命某一宮上。例如這十年大限命宮疊在福德宮，代表這十年的主軸和「心靈、享受、價值觀」特別有關。"},
  {id:"dx4", title:"四化是引動開關", em:"⚡", body:"本命四化是先天定象（像基因），大限與流年的四化則是後天引動（像事件的開關）。基因決定傾向，開關決定何時發生。"},
  {id:"dx5", title:"為什麼不用自己排", em:"🔮", body:"v2 不教排盤。用現成排盤軟體幾秒就能得到命盤，把力氣花在「讀懂它」，才是真正的重點。"},
+];
+
+/* ---------- 新模組 D：神煞十二神（命盤角落那些會轉動的字） ---------- */
+const SHENSHA = [
+ {id:"changsheng", name:"長生十二神", sub:"能量的一生", em:"🌱",
+  intro:"最好懂的一套！用「一個人的一生」來記——出生、長大、當官、巔峰、衰老、生病、死亡、入土，再受孕、養育。套在宮位上，就是看那個領域的能量正處在人生哪個階段：帝旺最強、死絕最弱。",
+  use:"套在宮位上，看該領域「能量強弱」正走到人生哪一階段。",
+  items:[
+   {n:"長生",m:"剛出生的嬰兒，朝氣蓬勃、生機無限",ex:"像新創公司剛成立，一切從零、充滿希望"},
+   {n:"沐浴",m:"嬰兒洗澡，青澀不穩、易出狀況（又叫敗地）",ex:"像新人剛上手，跌跌撞撞、容易出包"},
+   {n:"冠帶",m:"成年戴冠、漸入佳境",ex:"像員工升上小主管，開始有模有樣"},
+   {n:"臨官",m:"正式就業當官、事業興旺（又叫祿）",ex:"像事業上軌道、收入穩定的壯年"},
+   {n:"帝旺",m:"人生巔峰、能量最強",ex:"像事業如日中天、呼風喚雨的顛峰"},
+   {n:"衰",m:"過了高峰、開始走下坡",ex:"像過了顛峰，體力衝勁慢慢退"},
+   {n:"病",m:"生病虛弱、力不從心",ex:"像公司開始出狀況、營運吃力"},
+   {n:"死",m:"停滯無力、動彈不得",ex:"像事情陷入停擺、毫無進展"},
+   {n:"墓",m:"入庫收藏、沉潛蓄積（又叫庫）",ex:"像把資源收進倉庫、低調沉澱等時機"},
+   {n:"絕",m:"能量到谷底、將盡又將生",ex:"像絕處逢生前的最低點，物極必反"},
+   {n:"胎",m:"受孕、新生命開始醞釀",ex:"像新計畫正在肚子裡成形"},
+   {n:"養",m:"養育培育、蓄勢待發",ex:"像新人在培訓、養精蓄銳準備出發"}
+  ]},
+ {id:"boshi", name:"博士十二神", sub:"跟著祿存跑的助力群", em:"📚",
+  intro:"跟著「祿存」這顆星起排的一組神煞，描述一個宮位「幫手好不好、有沒有小人」的性質。有吉有凶——青龍、喜神是好的，飛廉、病符、官府是要小心的。",
+  use:"跟著祿存起排，看該宮「助力或阻力」的性質。",
+  items:[
+   {n:"博士",m:"聰明才智、有專業",ex:"像身邊那位學識淵博的顧問"},
+   {n:"力士",m:"權勢、掌實權",ex:"像手握資源的實力派主管"},
+   {n:"青龍",m:"喜慶、財氣、好運貴人（吉）",ex:"像帶財帶喜的貴人來報好消息"},
+   {n:"小耗",m:"小破財、小損失",ex:"像荷包破個小洞，錢慢慢漏"},
+   {n:"將軍",m:"威猛、衝勁、有魄力",ex:"像帶頭衝鋒的猛將"},
+   {n:"奏書",m:"文書喜訊、好消息",ex:"像收到錄取通知、得獎公文"},
+   {n:"飛廉",m:"小人、是非、口舌（凶）",ex:"像背後嚼舌根、扯後腿的人"},
+   {n:"喜神",m:"喜慶、好事臨門",ex:"像辦喜事、有值得慶祝的事"},
+   {n:"病符",m:"病災、身體不適（凶）",ex:"像小毛病纏身、健康亮黃燈"},
+   {n:"大耗",m:"大破財、大損失（凶）",ex:"像一次大失血、破財消災"},
+   {n:"伏兵",m:"暗中的小人、埋伏（凶）",ex:"像暗處放冷箭的對手"},
+   {n:"官府",m:"官司、訴訟、公門是非（凶）",ex:"像惹上官非、要跑法院"}
+  ]},
+ {id:"suiqian", name:"歲前十二神", sub:"太歲那一年的氣氛", em:"🗓️",
+  intro:"跟著「流年太歲」（今年的地支）起排的一組神煞，看這一年整體的吉凶氣氛。俗稱「安太歲、犯太歲、白虎、喪門」那些——過年拜拜常聽到的就是這套。",
+  use:"以流年太歲起排，看「今年」的吉凶氣氛。",
+  items:[
+   {n:"太歲",m:"當年值年之神，沖犯要安太歲",ex:"像今年輪到你當值日生，動土婚喪要留意"},
+   {n:"晦氣",m:"倒楣、不順、卡卡的",ex:"像諸事不順、走霉運的一段"},
+   {n:"喪門",m:"喪事、孝服、離別",ex:"像家有白事、參加喪禮"},
+   {n:"貫索",m:"像被繩子綁住的糾纏、官司牽連",ex:"像捲進糾紛、被綁住脫不了身"},
+   {n:"官符",m:"官非、文書訴訟",ex:"像收到罰單、告示、法律文件"},
+   {n:"小耗",m:"小破財",ex:"像小開銷、荷包縮水"},
+   {n:"歲破",m:"沖太歲、大不順、大破財",ex:"像正沖太歲那年，容易大失血、諸事不利"},
+   {n:"龍德",m:"逢凶化吉的吉神",ex:"像關鍵時刻出現的救星"},
+   {n:"白虎",m:"血光、意外、開刀",ex:"像要特別小心受傷、車關"},
+   {n:"天德",m:"貴人庇佑、化險為夷",ex:"像暗中有貴人罩你、大事化小"},
+   {n:"弔客",m:"探病、弔喪、他人喪事牽連",ex:"像常跑醫院、參加告別式"},
+   {n:"病符",m:"疾病、健康問題",ex:"像今年身體要多顧、易生病"}
+  ]},
+ {id:"jiangqian", name:"將前十二神", sub:"將星那一年的行動力", em:"🎖️",
+  intro:"跟著「流年將星」起排的一組神煞，看這一年的行動力與際遇。裡面的劫煞、災煞、天煞合稱「三煞」，是要特別小心的三顆。",
+  use:"以流年將星起排，看「今年」的行動與際遇。",
+  items:[
+   {n:"將星",m:"領導、權威、掌兵符",ex:"像被推上帶頭位置、當領隊"},
+   {n:"攀鞍",m:"升遷、晉級的機會",ex:"像有升官、上位的好時機"},
+   {n:"歲驛",m:"走動、變遷、遠行（即驛馬）",ex:"像今年常出差、搬遷、動來動去"},
+   {n:"息神",m:"消沉、沒勁、提不起勁",ex:"像心灰意冷、缺乏動力的低潮"},
+   {n:"華蓋",m:"孤高、聰明、玄學藝術緣",ex:"像喜歡獨處鑽研宗教哲學的孤才"},
+   {n:"劫煞",m:"破耗、被劫、突發損失（三煞之一）",ex:"像突然被偷被搶、意外破財"},
+   {n:"災煞",m:"災厄、意外、血光（三煞之一）",ex:"像容易出意外、要防災"},
+   {n:"天煞",m:"剋制、阻礙（三煞之一）",ex:"像處處受制、卡關不順"},
+   {n:"指背",m:"背後被指指點點、說閒話",ex:"像被人在背後議論、抹黑"},
+   {n:"咸池",m:"桃花、情慾",ex:"像桃花朵朵開、感情機會多"},
+   {n:"月煞",m:"小阻礙、小不順",ex:"像小卡關、小麻煩不斷"},
+   {n:"亡神",m:"耗損、失去、心神不寧",ex:"像丟三落四、精神渙散、有所失"}
+  ]}
 ];
 
 /* ---------- v3 未來藍圖（規劃中，本版先列計劃） ---------- */
@@ -1225,7 +1311,7 @@ const QUESTIONS = [
    ========================================================================== */
 const KEY="ziwei_learn_v2";
 const OLDKEY="ziwei_learn_v1";
-const DEFAULT={xp:0,learned:{palace:[],star:[],sihua:[],aux:[],duo:[],frame:[],daxian:[]},quiz:{answered:0,correct:0},wrong:{},streak:{count:0,last:""},bestScore:0,cleared:false,sound:true};
+const DEFAULT={xp:0,learned:{palace:[],star:[],sihua:[],aux:[],duo:[],frame:[],daxian:[],shensha:[]},quiz:{answered:0,correct:0},wrong:{},streak:{count:0,last:""},bestScore:0,cleared:false,sound:true};
 let S=load();
 
 /* 合併：以 DEFAULT 為底補齊所有新欄位（learned 新增 duo/frame/daxian 桶） */
@@ -1245,8 +1331,8 @@ function touchStreak(){const t=todayStr();if(S.streak.last===t)return;const y=ne
 
 /* ---- 等級計算 ---- */
 function levelInfo(xp){let cur=LEVELS[0];for(const L of LEVELS)if(xp>=L.xp)cur=L;const idx=LEVELS.indexOf(cur);const next=LEVELS[idx+1]||null;const base=cur.xp;const need=next?next.xp:cur.xp;const prog=next?Math.min(1,(xp-base)/(need-base)):1;return{lv:cur.lv,title:cur.title,next,base,need,prog,max:!next};}
-function totalLearned(){const L=S.learned;return L.palace.length+L.star.length+L.sihua.length+L.aux.length+L.duo.length+L.frame.length+L.daxian.length;}
-const TOTAL_CARDS=PALACES.length+STARS.length+SIHUA.length+AUX.length+DUO.length+FRAME.length+DAXIAN.length;
+function totalLearned(){const L=S.learned;return L.palace.length+L.star.length+L.sihua.length+L.aux.length+L.duo.length+L.frame.length+L.daxian.length+L.shensha.length;}
+const TOTAL_CARDS=PALACES.length+STARS.length+SIHUA.length+AUX.length+DUO.length+FRAME.length+DAXIAN.length+SHENSHA.length;
 
 /* ---- 加 XP + 升級偵測 ---- */
 function addXP(n){const before=levelInfo(S.xp).lv;S.xp+=n;const after=levelInfo(S.xp).lv;save();updatePill();if(after>before){ceremony(after);}return after>before;}
@@ -1286,6 +1372,7 @@ function render(){touchStreak();const v=view();
  else if(CUR==="duo")v.innerHTML=viewDuo();
  else if(CUR==="frame")v.innerHTML=viewFrame();
  else if(CUR==="daxian")v.innerHTML=viewDaxian();
+ else if(CUR==="shensha")v.innerHTML=viewShensha();
  else if(CUR==="quiz")v.innerHTML=viewQuizHub();
  else if(CUR==="wrong")v.innerHTML=viewWrong();
  else if(CUR==="me")v.innerHTML=viewMe();
@@ -1326,10 +1413,11 @@ function viewHome(){
    <div class="tile" onclick="go('duo')"><div class="em">♊</div><div><h3>雙星組合<span class="newdot">NEW</span></h3><p>命宮兩星的化學變化</p></div><div class="bar thin mini"><i style="width:${pct('duo')}%"></i></div></div>
    <div class="tile" onclick="go('frame')"><div class="em">🗺️</div><div><h3>框架與格局<span class="newdot">NEW</span></h3><p>三大框架＋常見格局</p></div><div class="bar thin mini"><i style="width:${pct('frame')}%"></i></div></div>
    <div class="tile" onclick="go('daxian')"><div class="em">⏳</div><div><h3>大限流年<span class="newdot">NEW</span></h3><p>先天、大限、流年觀念</p></div><div class="bar thin mini"><i style="width:${pct('daxian')}%"></i></div></div>
+   <div class="tile" onclick="go('shensha')"><div class="em">🎖️</div><div><h3>神煞十二神<span class="newdot">NEW</span></h3><p>青龍長生那類·附例子</p></div><div class="bar thin mini"><i style="width:${pct('shensha')}%"></i></div></div>
    <div class="tile big" onclick="go('quiz')"><div class="em">✍️</div><div><h3>開始測驗</h3><p>120 題題庫 · 章節 · 隨機 · 錯題重練${wrongN?` · 待複習 ${wrongN} 題`:""}</p></div><div class="arrow">›</div></div>
  </div>`;
 }
-function pct(cat){const map={palace:PALACES.length,star:STARS.length,sihua:SIHUA.length,aux:AUX.length,duo:DUO.length,frame:FRAME.length,daxian:DAXIAN.length};return Math.round(S.learned[cat].length/map[cat]*100);}
+function pct(cat){const map={palace:PALACES.length,star:STARS.length,sihua:SIHUA.length,aux:AUX.length,duo:DUO.length,frame:FRAME.length,daxian:DAXIAN.length,shensha:SHENSHA.length};return Math.round(S.learned[cat].length/map[cat]*100);}
 
 /* ======================= 學習中心 ======================= */
 function viewLearn(){
@@ -1341,6 +1429,7 @@ function viewLearn(){
   {r:"duo",em:"♊",n:"雙星組合",d:"命宮兩顆主星的物理與化學變化（12 組）",cat:"duo",tot:DUO.length},
   {r:"frame",em:"🗺️",n:"框架與格局",d:"三大命盤框架＋10 個常見格局圖鑑",cat:"frame",tot:FRAME.length},
   {r:"daxian",em:"⏳",n:"大限流年",d:"本命、大限、流年的觀念課（不排盤）",cat:"daxian",tot:DAXIAN.length},
+  {r:"shensha",em:"🎖️",n:"神煞十二神",d:"命盤角落那些會轉動的字（青龍、長生…）附例子",cat:"shensha",tot:SHENSHA.length},
  ];
  return `<div class="eyebrow">學習中心</div><h2 class="title">星曜研習</h2>
  <p class="lead">建議依序：宮位（舞台）→ 主星（演員）→ 四化（劇情）→ 輔星（配角）→ 雙星（合演）→ 框架格局（劇本）→ 大限流年（時間軸）。點卡片閱讀，讀完標記「已學會」可累積經驗值。</p>
@@ -1380,8 +1469,10 @@ function viewPalace(){
  </div>
  <div class="note"><b>小提醒：</b>看盤要看「三方四正」——本宮 + 對宮 + 兩個三合宮，四宮一起參看，不能只看單一宮位。例如判斷事業，除了官祿宮，也要參看命宮與財帛宮。</div>
  <div class="grouphdr">🎯 三方四正 · 互動命盤</div>
+ <div class="note" style="border-color:var(--purple-d)"><b style="color:var(--purple)">👶 白話：什麼是「三方四正」？</b><br>判斷一件事，不能只盯一個宮看，要把「本宮＋對面那宮＋斜角兩個宮」<b>四個角度加起來一起看</b>才準。<br>比方看一個人的工作（官祿宮），除了看工作本身，還要看他的個性底子（命宮）、他怎麼賺錢用錢（財帛宮）、外人怎麼看他（遷移宮）——四個角度合起來，才不會以偏概全。下面點點看：</div>
  <div class="svgwrap" id="sanfangBox">${svgSanfang()}</div>
  <div class="grouphdr">↔️ 六條線 · 對沖軸線</div>
+ <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">👶 白話：什麼是「六條線」？</b><br>十二個宮兩兩正對，連成六條線。每一條線的兩頭是「一體兩面」的人生課題，要<b>一起看</b>。例如「夫妻宮↔官祿宮」是同一條線——你怎麼經營感情，往往和你怎麼投入工作是同一套模式。</div>
  <div class="svgwrap">${svgSixLines()}</div>`;
 }
 function openPalace(id){const p=PALACES.find(x=>x.id===id);const dn=S.learned.palace.includes(id);
@@ -1446,7 +1537,19 @@ function openStar(id){const s=STARS.find(x=>x.id===id);const dn=S.learned.star.i
     <div class="field"><div class="k">案例故事</div><div class="v" style="line-height:1.85">${esc(s.story)}</div></div>
   </div>
   <div class="tabpane" id="tab_img" hidden>
-    <div class="svgwrap" style="text-align:center">${svgTotem(s,160)}<div class="svg-hint">${esc(s.name)}圖騰 · ${esc(s.core.split("｜")[0])}</div></div>
+    <div class="glancecard">
+      <div class="glance-visual">
+        <img src="img/${s.id}.jpg" alt="${esc(s.fig)}" class="starimg" onerror="this.style.display='none';var t=document.getElementById('gt_${s.id}');if(t)t.style.display='block'">
+        <div id="gt_${s.id}" style="display:none">${svgTotem(s,150)}</div>
+      </div>
+      <div class="glance-name">${esc(s.name)}　${esc(s.core.split("｜")[0])}</div>
+      <div class="glance-rows">
+        <div><span>🎭 代表人物</span><b>${esc(s.fig)}</b></div>
+        <div><span>💼 現代角色</span><b>${esc(s.role)}</b></div>
+        <div><span>🏷️ 關鍵字</span><b>${esc(s.core.split("｜")[1]||"")}</b></div>
+        <div><span>⭐ 一句話</span><b>${esc(oneLine(s))}</b></div>
+      </div>
+    </div>
   </div>
   ${learnBtn("star",id,dn)}
  `);
@@ -1617,6 +1720,32 @@ function openDaxian(id){const x=DAXIAN.find(d=>d.id===id);const dn=S.learned.dax
   ${learnBtn("daxian",id,dn)}
  `);
 }
+
+/* ======================= 神煞十二神（新模組 D） ======================= */
+function viewShensha(){
+ return `<div class="eyebrow">進階 · 神煞十二神</div><h2 class="title">神煞十二神</h2>
+ <p class="lead">命盤每格角落還有一組會「轉動」的小神煞。它們不是主角，比較像背景音樂或天氣註記——告訴你這個宮位／這一年的<b>氣氛與吉凶傾向</b>。共四套，點開各有 12 位，每位都配白話解釋＋實際例子。</p>
+ <div class="cardlist">
+ ${SHENSHA.map(s=>{const dn=S.learned.shensha.includes(s.id);
+   return `<div class="card lc${dn?' done':''} tap" onclick="openShensha('${s.id}')">
+     <div class="gly">${s.em}</div>
+     <div class="body"><h4>${esc(s.name)}</h4><div class="sub">${esc(s.sub)}</div></div>
+     <div class="mk">${dn?"✦":"○"}</div></div>`;}).join("")}
+ </div>
+ <div class="note"><b>白話總結：</b>這四套是「會跟著流年／位置轉動」的氣氛註記——長生十二神看能量強弱、博士十二神看幫手好壞、歲前十二神看太歲吉凶、將前十二神看行動際遇。入門先「看得懂它在講什麼」就夠了。</div>`;
+}
+function openShensha(id){const s=SHENSHA.find(x=>x.id===id);const dn=S.learned.shensha.includes(id);
+ openSheet(`
+  <div class="head"><div class="glyphL">${s.em}</div><div><h2>${esc(s.name)}</h2><div class="row"><span class="chip purple">${esc(s.sub)}</span></div></div></div>
+  <div class="core-box"><div class="k">這套在講什麼</div><div class="v" style="font-size:14px;font-weight:400;color:var(--text);line-height:1.75">${esc(s.intro)}</div></div>
+  <div class="field"><div class="k">用法</div><div class="v">${esc(s.use)}</div></div>
+  <div class="grouphdr" style="margin:16px 2px 6px">十二位一覽（附例子）</div>
+  ${s.items.map(it=>`<div class="ssrow"><div class="ssname">${esc(it.n)}</div><div class="ssbody"><div class="ssm">${esc(it.m)}</div><div class="ssex">例：${esc(it.ex)}</div></div></div>`).join("")}
+  ${learnBtn("shensha",id,dn)}
+ `);
+}
+/* 從 story 結尾取「一句話記住他」 */
+function oneLine(s){const m=(s.story||"").split("一句話記住他：");return m[1]?m[1].replace(/。\s*$/,""):"";}
 
 /* ======================= 十天干四化查表器 ======================= */
 function ganhuaTool(){
@@ -1920,7 +2049,7 @@ function viewMe(){
  <div class="note" style="margin-top:14px">學習紀錄儲存在此瀏覽器（本機）。換裝置或清除瀏覽資料會消失。日後若要跨裝置同步，可再接雲端（Firebase / 後端）。</div>`;
 }
 function computeBadges(){
- const full=c=>S.learned[c].length>= ({palace:PALACES.length,star:STARS.length,sihua:SIHUA.length,aux:AUX.length,duo:DUO.length,frame:FRAME.length,daxian:DAXIAN.length}[c]);
+ const full=c=>S.learned[c].length>= ({palace:PALACES.length,star:STARS.length,sihua:SIHUA.length,aux:AUX.length,duo:DUO.length,frame:FRAME.length,daxian:DAXIAN.length,shensha:SHENSHA.length}[c]);
  return [
   {n:"命盤入門",d:"學會全部十二宮",em:"🏛️",got:full("palace")},
   {n:"星曜通曉",d:"學會全部十四主星",em:"⭐",got:full("star")},
@@ -1929,6 +2058,7 @@ function computeBadges(){
   {n:"雙星入門",d:"學會全部 12 組雙星",em:"♊",got:full("duo")},
   {n:"識得格局",d:"學會三大框架",em:"🗺️",got:full("frame")},
   {n:"懂看大限",d:"學會大限流年 5 卡",em:"⏳",got:full("daxian")},
+  {n:"通曉神煞",d:"學會神煞十二神四套",em:"🎖️",got:full("shensha")},
   {n:"百題磨練",d:"累積答題滿 100 題",em:"✍️",got:S.quiz.answered>=100},
   {n:"星盤大師",d:"單次測驗拿到滿分",em:"🏆",got:S.bestScore>=100},
  ];
