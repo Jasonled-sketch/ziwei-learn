@@ -449,9 +449,11 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 
 <!-- USLED AUTH BEGIN -->
 <style>
-body.auth-checking > *:not(#auth-overlay):not(script),
-body.auth-needed   > *:not(#auth-login):not(script),
-body.auth-denied   > *:not(#auth-denied):not(script){display:none!important}
+body.auth-checking > *:not(#auth-overlay):not(#updbar):not(script),
+body.auth-needed   > *:not(#auth-login):not(#updbar):not(script),
+body.auth-denied   > *:not(#auth-denied):not(#updbar):not(script){display:none!important}
+#updbar{display:none;position:fixed;top:0;left:0;right:0;z-index:11000;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#C7A45B,#E7C57D);color:#241a06;font-weight:700;font-size:13px;padding:11px 16px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.45);font-family:'Noto Sans TC',sans-serif}
+#updbar:active{filter:brightness(1.05)}
 body.auth-checking #auth-overlay,
 body.auth-needed   #auth-login,
 body.auth-denied   #auth-denied{display:flex}
@@ -669,6 +671,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
 <script src="https://cdn.jsdelivr.net/npm/iztro@2.5.8/dist/iztro.min.js"></script>
 </head>
 <body class="auth-checking">
+<div id="updbar"><span>🔄 有新版本 · 點我更新</span></div>
 
 <!-- USLED AUTH HTML BEGIN -->
 <div id="auth-overlay">
@@ -742,7 +745,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v3.4";
+const APP_VERSION = "v3.5";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -2336,6 +2339,21 @@ function ceremony(newLv){const L=LEVELS.find(x=>x.lv===newLv);if(!L)return;SFX.l
 
 /* ======================= 啟動 ======================= */
 (function(){var v=document.getElementById("verTag");if(v)v.textContent=APP_VERSION;})();
+/* 自動偵測新版本：抓 version.json（繞過快取），若比目前新→顯示更新提示條 */
+(function(){
+ try{
+  fetch("version.json?t="+(new Date().getTime()),{cache:"no-store"})
+   .then(function(r){return r.json();})
+   .then(function(j){
+     if(j&&j.version&&j.version!==APP_VERSION){
+       var b=document.getElementById("updbar");if(!b)return;
+       b.querySelector("span").textContent="🔄 有新版本 "+j.version+"（目前 "+APP_VERSION+"）· 點我更新";
+       b.style.display="flex";
+       b.onclick=function(){location.href=location.pathname+"?v="+encodeURIComponent(j.version)+"_"+(new Date().getTime());};
+     }
+   }).catch(function(){});
+ }catch(e){}
+})();
 render();
 </script>
 </body>
