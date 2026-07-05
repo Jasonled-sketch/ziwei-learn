@@ -377,27 +377,34 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .segbtn.on{background:linear-gradient(135deg,var(--purple-d),var(--purple));border-color:var(--purple);color:#fff}
 .segbtn:active{transform:scale(.96)}
 /* 排盤命盤 */
-.cs-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.cs-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,minmax(82px,auto));gap:4px;min-width:344px}
-.cs-cell{border:1px solid var(--line);border-radius:9px;background:linear-gradient(160deg,var(--panel2),var(--panel));padding:5px 6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden}
+.cs-wrap{position:relative;width:100%}
+.cs-grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:3px;aspect-ratio:1/1;width:100%}
+.cs-cell{position:relative;border:1px solid var(--line);border-radius:8px;background:linear-gradient(160deg,var(--panel2),var(--panel));padding:3px 4px;cursor:pointer;display:flex;flex-direction:column;gap:1px;min-width:0;overflow:hidden;transition:border-color .15s,background .15s}
 .cs-cell:active{transform:scale(.98)}
-.cs-cell:hover{border-color:var(--purple-d)}
-.cs-top{display:flex;justify-content:space-between;align-items:baseline;gap:3px}
-.cs-pname{font-family:"Noto Serif TC",serif;font-weight:700;font-size:11.5px;color:var(--gold);white-space:nowrap}
-.cs-gz{font-size:9px;color:var(--muted2);white-space:nowrap}
-.cs-majs{display:flex;flex-wrap:wrap;gap:3px}
-.cs-star{font-family:"Noto Serif TC",serif;font-weight:700;font-size:12.5px;color:var(--text);line-height:1.3;white-space:nowrap}
-.cs-star sub{font-size:8px;color:var(--muted);margin-left:1px;vertical-align:baseline}
-.cs-star em,.cs-min em{font-style:normal;font-size:8.5px;font-weight:700;padding:0 2px;border-radius:3px;margin-left:1px;color:#fff;vertical-align:top}
+.cs-cell.hl-self{border-color:var(--gold);background:rgba(231,197,125,.15)}
+.cs-cell.hl-opp{border-color:var(--red);background:rgba(224,106,80,.13)}
+.cs-cell.hl-tri{border-color:var(--cyan);background:rgba(104,183,214,.11)}
+.cs-top{display:flex;justify-content:space-between;align-items:baseline;gap:2px;line-height:1.05}
+.cs-pname{font-family:"Noto Serif TC",serif;font-weight:700;font-size:10px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-rl{font-size:7px;font-weight:700;padding:0 2px;border-radius:3px;color:#0E0C1A}
+.cs-rl-self{background:var(--gold)}.cs-rl-opp{background:var(--red);color:#fff}.cs-rl-tri{background:var(--cyan);color:#06263a}
+.cs-gz{font-size:8px;color:var(--muted2);white-space:nowrap}
+.cs-majs{display:flex;flex-wrap:wrap;gap:0 3px;line-height:1.15}
+.cs-star{font-family:"Noto Serif TC",serif;font-weight:700;font-size:11px;color:var(--text);white-space:nowrap}
+.cs-star sub{font-size:7px;color:var(--muted);margin-left:0;vertical-align:baseline}
+.cs-star em,.cs-min em{font-style:normal;font-size:7px;font-weight:700;padding:0 1px;border-radius:2px;margin-left:0;color:#fff;vertical-align:top}
 .m-green{background:var(--green)}.m-purple{background:var(--purple)}.m-cyan{background:var(--cyan)}.m-red{background:var(--red)}.m-gold{background:var(--gold-d)}
-.cs-mins{display:flex;flex-wrap:wrap;gap:2px 4px}
-.cs-min{font-size:10px;color:var(--muted);white-space:nowrap}
-.cs-bot{margin-top:auto;font-size:8.5px;color:var(--muted2)}
-.cs-empty{color:var(--muted2)}
-.cs-center{grid-column:2/4;grid-row:2/4;border:1px solid var(--line2);border-radius:11px;background:radial-gradient(circle at 50% 35%,rgba(156,124,240,.14),var(--bg2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px;text-align:center}
-.cs-cbig{font-family:"Noto Serif TC",serif;font-weight:900;font-size:19px;color:var(--gold)}
-.cs-cinfo{font-size:10.5px;color:var(--muted);line-height:1.4}
-.cs-cdate{font-size:9.5px;color:var(--muted2)}
+.cs-mins{display:flex;flex-wrap:wrap;gap:0 2px;line-height:1.1}
+.cs-min{font-size:8px;color:var(--muted);white-space:nowrap}
+.cs-foot{margin-top:auto;display:flex;justify-content:space-between;gap:2px;line-height:1}
+.cs-god{font-size:6.5px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-dec{font-size:6.5px;color:var(--muted2);white-space:nowrap;flex:none}
+.cs-empty{color:var(--muted2);font-size:9px}
+.cs-center{grid-column:2/4;grid-row:2/4;border:1px solid var(--line2);border-radius:10px;background:radial-gradient(circle at 50% 35%,rgba(156,124,240,.14),var(--bg2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px;text-align:center;z-index:2}
+.cs-cbig{font-family:"Noto Serif TC",serif;font-weight:900;font-size:16px;color:var(--gold)}
+.cs-cinfo{font-size:9px;color:var(--muted);line-height:1.35}
+.cs-cdate{font-size:8px;color:var(--muted2)}
+.cs-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
 .miaopick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .miaobtn{padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:15px;font-weight:700;cursor:pointer;transition:.14s}
 .miaobtn:active{transform:scale(.95)}
@@ -734,7 +741,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v3.1";
+const APP_VERSION = "v3.2";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1588,6 +1595,7 @@ function viewPalace(){
  <div class="note"><b>小提醒：</b>看盤要看「三方四正」——本宮 + 對宮 + 兩個三合宮，四宮一起參看，不能只看單一宮位。例如判斷事業，除了官祿宮，也要參看命宮與財帛宮。</div>
  <div class="grouphdr">🎯 三方四正 · 互動命盤</div>
  <div class="note" style="border-color:var(--purple-d)"><b style="color:var(--purple)">👶 白話：什麼是「三方四正」？</b><br>判斷一件事，不能只盯一個宮看，要把「本宮＋對面那宮＋斜角兩個宮」<b>四個角度加起來一起看</b>才準。<br>比方看一個人的工作（官祿宮），除了看工作本身，還要看他的個性底子（命宮）、他怎麼賺錢用錢（財帛宮）、外人怎麼看他（遷移宮）——四個角度合起來，才不會以偏概全。下面點點看：</div>
+ <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">📐 它是怎麼來的？（排法公式）</b><br>來自地支的兩種關係：<br>①<b>三合</b>——申子辰、寅午戌、亥卯未、巳酉丑（三個地支排成 120° 三角，氣場相通）。<br>②<b>六沖（對宮）</b>——子↔午、丑↔未、寅↔申、卯↔酉、辰↔戌、巳↔亥（正對面 180°）。<br>把「本宮＋同組三合的另兩宮（三方）＋對宮（四正）」合起來，就是三方四正。<b>去「🪐 排盤」點自己盤上的宮，會直接畫出這四宮的連線。</b></div>
  <div class="svgwrap" id="sanfangBox">${svgSanfang()}</div>
  <div class="grouphdr">↔️ 六條線 · 對沖軸線</div>
  <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">👶 白話：什麼是「六條線」？</b><br>十二個宮兩兩正對，連成六條線。每一條線的兩頭是「一體兩面」的人生課題，要<b>一起看</b>。例如「夫妻宮↔官祿宮」是同一條線——你怎麼經營感情，往往和你怎麼投入工作是同一套模式。</div>
@@ -1644,6 +1652,7 @@ function openStar(id){const s=STARS.find(x=>x.id===id);const dn=S.learned.star.i
   <div class="tabpane" id="tab_ess">
     ${F("人物比喻",s.person)}${F("性格優勢",s.pros)}${F("性格缺點",s.cons)}
     ${F("事業傾向",s.career)}${F("財務模式",s.wealth)}${F("感情特質",s.love)}
+    <div class="field"><div class="k">對宮星（正對面·一定要合看）</div><div class="v">${FIXEDOPP[s.id]?`<b style="color:var(--gold)">${FIXEDOPP[s.id]}</b>（與${esc(s.name)}同屬天府星系、永遠隔 6 宮正對，判斷時務必合看）`:`隨命盤位置而變——去「🪐 排盤」點${esc(s.name)}所在的宮，會自動畫出它的對宮與三合。`}</div></div>
     <div class="mnem"><div class="k">口訣</div><div class="v">${esc(s.mn)}</div></div>
   </div>
   <div class="tabpane" id="tab_cas" hidden>
@@ -1913,7 +1922,7 @@ function viewChart(){
    <input type="hidden" id="cCal" value="${s.cal||"solar"}"><input type="hidden" id="cG" value="${s.g||"男"}">
    <button class="btn btn-g" style="margin-top:10px" onclick="submitChart()">✨ 開始排盤</button>
  </div>
- <div id="chartOut" style="margin-top:16px"></div>`;
+ <div id="chartOut" style="margin-top:16px">${CHART?renderChart(CHART):""}</div>`;
 }
 function pickSeg(b,hid,attr){b.parentNode.querySelectorAll(".segbtn").forEach(x=>x.classList.remove("on"));b.classList.add("on");document.getElementById(hid).value=b.dataset[attr];}
 function submitChart(){
@@ -1925,24 +1934,33 @@ function submitChart(){
  try{
   CHART=(cal==="lunar")?iztro.astro.byLunar(dateStr,ti,g,false,true,"zh-TW"):iztro.astro.bySolar(dateStr,ti,g,true,"zh-TW");
  }catch(e){toast("排盤失敗："+(e.message||e));return;}
- SFX.ok();
+ SFX.ok();CHART_SEL=null;
  document.getElementById("chartOut").innerHTML=renderChart(CHART);
  setTimeout(()=>{const el=document.getElementById("chartOut");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});},80);
 }
 const M4C={"祿":"green","權":"purple","科":"cyan","忌":"red"};
+const GPOS={"巳":[1,1],"午":[2,1],"未":[3,1],"申":[4,1],"辰":[1,2],"酉":[4,2],"卯":[1,3],"戌":[4,3],"寅":[1,4],"丑":[2,4],"子":[3,4],"亥":[4,4]};
+const OPP={"子":"午","丑":"未","寅":"申","卯":"酉","辰":"戌","巳":"亥","午":"子","未":"丑","申":"寅","酉":"卯","戌":"辰","亥":"巳"};
+const SANHE=[["申","子","辰"],["寅","午","戌"],["亥","卯","未"],["巳","酉","丑"]];
+function sanheOther(b){const g=SANHE.find(x=>x.indexOf(b)>=0)||[];return g.filter(x=>x!==b);}
+let CHART_SEL=null;
+function csStar(st,cls){return `<span class="${cls}">${esc(st.name)}${st.brightness?`<sub>${esc(st.brightness)}</sub>`:""}${st.mutagen?`<em class="m-${M4C[st.mutagen]||"gold"}">${esc(st.mutagen)}</em>`:""}</span>`;}
 function renderChart(a){
- const GP={"巳":[1,1],"午":[2,1],"未":[3,1],"申":[4,1],"辰":[1,2],"酉":[4,2],"卯":[1,3],"戌":[4,3],"寅":[1,4],"丑":[2,4],"子":[3,4],"亥":[4,4]};
+ const sel=CHART_SEL;let selB=null,oppB=null,triB=[];
+ if(sel!=null){selB=a.palaces[sel].earthlyBranch;oppB=OPP[selB];triB=sanheOther(selB);}
  let cells="";
  a.palaces.forEach((p,idx)=>{
-   const g=GP[p.earthlyBranch];if(!g)return;
-   const maj=p.majorStars.map(st=>`<span class="cs-star">${esc(st.name)}${st.brightness?`<sub>${esc(st.brightness)}</sub>`:""}${st.mutagen?`<em class="m-${M4C[st.mutagen]||"gold"}">${esc(st.mutagen)}</em>`:""}</span>`).join("");
-   const minr=p.minorStars.map(st=>`<span class="cs-min">${esc(st.name)}${st.mutagen?`<em class="m-${M4C[st.mutagen]||"gold"}">${esc(st.mutagen)}</em>`:""}</span>`).join("");
+   const g=GPOS[p.earthlyBranch];if(!g)return;
+   let role="";if(sel!=null){if(p.earthlyBranch===selB)role="self";else if(p.earthlyBranch===oppB)role="opp";else if(triB.indexOf(p.earthlyBranch)>=0)role="tri";}
+   const rl=role?` <b class="cs-rl cs-rl-${role}">${role==="self"?"本宮":role==="opp"?"對宮":"三合"}</b>`:"";
+   const maj=p.majorStars.map(s=>csStar(s,"cs-star")).join("")||'<span class="cs-empty">借對宮</span>';
+   const mins=[...p.minorStars,...p.adjectiveStars].map(s=>csStar(s,"cs-min")).join("");
    const dec=(p.decadal&&p.decadal.range)?p.decadal.range[0]+"-"+p.decadal.range[1]:"";
-   cells+=`<div class="cs-cell" style="grid-column:${g[0]};grid-row:${g[1]}" onclick="openChartPalace(${idx})">
-     <div class="cs-top"><span class="cs-pname">${esc(p.name)}${p.isBodyPalace?"·身":""}</span><span class="cs-gz">${esc(p.heavenlyStem)}${esc(p.earthlyBranch)}</span></div>
-     <div class="cs-majs">${maj||'<span class="cs-empty">—</span>'}</div>
-     <div class="cs-mins">${minr}</div>
-     <div class="cs-bot">${dec?"大限 "+dec:""}</div>
+   cells+=`<div class="cs-cell${role?" hl-"+role:""}" style="grid-column:${g[0]};grid-row:${g[1]}" onclick="chartSanfang(${idx})">
+     <div class="cs-top"><span class="cs-pname">${esc(p.name)}${p.isBodyPalace?"·身":""}${rl}</span><span class="cs-gz">${esc(p.heavenlyStem)}${esc(p.earthlyBranch)}</span></div>
+     <div class="cs-majs">${maj}</div>
+     <div class="cs-mins">${mins}</div>
+     <div class="cs-foot"><span class="cs-god">${esc(p.changsheng12)}·${esc(p.boshi12)}</span><span class="cs-dec">${dec}</span></div>
    </div>`;
  });
  const gd=loadChartInput().g||"";
@@ -1954,21 +1972,26 @@ function renderChart(a){
    <div class="cs-cdate">陽 ${esc(a.solarDate||"")}</div>
    <div class="cs-cdate">農 ${esc(a.lunarDate||"")}</div>
  </div>`;
- return `<div class="cs-wrap"><div class="cs-grid">${cells}${center}</div></div>
- <div class="note">👆 點任一宮，看完整星曜與白話解說。星旁小字是<b>廟旺亮度</b>、彩色標籤是<b>四化</b>（<span style="color:var(--green)">祿</span>／<span style="color:var(--purple)">權</span>／<span style="color:var(--cyan)">科</span>／<span style="color:var(--red)">忌</span>）。</div>`;
+ let cap;
+ if(sel!=null){const nm=b=>a.palaces.find(x=>x.earthlyBranch===b).name;
+   cap=`<div class="note" style="border-color:var(--purple-d)">看 <b style="color:var(--gold)">${nm(selB)}</b> → 三合合看 <b style="color:var(--cyan)">${nm(triB[0])}、${nm(triB[1])}</b>；對宮 <b style="color:var(--red)">${nm(oppB)}</b>。這四宮（三方四正）要<b>一起看</b>才準。再點一次可取消。</div>`;
+ }else{
+   cap=`<div class="note">👆 點任一宮，會畫出它的<b style="color:var(--cyan)">三合</b>與<b style="color:var(--red)">對宮</b>連線。星旁小字是廟旺、彩標是四化（<span style="color:var(--green)">祿</span><span style="color:var(--purple)">權</span><span style="color:var(--cyan)">科</span><span style="color:var(--red)">忌</span>），底排是長生·博士十二神＋大限。</div>`;
+ }
+ return `<div class="cs-wrap"><div class="cs-grid">${cells}${center}${sanfangSvg(sel,a)}</div></div>${cap}
+ <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">📐 三方四正是怎麼來的？（公式）</b><br>地支有<b>四組三合</b>：申子辰、寅午戌、亥卯未、巳酉丑（三個地支排成 120° 三角）；還有<b>六沖</b>：子↔午、丑↔未、寅↔申、卯↔酉、辰↔戌、巳↔亥（正對面 180°）。<br>「<b>三方</b>」＝本宮＋同一組三合的另兩宮（三角形的另兩個角）；「<b>四正</b>」＝再加上對宮（正對面那宮）。四宮一起看＝三方四正。</div>`;
 }
-function openChartPalace(idx){
- const p=CHART.palaces[idx];
- const row=(st,kind)=>`<div class="ssrow"><div class="ssname" style="width:auto;min-width:48px;font-size:16px">${esc(st.name)}</div><div class="ssbody"><div class="ssm">${kind}${st.brightness?"　亮度 <b>"+esc(st.brightness)+"</b>":""}${st.mutagen?'　<b style="color:var(--'+(M4C[st.mutagen]||"gold")+')">化'+esc(st.mutagen)+"</b>":""}</div></div></div>`;
- openSheet(`
-  <div class="head"><div class="glyphL pp">${esc(p.name.slice(0,1))}</div><div><h2>${esc(p.name)}${p.isBodyPalace?" · 身宮":""}</h2><div class="row"><span class="chip purple">${esc(p.heavenlyStem)}${esc(p.earthlyBranch)}</span>${(p.decadal&&p.decadal.range)?`<span class="chip">大限 ${p.decadal.range[0]}-${p.decadal.range[1]}</span>`:""}</div></div></div>
-  ${p.majorStars.length?`<div class="grouphdr" style="margin-top:8px">主星</div>${p.majorStars.map(s=>row(s,"主星")).join("")}`:'<div class="note" style="margin-top:8px">此宮無主星（借對宮主星參看）</div>'}
-  ${p.minorStars.length?`<div class="grouphdr">輔星</div>${p.minorStars.map(s=>row(s,"輔星")).join("")}`:""}
-  ${p.adjectiveStars.length?`<div class="grouphdr">雜曜</div><div style="font-size:13px;color:var(--muted);line-height:1.9">${p.adjectiveStars.map(s=>esc(s.name)).join("、")}</div>`:""}
-  <div class="grouphdr">神煞十二神</div><div style="font-size:12.5px;color:var(--muted);line-height:2">長生：${esc(p.changsheng12)}｜博士：${esc(p.boshi12)}<br>歲前：${esc(p.suiqian12)}｜將前：${esc(p.jiangqian12)}</div>
-  <div class="note" style="margin-top:14px">想懂這些星的意思？回「學習」各單元查——主星、輔星煞曜、廟旺利陷、神煞十二神都有白話解說。</div>
- `);
+function sanfangSvg(sel,a){
+ if(sel==null)return "";
+ const selB=a.palaces[sel].earthlyBranch,oppB=OPP[selB],tri=sanheOther(selB);
+ const c=b=>{const g=GPOS[b];return [((g[0]-0.5)/4*100).toFixed(1),((g[1]-0.5)/4*100).toFixed(1)];};
+ const P=c(selB),T1=c(tri[0]),T2=c(tri[1]),O=c(oppB);
+ return `<svg class="cs-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+   <polygon points="${P[0]},${P[1]} ${T1[0]},${T1[1]} ${T2[0]},${T2[1]}" fill="rgba(104,183,214,.05)" stroke="#68B7D6" stroke-width="0.5" stroke-dasharray="1.6 1.2"/>
+   <line x1="${P[0]}" y1="${P[1]}" x2="${O[0]}" y2="${O[1]}" stroke="#E06A50" stroke-width="0.6" stroke-dasharray="1.6 1.2"/>
+ </svg>`;
 }
+function chartSanfang(idx){SFX.tap();CHART_SEL=(CHART_SEL===idx?null:idx);const el=document.getElementById("chartOut");if(el)el.innerHTML=renderChart(CHART);}
 
 /* ======================= 十天干四化查表器 ======================= */
 function ganhuaTool(){
@@ -1989,6 +2012,8 @@ function showGanhua(g){
 
 /* ======================= 十四主星 SVG 圖騰 ======================= */
 const STAR_COLOR={ziwei:"purple",tianji:"cyan",taiyang:"gold",wuqu:"gold",tiantong:"green",lianzhen:"red",tianfu:"gold",taiyin:"cyan",tanlang:"rose",jumen:"purple",tianxiang:"cyan",tianliang:"green",qisha:"red",pojun:"red"};
+/* 永遠固定的對宮星（只有這兩對，其餘隨盤而變） */
+const FIXEDOPP={tianxiang:"破軍",pojun:"天相",tianfu:"七殺",qisha:"天府"};
 function svgTotem(s,size){
  size=size||120;
  const c=STAR_COLOR[s.id]||"gold";const ch=s.name.slice(0,1);
