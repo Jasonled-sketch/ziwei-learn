@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0E0C1A">
+<title>紫微斗數 · 星曜研習</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E0C1A; --bg2:#141126; --panel:#1B1736; --panel2:#231E45; --raise:#2A2451;
+  --line:#332C5A; --line2:#413970;
+  --purple:#9C7CF0; --purple-d:#6B4FC0; --purple-glow:rgba(156,124,240,.35);
+  --gold:#E7C57D; --gold-d:#C7A45B; --gold-glow:rgba(231,197,125,.25);
+  --text:#ECE8F8; --muted:#9E97C4; --muted2:#77719A;
+  --rose:#E68CB4; --red:#E06A50; --green:#68C79C; --cyan:#68B7D6;
+  --ok:#68C79C; --no:#E06A50;
+  --r:16px; --r-sm:11px;
+  --sh:0 10px 30px rgba(0,0,0,.45);
+  --maxw:820px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",sans-serif;
+  font-size:15px; line-height:1.65; min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* ---- 星空背景 ---- */
+body::before{
+  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(1.5px 1.5px at 18% 22%, rgba(255,255,255,.9), transparent),
+    radial-gradient(1.5px 1.5px at 68% 12%, rgba(231,197,125,.9), transparent),
+    radial-gradient(1px 1px at 42% 38%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px 1px at 84% 52%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.5px 1.5px at 12% 68%, rgba(156,124,240,.9), transparent),
+    radial-gradient(1px 1px at 55% 78%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px 1px at 90% 88%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.2px 1.2px at 32% 92%, rgba(231,197,125,.7), transparent),
+    radial-gradient(1px 1px at 76% 32%, rgba(255,255,255,.6), transparent),
+    var(--bg);
+  background-repeat:no-repeat;
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.9;
+  background:
+    radial-gradient(60% 45% at 78% -6%, rgba(156,124,240,.16), transparent 70%),
+    radial-gradient(50% 40% at 8% 108%, rgba(231,197,125,.10), transparent 70%);
+}
+@media (prefers-reduced-motion:no-preference){
+  .twinkle{animation:tw 4s ease-in-out infinite}
+  @keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}
+}
+/* ---- 版面 ---- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px calc(96px + env(safe-area-inset-bottom));min-height:100vh}
+.topbar{
+  position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 4px 12px;margin:0 -4px;
+  background:linear-gradient(180deg,var(--bg) 62%,transparent);
+}
+.brand{font-family:"Noto Serif TC",serif;font-weight:900;font-size:19px;letter-spacing:.06em;color:var(--gold);display:flex;align-items:baseline;gap:8px}
+.brand-sub{font-family:"Noto Sans TC",sans-serif;font-weight:400;font-size:11px;letter-spacing:.28em;color:var(--muted2)}
+.lvpill{
+  border:1px solid var(--line2);background:linear-gradient(135deg,var(--panel2),var(--panel));
+  color:var(--text);border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:7px;white-space:nowrap;box-shadow:0 0 0 1px rgba(156,124,240,.06)
+}
+.lvpill b{color:var(--purple)}
+.lvpill:active{transform:scale(.96)}
+.view{animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---- 底部導航 ---- */
+.nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  display:flex;justify-content:center;gap:4px;
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  background:linear-gradient(0deg,var(--bg) 72%,transparent);
+  backdrop-filter:blur(8px);
+}
+.nav-inner{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px;box-shadow:var(--sh);max-width:var(--maxw);width:100%;}
+.nav button{
+  flex:1;border:0;background:transparent;color:var(--muted);font-family:inherit;font-size:12px;font-weight:600;
+  padding:9px 4px;border-radius:999px;cursor:pointer;transition:.18s;display:flex;flex-direction:column;align-items:center;gap:3px;line-height:1
+}
+.nav button .ic{font-size:16px;line-height:1}
+.nav button.on{background:linear-gradient(135deg,var(--purple-d),var(--purple));color:#fff;box-shadow:0 4px 14px var(--purple-glow)}
+.nav button:active{transform:scale(.93)}
+
+/* ---- 通用元件 ---- */
+.eyebrow{font-size:11px;letter-spacing:.28em;color:var(--gold-d);font-weight:700;text-transform:uppercase;margin:0 0 8px}
+h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter-spacing:.04em;margin:0 0 4px}
+.lead{color:var(--muted);font-size:13.5px;margin:0 0 18px}
+.section-gap{height:26px}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+.card{
+  background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);
+  border-radius:var(--r);padding:16px;box-shadow:var(--sh);position:relative;overflow:hidden
+}
+.tap{cursor:pointer;transition:transform .14s, border-color .18s}
+.tap:active{transform:scale(.985)}
+.tap:hover{border-color:var(--line2)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
+.chip.gold{color:var(--gold);border-color:var(--gold-d);background:var(--gold-glow)}
+.chip.purple{color:var(--purple);border-color:var(--purple-d);background:var(--purple-glow)}
+.chip.rose{color:var(--rose);border-color:rgba(230,140,180,.5)}
+.chip.red{color:var(--red);border-color:rgba(224,106,80,.5)}
+.chip.green{color:var(--green);border-color:rgba(104,199,156,.5)}
+.chip.cyan{color:var(--cyan);border-color:rgba(104,183,214,.5)}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  border:0;border-radius:13px;padding:14px 18px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:.16s
+}
+.btn-p{background:linear-gradient(135deg,var(--purple-d),var(--purple));color:#fff;box-shadow:0 8px 22px var(--purple-glow)}
+.btn-g{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#241a06;box-shadow:0 8px 22px var(--gold-glow)}
+.btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--line2)}
+.btn:active{transform:translateY(1px) scale(.99);filter:brightness(1.05)}
+.btn:disabled{opacity:.4;cursor:default;filter:none}
+
+/* ---- 進度條 ---- */
+.bar{height:8px;border-radius:999px;background:var(--bg2);overflow:hidden;border:1px solid var(--line)}
+.bar > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--purple),var(--gold));transition:width .6s cubic-bezier(.22,1,.36,1)}
+.bar.thin{height:6px}
+
+/* ---- Home 英雄區 ---- */
+.hero{
+  border:1px solid var(--line2);border-radius:22px;padding:24px 20px;margin:4px 0 22px;position:relative;overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 88% -20%, rgba(156,124,240,.28), transparent 60%),
+    radial-gradient(90% 80% at -10% 120%, rgba(231,197,125,.16), transparent 60%),
+    linear-gradient(160deg,var(--panel2),var(--bg2));
+  box-shadow:var(--sh)
+}
+.hero .seal{position:absolute;right:-14px;top:-10px;font-family:"Noto Serif TC",serif;font-weight:900;font-size:120px;color:rgba(231,197,125,.06);line-height:1;pointer-events:none;user-select:none}
+.hero h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:30px;letter-spacing:.05em;margin:0;color:var(--text)}
+.hero h1 span{color:var(--gold)}
+.hero .tag{color:var(--muted);font-size:13px;margin:6px 0 18px;letter-spacing:.02em}
+.rankrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.rankname{font-family:"Noto Serif TC",serif;font-weight:700;font-size:17px;color:var(--gold)}
+.rankname small{font-family:"Noto Sans TC",sans-serif;font-weight:700;color:var(--purple);font-size:13px;margin-right:8px}
+.xpnum{font-size:12px;color:var(--muted)}
+
+.stats3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0 4px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 10px;text-align:center}
+.stat b{display:block;font-family:"Noto Serif TC",serif;font-size:22px;font-weight:900;color:var(--text);line-height:1.2}
+.stat span{font-size:11px;color:var(--muted)}
+.stat.gold b{color:var(--gold)} .stat.purple b{color:var(--purple)} .stat.green b{color:var(--green)}
+
+/* Home 入口磚 */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--r);padding:16px;cursor:pointer;transition:.16s;position:relative;overflow:hidden;min-height:104px;display:flex;flex-direction:column;justify-content:space-between}
+.tile:active{transform:scale(.98)}
+.tile:hover{border-color:var(--line2)}
+.tile .em{font-size:26px}
+.tile h3{font-family:"Noto Serif TC",serif;font-size:17px;font-weight:700;margin:6px 0 2px}
+.tile p{font-size:11.5px;color:var(--muted);margin:0}
+.tile .mini{margin-top:8px}
+.tile.big{grid-column:1 / -1;flex-direction:row;align-items:center;gap:16px;min-height:0}
+.tile.big .em{font-size:30px}
+.tile.big > div{flex:1}
+
+/* ---- 學習卡列表 ---- */
+.hub{display:grid;gap:12px}
+.hubcard{display:flex;align-items:center;gap:14px;padding:15px 16px}
+.hubcard .em{font-size:28px;width:46px;text-align:center}
+.hubcard .info{flex:1;min-width:0}
+.hubcard h3{font-family:"Noto Serif TC",serif;font-size:17px;font-weight:700;margin:0 0 3px}
+.hubcard .info p{margin:0 0 7px;font-size:12px;color:var(--muted)}
+.hubcard .arrow{color:var(--muted2);font-size:20px}
+
+.cardlist{display:grid;gap:10px}
+.lc{display:flex;align-items:center;gap:13px;padding:14px 15px}
+.lc .gly{
+  width:44px;height:44px;flex:none;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-family:"Noto Serif TC",serif;font-weight:900;font-size:20px;color:var(--gold);
+  background:radial-gradient(circle at 30% 25%, rgba(231,197,125,.22), rgba(156,124,240,.12));border:1px solid var(--line2)
+}
+.lc.pp .gly{color:var(--purple);background:radial-gradient(circle at 30% 25%, var(--purple-glow), rgba(231,197,125,.08))}
+.lc .body{flex:1;min-width:0}
+.lc .body h4{margin:0 0 2px;font-family:"Noto Serif TC",serif;font-size:16.5px;font-weight:700}
+.lc .body .sub{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lc .mk{font-size:20px;color:var(--muted2);flex:none}
+.lc.done{border-color:var(--gold-d)}
+.lc.done .mk{color:var(--gold)}
+.grouphdr{display:flex;align-items:center;gap:9px;margin:20px 2px 10px;font-family:"Noto Serif TC",serif;font-weight:700;font-size:15px;color:var(--muted)}
+.grouphdr::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---- 命盤格 (十二宮) ---- */
+.chart{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:8px;aspect-ratio:1/1;max-width:560px;margin:2px auto 0}
+.cell{
+  border:1px solid var(--line);border-radius:12px;background:linear-gradient(160deg,var(--panel2),var(--panel));
+  padding:8px 6px;cursor:pointer;transition:.16s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;min-width:0
+}
+.cell:active{transform:scale(.96)} .cell:hover{border-color:var(--purple-d)}
+.cell .nm{font-family:"Noto Serif TC",serif;font-weight:700;font-size:15px;color:var(--gold);line-height:1.15}
+.cell .zh{font-size:9px;color:var(--muted2);letter-spacing:.1em}
+.cell.done{border-color:var(--gold-d);background:linear-gradient(160deg,rgba(231,197,125,.14),var(--panel))}
+.cell.done .nm::after{content:" ✦";color:var(--gold);font-size:11px}
+.center{grid-column:2 / 4;grid-row:2 / 4;border:1px solid var(--line2);border-radius:14px;background:radial-gradient(circle at 50% 40%, rgba(156,124,240,.14), var(--bg2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px}
+.center .big{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(30px,9vw,44px);color:var(--gold);line-height:1}
+.center .cap{font-size:10.5px;color:var(--muted);letter-spacing:.14em}
+.center .pg{width:70%;margin-top:2px}
+.note{background:var(--panel);border:1px dashed var(--line2);border-radius:12px;padding:12px 14px;font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.7}
+.note b{color:var(--gold-d)}
+
+/* ---- Modal 卡片詳情 ---- */
+.modal{position:fixed;inset:0;z-index:100;display:flex;align-items:flex-end;justify-content:center;background:rgba(6,5,14,.72);backdrop-filter:blur(4px);animation:fade .2s}
+.sheet{
+  width:100%;max-width:var(--maxw);max-height:90vh;overflow-y:auto;background:linear-gradient(180deg,var(--bg2),var(--panel));
+  border:1px solid var(--line2);border-bottom:0;border-radius:22px 22px 0 0;padding:8px 18px calc(24px + env(safe-area-inset-bottom));
+  animation:slideup .32s cubic-bezier(.22,1,.36,1);box-shadow:0 -20px 50px rgba(0,0,0,.5)
+}
+@keyframes slideup{from{transform:translateY(100%)}to{transform:none}}
+.grab{width:40px;height:4px;border-radius:99px;background:var(--line2);margin:8px auto 14px}
+.sheet .head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.sheet .glyphL{
+  width:60px;height:60px;flex:none;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-family:"Noto Serif TC",serif;font-weight:900;font-size:28px;color:var(--gold);
+  background:radial-gradient(circle at 30% 25%, rgba(231,197,125,.25), rgba(156,124,240,.14));border:1px solid var(--line2)
+}
+.sheet .glyphL.pp{color:var(--purple)}
+.sheet .head h2{font-family:"Noto Serif TC",serif;font-size:25px;font-weight:900;margin:0 0 5px}
+.sheet .head .row{display:flex;gap:6px;flex-wrap:wrap}
+.field{padding:12px 0;border-top:1px solid var(--line)}
+.field:first-of-type{border-top:0}
+.field .k{font-size:11.5px;letter-spacing:.16em;color:var(--gold-d);font-weight:700;margin-bottom:4px}
+.field .v{font-size:14px;color:var(--text);line-height:1.7}
+.core-box{background:linear-gradient(135deg,var(--panel2),var(--bg2));border:1px solid var(--line2);border-radius:14px;padding:14px;margin:10px 0 4px}
+.core-box .k{font-size:11px;letter-spacing:.16em;color:var(--gold-d);font-weight:700;margin-bottom:5px}
+.core-box .v{font-family:"Noto Serif TC",serif;font-size:17px;font-weight:700;color:var(--gold);line-height:1.55}
+.mnem{background:radial-gradient(circle at 20% 20%, var(--purple-glow), var(--panel));border:1px solid var(--purple-d);border-radius:14px;padding:13px 15px;margin-top:12px;display:flex;gap:10px;align-items:flex-start}
+.mnem .k{color:var(--purple);font-weight:700;font-size:12px;flex:none}
+.mnem .v{font-family:"Noto Serif TC",serif;font-size:15.5px;color:var(--text)}
+.sheet .actions{margin-top:16px;display:grid;gap:10px}
+.doneflag{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--gold);font-weight:700;font-size:14px;padding:12px;border:1px solid var(--gold-d);border-radius:13px;background:var(--gold-glow)}
+
+/* ---- 測驗 ---- */
+.qhub-mode{display:grid;gap:12px}
+.modecard{display:flex;align-items:center;gap:14px;padding:16px}
+.modecard .em{font-size:26px;width:44px;text-align:center}
+.modecard .info{flex:1}
+.modecard h3{font-family:"Noto Serif TC",serif;font-size:17px;margin:0 0 2px}
+.modecard p{margin:0;font-size:12px;color:var(--muted)}
+.modecard .arrow{color:var(--muted2);font-size:20px}
+.topicpick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.topicpick button{padding:16px 12px;border-radius:14px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;transition:.15s;text-align:left}
+.topicpick button:active{transform:scale(.97)}
+.topicpick button span{display:block;font-weight:400;font-size:11px;color:var(--muted);margin-top:3px}
+
+.qwrap{max-width:560px;margin:0 auto}
+.qtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:12px;color:var(--muted)}
+.qprog{margin-bottom:18px}
+.qcard{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line2);border-radius:18px;padding:20px 18px;box-shadow:var(--sh)}
+.qtype{font-size:11px;letter-spacing:.16em;color:var(--gold-d);font-weight:700;margin-bottom:8px}
+.qtext{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:700;line-height:1.6;margin:0 0 18px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:11px;padding:14px 15px;border:1px solid var(--line2);border-radius:13px;background:var(--panel);cursor:pointer;transition:.14s;font-size:14.5px}
+.opt:active{transform:scale(.98)}
+.opt .box{width:22px;height:22px;flex:none;border-radius:7px;border:1.5px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;transition:.14s}
+.opt.multi .box{border-radius:50%}
+.opt.sel{border-color:var(--purple);background:rgba(156,124,240,.12)}
+.opt.sel .box{background:var(--purple);border-color:var(--purple);color:#fff}
+.opt.correct{border-color:var(--ok);background:rgba(104,199,156,.14)}
+.opt.correct .box{background:var(--ok);border-color:var(--ok);color:#08120c}
+.opt.wrong{border-color:var(--no);background:rgba(224,106,80,.13)}
+.opt.wrong .box{background:var(--no);border-color:var(--no);color:#160604}
+.opt.locked{cursor:default}
+.fillbox{width:100%;padding:15px 16px;border:1px solid var(--line2);border-radius:13px;background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:18px;text-align:center;letter-spacing:.1em}
+.fillbox:focus{outline:2px solid var(--purple);border-color:var(--purple)}
+.matchrow{display:flex;align-items:center;gap:10px;padding:9px 0}
+.matchrow .ml{font-family:"Noto Serif TC",serif;font-weight:700;font-size:16px;flex:none;min-width:64px;color:var(--gold)}
+.matchrow select{flex:1;padding:12px 12px;border-radius:12px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:inherit;font-size:14px}
+.matchrow.mok .ml{color:var(--ok)} .matchrow.mno .ml{color:var(--no)}
+.matchrow.mok select{border-color:var(--ok)} .matchrow.mno select{border-color:var(--no)}
+
+.expl{margin-top:16px;border-radius:14px;padding:14px 15px;font-size:13.5px;line-height:1.7;animation:fade .3s;border:1px solid}
+.expl.ok{background:rgba(104,199,156,.1);border-color:rgba(104,199,156,.4)}
+.expl.no{background:rgba(224,106,80,.1);border-color:rgba(224,106,80,.4)}
+.expl .r{font-family:"Noto Serif TC",serif;font-weight:700;font-size:15px;display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.expl.ok .r{color:var(--ok)} .expl.no .r{color:var(--no)}
+.expl .ans{color:var(--gold);font-weight:600}
+
+/* 測驗結束 */
+.result{max-width:480px;margin:0 auto;text-align:center;padding-top:10px}
+.result .score{font-family:"Noto Serif TC",serif;font-weight:900;font-size:58px;color:var(--gold);line-height:1;margin:14px 0 2px}
+.result .score small{font-size:24px;color:var(--muted)}
+.result .rmsg{font-size:14px;color:var(--muted);margin-bottom:18px}
+.result .rstats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+
+/* ---- 錯題本 ---- */
+.wrongitem{padding:14px 15px}
+.wrongitem .top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.wrongitem .q{font-family:"Noto Serif TC",serif;font-size:14.5px;font-weight:500;line-height:1.55;color:var(--text)}
+.wrongitem .cnt{font-size:11px;color:var(--red);font-weight:700}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty .em{font-size:44px;margin-bottom:12px;opacity:.7}
+.empty p{margin:6px 0}
+
+/* ---- 我的 ---- */
+.rankladder{display:grid;gap:8px;margin-top:4px}
+.rl{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel)}
+.rl .lv{font-family:"Noto Serif TC",serif;font-weight:900;font-size:15px;width:40px;color:var(--muted2)}
+.rl .nm{flex:1;font-size:14px;color:var(--muted)}
+.rl .st{font-size:11px;color:var(--muted2)}
+.rl.reached{border-color:var(--gold-d);background:var(--gold-glow)}
+.rl.reached .lv,.rl.reached .nm{color:var(--gold)}
+.rl.cur{border-color:var(--purple);background:rgba(156,124,240,.12)}
+.rl.cur .lv,.rl.cur .nm{color:var(--purple)}
+.badges{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.badge{display:flex;align-items:center;gap:10px;padding:12px;border-radius:13px;border:1px solid var(--line);background:var(--panel);opacity:.42;transition:.2s}
+.badge.got{opacity:1;border-color:var(--gold-d);background:var(--gold-glow)}
+.badge .em{font-size:24px}
+.badge .bn{font-size:13px;font-weight:700}
+.badge .bd{font-size:10.5px;color:var(--muted)}
+.setrow{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-radius:13px;border:1px solid var(--line);background:var(--panel);margin-bottom:10px}
+.setrow .l b{display:block;font-size:14px}
+.setrow .l span{font-size:11.5px;color:var(--muted)}
+.toggle{width:50px;height:29px;border-radius:99px;border:1px solid var(--line2);background:var(--bg2);position:relative;cursor:pointer;transition:.2s;flex:none}
+.toggle::after{content:"";position:absolute;top:2.5px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:.22s}
+.toggle.on{background:linear-gradient(135deg,var(--purple-d),var(--purple));border-color:var(--purple)}
+.toggle.on::after{left:24px;background:#fff}
+
+/* ---- 升級儀式 ---- */
+.lvup{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(6,5,14,.85);backdrop-filter:blur(6px)}
+.lvup .burst{text-align:center;animation:pop .5s cubic-bezier(.22,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.lvup .ray{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,var(--gold-glow),transparent 60%);animation:ray 1.2s ease-out infinite}
+@keyframes ray{0%{transform:scale(.5);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.lvup .up{font-size:13px;letter-spacing:.4em;color:var(--gold);font-weight:700;margin-bottom:10px}
+.lvup .lvbig{font-family:"Noto Serif TC",serif;font-weight:900;font-size:64px;color:#fff;line-height:1;text-shadow:0 0 30px var(--purple-glow)}
+.lvup .lvbig span{color:var(--gold)}
+.lvup .ttl{font-family:"Noto Serif TC",serif;font-weight:700;font-size:26px;color:var(--gold);margin:8px 0 22px}
+.lvup .tap{color:var(--muted);font-size:12px;letter-spacing:.2em}
+.shake{animation:shk .5s}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);z-index:150;background:var(--panel2);border:1px solid var(--gold-d);color:var(--gold);font-weight:700;font-size:13.5px;padding:11px 20px;border-radius:99px;box-shadow:var(--sh);opacity:0;transition:.3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---- v2 新增元件 ---- */
+.newdot{display:inline-block;font-size:8.5px;font-weight:900;letter-spacing:.08em;color:#241a06;background:linear-gradient(135deg,var(--gold),var(--gold-d));padding:1px 5px;border-radius:6px;vertical-align:middle;margin-left:5px}
+.spectrum{margin:6px 0 20px}
+.spectrum-bar{height:12px;border-radius:999px;background:linear-gradient(90deg,var(--cyan),var(--gold) 50%,var(--red));box-shadow:0 0 0 1px var(--line) inset}
+.spectrum-labels{display:flex;justify-content:space-between;margin-top:7px;font-family:"Noto Serif TC",serif;font-size:12.5px;font-weight:700;color:var(--muted);text-align:center}
+.spectrum-labels span{flex:1}
+.spectrum-labels small{font-weight:400;font-size:10px;color:var(--muted2)}
+.ganpick{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.ganbtn{padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:19px;font-weight:700;cursor:pointer;transition:.14s}
+.ganbtn:active{transform:scale(.94)}
+.ganbtn.on{background:linear-gradient(135deg,var(--purple-d),var(--purple));border-color:var(--purple);color:#fff;box-shadow:0 4px 14px var(--purple-glow)}
+.ganrows{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ganrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.tabs{display:flex;gap:6px;margin:14px 0 6px;background:var(--bg2);padding:5px;border-radius:12px;border:1px solid var(--line)}
+.tab{flex:1;border:0;background:transparent;color:var(--muted);font-family:inherit;font-weight:700;font-size:13px;padding:9px 4px;border-radius:9px;cursor:pointer;transition:.15s}
+.tab.on{background:linear-gradient(135deg,var(--purple-d),var(--purple));color:#fff;box-shadow:0 4px 12px var(--purple-glow)}
+.tab:active{transform:scale(.96)}
+.figcard{background:radial-gradient(circle at 16% 12%,var(--gold-glow),var(--panel2));border:1px solid var(--gold-d);border-radius:14px;padding:15px;margin:12px 0}
+.figname{font-family:"Noto Serif TC",serif;font-weight:900;font-size:22px;color:var(--gold);margin-bottom:3px}
+.figname::before{content:"🎭 ";font-size:15px}
+.figrole{font-size:12px;color:var(--purple);font-weight:700;margin-bottom:8px}
+.figdesc{font-size:13.5px;color:var(--text);line-height:1.7}
+.minorgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
+.minorcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+.minorcard b{font-family:"Noto Serif TC",serif;font-size:14px;color:var(--text);display:block;margin-bottom:2px}
+.minorcard span{font-size:11px;color:var(--muted);line-height:1.5}
+.svgwrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:2px 0 16px}
+.svgwrap svg{display:block;width:100%;height:auto}
+.svg-hint{font-size:12px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.6;min-height:20px}
+.totem{display:block;margin:0 auto}
+
+@media (max-width:420px){
+  .brand{font-size:17px} .brand-sub{display:none}
+  .hero h1{font-size:26px} .hero .seal{font-size:96px}
+  .cell .nm{font-size:13px} .cell .zh{display:none}
+  .nav button{font-size:11px}
+  .stat b{font-size:19px}
+  .minorgrid{grid-template-columns:1fr}
+}
+</style>
+
+<!-- USLED AUTH BEGIN -->
+<style>
+body.auth-checking > *:not(#auth-overlay):not(script),
+body.auth-needed   > *:not(#auth-login):not(script),
+body.auth-denied   > *:not(#auth-denied):not(script){display:none!important}
+body.auth-checking #auth-overlay,
+body.auth-needed   #auth-login,
+body.auth-denied   #auth-denied{display:flex}
+#auth-overlay,#auth-login,#auth-denied{
+  position:fixed;inset:0;background:#0E0C1A;color:#ECE8F8;
+  z-index:10000;display:none;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;padding:30px;
+  font-family:'Noto Sans TC',sans-serif;
+}
+.auth-card{
+  background:linear-gradient(160deg,#231E45,#1B1736);border:1px solid #413970;border-radius:16px;
+  padding:34px 26px;max-width:380px;width:100%;text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+.auth-title{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:#E7C57D;letter-spacing:3px;margin-bottom:8px}
+.auth-sub{font-size:13px;color:#9E97C4;margin-bottom:20px;line-height:1.8}
+.auth-email{font-size:12px;color:#ECE8F8;background:#141126;padding:9px 12px;border-radius:8px;margin:10px 0;word-break:break-all}
+.auth-btn{
+  background:#fff;color:#333;border:1px solid #dadce0;border-radius:8px;
+  padding:12px 18px;font-size:14px;font-weight:500;cursor:pointer;
+  display:inline-flex;align-items:center;gap:10px;min-height:48px;
+  font-family:'Noto Sans TC',sans-serif;
+}
+.auth-btn:hover{background:#f8f9fa}
+.auth-btn svg{width:18px;height:18px}
+.auth-btn-ghost{
+  background:transparent;color:#9E97C4;border:1px solid #413970;
+  padding:9px 14px;font-size:12px;border-radius:8px;cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;margin-top:8px;
+}
+.auth-err{font-size:12px;color:#E06A50;margin-top:10px;min-height:16px}
+.auth-spinner{
+  width:34px;height:34px;border:3px solid #413970;border-top-color:#E7C57D;
+  border-radius:50%;animation:authspin 0.8s linear infinite;
+}
+@keyframes authspin{to{transform:rotate(360deg)}}
+#admin-fab{
+  display:none;position:fixed;bottom:96px;right:16px;z-index:8000;
+  background:#E7C57D;color:#241a06;border:none;border-radius:50px;
+  padding:10px 16px;font-size:12px;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 14px rgba(231,197,125,.4);
+  font-family:'Noto Sans TC',sans-serif;letter-spacing:1px;
+}
+body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
+#admin-fab:active{transform:scale(.96)}
+#admin-panel{
+  position:fixed;inset:0;background:rgba(6,5,14,.75);z-index:9500;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+#admin-panel.show{display:flex}
+.admin-card{
+  background:linear-gradient(180deg,#141126,#1B1736);border:1px solid #413970;border-radius:16px;
+  padding:24px;max-width:480px;width:100%;max-height:82vh;overflow:auto;
+  font-family:'Noto Sans TC',sans-serif;
+}
+.admin-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.admin-head-title{font-size:15px;font-weight:700;color:#E7C57D;letter-spacing:1px}
+.admin-tip{font-size:11px;color:#9E97C4;margin-bottom:12px;line-height:1.7}
+.admin-list{list-style:none;padding:0;margin:12px 0;max-height:300px;overflow:auto}
+.admin-list li{
+  display:flex;justify-content:space-between;align-items:center;
+  background:#231E45;padding:9px 12px;border-radius:8px;margin-bottom:5px;font-size:12px;gap:8px;
+}
+.admin-list .em{flex:1;word-break:break-all;color:#ECE8F8}
+.admin-list .em-admin{color:#E7C57D}
+.admin-list .del-btn{
+  background:#E06A50;color:#fff;border:none;border-radius:6px;
+  padding:5px 10px;font-size:11px;cursor:pointer;flex-shrink:0;
+}
+.admin-add{display:flex;gap:6px;margin-top:14px}
+.admin-add input{
+  flex:1;background:#0E0C1A;border:1px solid #413970;border-radius:8px;
+  color:#ECE8F8;padding:10px 12px;font-size:13px;outline:none;
+}
+.admin-add input:focus{border-color:#E7C57D}
+.admin-add button{
+  background:#E7C57D;color:#241a06;border:none;border-radius:8px;
+  padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;
+}
+.admin-empty{color:#77719A;font-size:12px;text-align:center;padding:18px;font-style:italic}
+@media print{
+  #auth-overlay,#auth-login,#auth-denied,#admin-fab,#admin-panel{display:none!important}
+}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  var firebaseConfig = {
+    apiKey: "AIzaSyB-MgbNVlC5Cc_qM411zb2y3tB833kQ9VI",
+    authDomain: "ziwei-learn.firebaseapp.com",
+    projectId: "ziwei-learn",
+    storageBucket: "ziwei-learn.firebasestorage.app",
+    messagingSenderId: "39677127175",
+    appId: "1:39677127175:web:f53beab40eca1c8aba98a2"
+  };
+  var ADMIN_EMAIL = 'covernself@gmail.com';
+
+  firebase.initializeApp(firebaseConfig);
+  var fbAuth = firebase.auth();
+  var fbDb   = firebase.firestore();
+
+  function setState(s){
+    document.body.classList.remove('auth-checking','auth-needed','auth-denied','auth-ok');
+    document.body.classList.add(s);
+  }
+
+  window.USLED_AUTH = {
+    user:null,
+    signIn:function(){
+      var errEl = document.getElementById('auth-err');
+      if(errEl) errEl.textContent='';
+      var provider = new firebase.auth.GoogleAuthProvider();
+      fbAuth.signInWithPopup(provider).catch(function(e){
+        if(errEl) errEl.textContent='登入失敗: '+(e.message||e.code||'未知錯誤');
+      });
+    },
+    signOut:function(){
+      fbAuth.signOut().then(function(){ location.reload(); });
+    },
+    openAdmin:function(){
+      USLED_AUTH.loadList();
+      document.getElementById('admin-panel').classList.add('show');
+    },
+    closeAdmin:function(){
+      document.getElementById('admin-panel').classList.remove('show');
+    },
+    loadList:function(){
+      var ul = document.getElementById('admin-emails-list');
+      ul.innerHTML = '<li class="admin-empty">載入中...</li>';
+      fbDb.collection('allowed_emails').orderBy('addedAt','desc').get().then(function(snap){
+        ul.innerHTML='';
+        var adminLi = document.createElement('li');
+        adminLi.innerHTML = '<span class="em em-admin">'+ADMIN_EMAIL+' (管理員)</span>';
+        ul.appendChild(adminLi);
+        if(snap.empty){
+          var li = document.createElement('li');
+          li.className = 'admin-empty';
+          li.textContent = '尚未授權任何其他帳號';
+          ul.appendChild(li);
+          return;
+        }
+        snap.forEach(function(doc){
+          var li = document.createElement('li');
+          var span = document.createElement('span');
+          span.className='em';
+          span.textContent = doc.id;
+          var btn = document.createElement('button');
+          btn.className='del-btn';
+          btn.textContent='移除';
+          btn.onclick = function(){ USLED_AUTH.removeEmail(doc.id); };
+          li.appendChild(span);
+          li.appendChild(btn);
+          ul.appendChild(li);
+        });
+      }).catch(function(e){
+        ul.innerHTML = '<li class="admin-empty" style="color:#E06A50">讀取失敗: '+(e.message||e.code)+'</li>';
+      });
+    },
+    addEmail:function(){
+      var input = document.getElementById('admin-email-input');
+      var email = (input.value||'').trim().toLowerCase();
+      if(!email || email.indexOf('@')<0){ alert('請輸入有效 email'); return; }
+      if(email === ADMIN_EMAIL){ alert('管理員已自動授權,無需新增'); return; }
+      fbDb.collection('allowed_emails').doc(email).set({
+        addedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        addedBy: (USLED_AUTH.user && USLED_AUTH.user.email) || 'unknown'
+      }).then(function(){
+        input.value='';
+        USLED_AUTH.loadList();
+      }).catch(function(e){
+        alert('新增失敗: '+(e.message||e.code));
+      });
+    },
+    removeEmail:function(email){
+      if(!confirm('確定移除 '+email+' 的授權?')) return;
+      fbDb.collection('allowed_emails').doc(email).delete().then(function(){
+        USLED_AUTH.loadList();
+      }).catch(function(e){
+        alert('刪除失敗: '+(e.message||e.code));
+      });
+    }
+  };
+
+  fbAuth.onAuthStateChanged(function(user){
+    if(!user){ setState('auth-needed'); return; }
+    USLED_AUTH.user = user;
+    setState('auth-checking');
+    var email = (user.email||'').toLowerCase();
+    if(email === ADMIN_EMAIL){
+      document.body.classList.add('is-admin');
+      setState('auth-ok');
+      return;
+    }
+    fbDb.collection('allowed_emails').doc(email).get().then(function(doc){
+      if(doc.exists){
+        setState('auth-ok');
+      } else {
+        var d = document.getElementById('auth-denied-email');
+        if(d) d.textContent = user.email;
+        setState('auth-denied');
+      }
+    }).catch(function(e){
+      var d = document.getElementById('auth-denied-email');
+      if(d) d.textContent = (user.email||'')+' (檢查失敗: '+(e.message||e.code)+')';
+      setState('auth-denied');
+    });
+  });
+})();
+</script>
+<!-- USLED AUTH END (</head> 前) -->
+</head>
+<body class="auth-checking">
+
+<!-- USLED AUTH HTML BEGIN -->
+<div id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-title">紫微斗數 · 星曜研習</div>
+    <div class="auth-sub">驗證中…</div>
+    <div class="auth-spinner" style="margin:14px auto 4px"></div>
+  </div>
+</div>
+<div id="auth-login">
+  <div class="auth-card">
+    <div class="auth-title">紫微斗數 · 星曜研習</div>
+    <div class="auth-sub">需要 Google 帳號登入<br>請使用獲授權的 Gmail</div>
+    <button class="auth-btn" onclick="USLED_AUTH.signIn()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      使用 Google 帳號登入
+    </button>
+    <div class="auth-err" id="auth-err"></div>
+  </div>
+</div>
+<div id="auth-denied">
+  <div class="auth-card">
+    <div class="auth-title" style="color:#E06A50">存取遭拒</div>
+    <div class="auth-sub">您的 Google 帳號未獲授權<br>請聯繫管理員 covernself@gmail.com</div>
+    <div class="auth-email" id="auth-denied-email">—</div>
+    <button class="auth-btn-ghost" onclick="USLED_AUTH.signOut()">登出並換帳號</button>
+  </div>
+</div>
+<button id="admin-fab" onclick="USLED_AUTH.openAdmin()">👤 授權管理</button>
+<div id="admin-panel">
+  <div class="admin-card">
+    <div class="admin-head">
+      <div class="admin-head-title">授權名單管理</div>
+      <button class="auth-btn-ghost" style="margin:0" onclick="USLED_AUTH.closeAdmin()">關閉</button>
+    </div>
+    <div class="admin-tip">在這裡新增/移除可使用本工具的 Google 帳號。<br>變更即時生效，不需重新部署。</div>
+    <ul class="admin-list" id="admin-emails-list"></ul>
+    <div class="admin-add">
+      <input type="email" id="admin-email-input" placeholder="user@gmail.com" autocomplete="off">
+      <button onclick="USLED_AUTH.addEmail()">新增</button>
+    </div>
+    <div class="admin-tip" style="margin-top:14px;text-align:right">
+      <button class="auth-btn-ghost" style="margin:0" onclick="USLED_AUTH.signOut()">登出</button>
+    </div>
+  </div>
+</div>
+<!-- USLED AUTH HTML END -->
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">紫微斗數<span class="brand-sub">星曜研習</span></div>
+    <button class="lvpill" id="lvpill" onclick="go('me')"><b>Lv.1</b> · 0 XP</button>
+  </header>
+  <main id="view" class="view"></main>
+</div>
+<nav class="nav"><div class="nav-inner" id="nav">
+  <button data-route="home" class="on"><span class="ic">🏠</span>首頁</button>
+  <button data-route="learn"><span class="ic">📖</span>學習</button>
+  <button data-route="quiz"><span class="ic">✍️</span>測驗</button>
+  <button data-route="wrong"><span class="ic">🔖</span>錯題本</button>
+  <button data-route="me"><span class="ic">✦</span>我的</button>
+</div></nav>
+<div id="modal"></div>
+<div id="lvup"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ==========================================================================
+   紫微斗數 · 星曜研習  —  單檔學習系統  (Vanilla JS / localStorage 本機模式)
+   資料層：全部知識內容 + 題庫
+   ========================================================================== */
+
+/* ---------- 十二宮 ---------- */
+const PALACES = [
+ {id:"ming",  name:"命宮",  en:"Life",     core:"人格、本質、人生主軸與先天格局",
+  rep:"自己、性格、氣質、外顯行為、一生基調", obs:"個性、反應方式、天生特質、人生底色",
+  myth:"命宮星曜好，不代表一生順遂；還要看三方四正與大限流年", pair:"財帛宮、官祿宮、遷移宮（對宮）",
+  cs:"最近老是有人說你「變了個人」，或你自己覺得活得不像自己——問題常出在命宮的能量沒被好好活出來。",
+  line:"命遷線（命宮 ↔ 遷移宮）：命宮是你內在的個性底色，遷移宮是你走出門後別人看到的你，內外一定要合看。"},
+ {id:"xiong", name:"兄弟宮", en:"Siblings", core:"手足、平輩、合作與資金週轉",
+  rep:"兄弟姊妹、同事、合夥人、周轉現金", obs:"手足緣分、合作關係、私房錢與財務調度",
+  myth:"不只看兄弟感情，也反映合夥默契與現金流體質", pair:"疾厄宮、田宅宮、交友宮（對宮）",
+  cs:"和合夥人拆帳喬不攏、跟兄弟姊妹為錢傷感情、或公司現金周轉卡住——都可能在兄弟宮現形。",
+  line:"兄友線（兄弟宮 ↔ 交友宮）：一邊是手足平輩，一邊是朋友部屬，合起來是你這輩子借力使力的「成就線」。"},
+ {id:"fu",    name:"夫妻宮", en:"Spouse",   core:"婚姻、配偶、親密關係與相處模式",
+  rep:"另一半、感情態度、擇偶條件、婚後互動", obs:"感情觀、配偶類型、婚姻穩定度、相處課題",
+  myth:"夫妻宮有桃花星不等於外遇；要看整體結構與四化", pair:"遷移宮、福德宮、官祿宮（對宮）",
+  cs:"總是愛上同一種類型、或每段感情都卡在同樣的問題——夫妻宮講的正是你會被什麼樣的人吸引、以及你在關係裡的樣子。",
+  line:"夫官線（夫妻宮 ↔ 官祿宮）：感情態度與事業價值是同一條線，你怎麼對待感情，往往也反映你怎麼投入工作。"},
+ {id:"zi",    name:"子女宮", en:"Children", core:"子女、晚輩、部屬、創造力與性生活",
+  rep:"孩子、學生、下線、作品、桃花緣", obs:"與子女緣分、教養方式、創造與生育、部屬互動",
+  myth:"不只看有無小孩，也看創造力、性態度與合作下線", pair:"交友宮、父母宮、田宅宮（對宮）",
+  cs:"和小孩、學生或下線處不好，或創作、生育卡關——子女宮會透露你和「晚輩／作品」的緣分深淺。",
+  line:"子田線（子女宮 ↔ 田宅宮）：一邊是晚輩桃花，一邊是家庭不動產，合起來是你的「家運線」。"},
+ {id:"cai",   name:"財帛宮", en:"Wealth",   core:"金錢、收入、理財方式與賺錢能力",
+  rep:"現金流、收入來源、理財觀、金錢價值觀", obs:"賺錢方式、用錢習慣、財務起伏",
+  myth:"財帛好是「會賺會流動」；能不能存，要看田宅宮", pair:"官祿宮、命宮、福德宮（對宮）",
+  cs:"月月有進帳卻總是存不下來、或賺錢方式老是換——財帛宮看的是你「怎麼賺、怎麼用」錢。",
+  line:"財福線（財帛宮 ↔ 福德宮）：一邊是賺錢用錢的方式，一邊是花錢享受與價值觀，合起來是你的「金錢價值觀線」。"},
+ {id:"ji",    name:"疾厄宮", en:"Health",   core:"健康、體質、情緒與潛在病痛",
+  rep:"身體狀況、慢性傾向、意外、壓力反應", obs:"體質強弱、易犯病位、抗壓性、身心健康",
+  myth:"有煞星不代表一定生病，是提醒該注意的方向", pair:"田宅宮、兄弟宮、父母宮（對宮）",
+  cs:"壓力一大就固定某個部位出狀況（胃痛、失眠、皮膚）——疾厄宮提醒你身體的罩門在哪。",
+  line:"疾父線（疾厄宮 ↔ 父母宮）：一邊是身體健康，一邊是遺傳與長輩、文書，合起來是你的「健康與文書線」。"},
+ {id:"qian",  name:"遷移宮", en:"Travel",   core:"外出、環境、機遇與社會形象",
+  rep:"出外運、外地發展、人脈際遇、他人眼中的你", obs:"在外順逆、社交表現、遠行變動、外緣好壞",
+  myth:"遷移是命宮的對宮，兩者一定要一起看", pair:"福德宮、夫妻宮、命宮（對宮）",
+  cs:"在家一條蟲、出外一條龍（或相反）；換個城市、換個環境運勢就翻盤——遷移宮講的就是你的「出外運」。",
+  line:"命遷線（遷移宮 ↔ 命宮）：遷移宮是你在外的表現與際遇，命宮是你的內在本質，一定要對照著看。"},
+ {id:"jiao",  name:"交友宮", en:"Friends",  core:"朋友、同事、部屬與人際支援（奴僕宮）",
+  rep:"平輩交情、下屬、客戶群、人脈品質", obs:"朋友助力或阻力、領導部屬、人際圈層",
+  myth:"交友宮差不是沒朋友，而是助力有限或易犯小人", pair:"父母宮、子女宮、兄弟宮（對宮）",
+  cs:"朋友多卻沒一個幫得上忙、或老是遇到扯後腿的小人、帶不動下屬——交友宮反映你的人際助力品質。",
+  line:"兄友線（交友宮 ↔ 兄弟宮）：朋友部屬與手足平輩同屬一線，是你能不能借到力、成就大小的關鍵。"},
+ {id:"guan",  name:"官祿宮", en:"Career",   core:"事業、職涯、工作型態與社會定位",
+  rep:"工作、職位、成就、社會角色、事業格局", obs:"適合行業、職涯發展、工作態度、事業高度",
+  myth:"官祿不只看有無官位，是整體事業與社會表現", pair:"命宮、財帛宮、夫妻宮（對宮）",
+  cs:"做得要死卻沒被看見、或明明有能力就是升不上去——官祿宮是你事業高度與工作型態的縮影。",
+  line:"夫官線（官祿宮 ↔ 夫妻宮）：事業與感情是同一條線，投入工作的方式，常和你經營感情的方式互為鏡子。"},
+ {id:"tian",  name:"田宅宮", en:"Property", core:"不動產、家庭環境與財富的「庫」",
+  rep:"房產、居家、家運、存得住的資產、公司位置", obs:"置產能力、居住環境、能否守財、家庭氛圍",
+  myth:"田宅是財庫；財帛會賺、田宅能不能守，要分開看", pair:"兄弟宮、疾厄宮、子女宮（對宮）",
+  cs:"很會賺卻買不起／守不住房子、或家裡氣氛總是不對勁——田宅宮是你的「財庫」與家運。",
+  line:"子田線（田宅宮 ↔ 子女宮）：家庭不動產與晚輩桃花同屬家運線，看你守不守得住「家與財」。"},
+ {id:"fude",  name:"福德宮", en:"Fortune",  core:"精神、享受、興趣與內在福報",
+  rep:"心靈狀態、嗜好、價值觀、祖德、快樂來源", obs:"想不想得開、精神品質、興趣、內在滿足",
+  myth:"福德不是有沒有錢，是「過得快不快樂、想不想得通」", pair:"夫妻宮、遷移宮、財帛宮（對宮）",
+  cs:"什麼都有了卻還是不快樂、或閒下來就焦慮——福德宮講的是你「想不想得開、快不快樂」。",
+  line:"財福線（福德宮 ↔ 財帛宮）：精神享受與賺錢方式互相牽動，你的價值觀決定你怎麼花錢、為何而忙。"},
+ {id:"mu",    name:"父母宮", en:"Parents",  core:"父母、長輩、上司與文書契約（相貌宮）",
+  rep:"雙親、長官、貴人長輩、證照、文件、面子", obs:"與父母緣分、長輩助力、文書運、與權威關係",
+  myth:"父母宮又稱相貌宮，同時看長輩緣與外在形象", pair:"子女宮、交友宮、疾厄宮（對宮）",
+  cs:"和爸媽或上司總是話不投機、或簽約、證照、文件老是出包——父母宮兼看長輩緣與文書運。",
+  line:"疾父線（父母宮 ↔ 疾厄宮）：長輩遺傳與身體健康同屬一線，也管文書契約，是你的「文書與健康線」。"},
+];
+
+/* ---------- 十四主星 ----------
+   v2 新增欄位：fig（代表人物）、figDesc（人物與星性的連結）、
+   role（現代企業角色）、story（案例故事，結尾「一句話記住他」）、visual（圖騰代號=id） */
+const STARS = [
+ /* 北斗 */
+ {id:"ziwei", name:"紫微", wx:"己土‧陰", dou:"北斗", core:"帝王星｜尊貴、領導、地位、掌權",
+  person:"君王、董事長、大家長", pros:"領導氣度、志向遠大、能服眾、重格局", cons:"好面子、耳根軟、需輔佐、有時獨斷",
+  career:"領導管理、政商、具代表性的職位", wealth:"因身分地位而得財，不擅理瑣碎小錢", love:"重對方條件與尊嚴，需被尊重",
+  mn:"紫微為帝星，得輔佐則貴、無輔則孤",
+  fig:"唐太宗 李世民", figDesc:"開創貞觀之治的帝王典範，靠房玄齡、杜如晦一群能臣才成大業——正是紫微「得輔則貴、無輔則孤」。",
+  role:"總經理／執行長",
+  story:"紫微像扛著整間公司的執行長：天生要坐主位、扛目標、愛面子重排場，決策要被尊重。但他一個人撐不起江山，身邊沒有得力幹部就會從「明君」變「孤君」，事必躬親累垮自己。李世民厲害的不是自己多能打，而是敢用、會用一群比他強的人。一句話記住他：天生的老大，但要有人捧場才發光。",
+  visual:"ziwei"},
+ {id:"wuqu", name:"武曲", wx:"辛金‧陰", dou:"北斗", core:"財星｜執行、紀律、剛毅、結果導向",
+  person:"財務長、軍官、技術主管", pros:"務實、果斷、重效率、有責任感", cons:"固執、剛硬、不擅表達情感、易寂寞",
+  career:"金融、工程、財務、技術、金屬機械", wealth:"重實際收入與資產累積，善守財", love:"不浪漫但重承諾，較晚婚或需磨合",
+  mn:"武曲重財務，做事講效率",
+  fig:"范蠡（陶朱公）", figDesc:"助勾踐復國的軍事家，功成身退後三次經商成鉅富——能文能武、既會打仗又會賺錢，正是武曲財星的完美典型。",
+  role:"財務長兼工務長",
+  story:"武曲是那種能文能武的工作狂：對數字和錢特別敏銳，講信用、重義氣、耐操不服輸，交代的事使命必達。范蠡先幫勾踐打天下，再轉身經商三聚三散成「商聖」，就是武曲的天花板。缺點是太硬、不擅表達情感，容易把感情擺一邊、獨自扛到寂寞。一句話記住他：會賺會扛，就是不會撒嬌。",
+  visual:"wuqu"},
+ {id:"lianzhen", name:"廉貞", wx:"丁火‧陰", dou:"北斗", core:"囚星／次桃花｜原則、複雜、剛柔並存",
+  person:"幹部、公關、有原則的專業者", pros:"有企圖心、應變靈活、重情義、能剛能柔", cons:"情緒起伏大、易走極端、感情糾葛",
+  career:"業務公關、政治、電子、需交際的專業", wealth:"財來財去，善交際換資源", love:"感情濃烈、桃花多、易有波折",
+  mn:"廉貞多變化，是非分明也多情",
+  fig:"曹操", figDesc:"「治世之能臣，亂世之奸雄」，能寫詩也能屠城、能柔情也能狠絕——廉貞亦正亦邪、剛柔並存的雙面性，曹操一人演盡。",
+  role:"政風／業務主管",
+  story:"廉貞是公司裡最難一句話講清楚的人：他有兩個開關。陽剛時是拚勁十足、殺紅眼的戰將；陰柔時又重感情、幽默有魅力（次桃花星）。曹操就是這種複雜體——挾天子令諸侯的梟雄，卻也是「對酒當歌」的詩人。用對地方是能臣，走極端就變麻煩。一句話記住他：正邪一念間，就看擺對位置沒。",
+  visual:"lianzhen"},
+ {id:"tanlang", name:"貪狼", wx:"甲木‧陽", dou:"北斗", core:"桃花／慾望星｜才藝、慾望、交際、多元",
+  person:"交際高手、藝人、多角經營者", pros:"社交強、學習快、多才多藝、有魅力", cons:"慾望多、易分心、貪心貪玩、好投機",
+  career:"業務、娛樂、餐飲、命理、靠人脈才藝的領域", wealth:"偏財與人脈財，敢賺敢花", love:"桃花旺、多情、感情豐富需節制",
+  mn:"貪狼多慾望，才藝廣人緣好",
+  fig:"唐伯虎", figDesc:"江南第一風流才子，詩書畫樣樣精、桃花處處開——貪狼「第一桃花星、多才多藝、人脈即錢脈」的代表。",
+  role:"業務王／公關王",
+  story:"貪狼是公司裡最會交際、才藝最多的那個超級業務：能喝能玩能聊，走到哪人脈開到哪，人脈就是他的錢脈。唐伯虎詩書畫三絕又風流多情，正是貪狼的樣子——樣樣通、桃花旺、慾望大。課題也在這：慾望多容易分心貪玩，要學會節制。一句話記住他：魅力是本錢，節制是功課。",
+  visual:"tanlang"},
+ {id:"jumen", name:"巨門", wx:"癸水‧陰", dou:"北斗", core:"暗星／口舌｜口才、分析、質疑、鑽研",
+  person:"律師、老師、專家、靠嘴吃飯者", pros:"口才好、分析力強、追根究柢、專業深", cons:"多疑、愛計較、易口舌是非、鑽牛角尖",
+  career:"法律、教育、業務、口才與專業並重", wealth:"靠專業與口才生財，多白手起家", love:"易因言語生誤會，需多溝通",
+  mn:"巨門主口舌，口才專業兩相宜",
+  fig:"張儀", figDesc:"戰國縱橫家，憑一張嘴遊說六國、連橫破合縱，「三寸之舌強於百萬雄兵」——巨門「口才辯才一流、靠嘴吃飯」的極致。",
+  role:"發言人／律師",
+  story:"巨門是公司裡那張最厲害的嘴：口才、辯才、分析力一流，追根究柢、質疑到底，最適合當發言人或律師。張儀靠遊說之術把六國玩弄於股掌，就是巨門的看家本領。罩門是多疑、愛計較、講話帶刺，容易招惹口舌是非。一句話記住他：一張嘴能成事，也能惹事。",
+  visual:"jumen"},
+ {id:"pojun", name:"破軍", wx:"癸水‧陰", dou:"北斗", core:"耗星｜破舊立新、開創、變動、除舊",
+  person:"改革者、開拓者、拆解重建的人", pros:"敢衝敢變、開創力強、不畏艱難、能吃苦", cons:"求變不穩、破耗、先破後立過程辛苦",
+  career:"開創型、業務、軍警、需破局重建的領域", wealth:"大起大落，先花後有或先破後立", love:"感情起伏大，波折後方能穩定",
+  mn:"破軍主變動，破舊立新方見功",
+  fig:"項羽", figDesc:"破釜沉舟、力拔山河的西楚霸王，敢賭敢衝、大破大立，人生從巔峰到烏江大起大落——破軍「開創破壞、求新求變、起伏大」的極致。",
+  role:"新創破壞者",
+  story:"破軍是公司裡那個敢砍掉重練的破壞式創新者：大破大立、求新求變、敢賭敢衝，別人守成他偏要掀桌重來。項羽破釜沉舟、鉅鹿一戰成名，就是破軍那股孤注一擲的狠勁。代價是人生起伏大、先破後立過程辛苦，贏要懂得守。一句話記住他：最敢掀桌的人，也最需要學會收桌。",
+  visual:"pojun"},
+ /* 南斗 */
+ {id:"tianfu", name:"天府", wx:"戊土‧陽", dou:"南斗", core:"財庫星｜穩重、保守、管理、包容",
+  person:"總管、財庫管理者、穩重長者", pros:"穩健、有度量、善管理、能守成", cons:"保守、缺開創、易安於現狀、被動",
+  career:"管理、財務、行政、穩定型主管職", wealth:"善理財守庫，重穩定累積", love:"顧家穩定，重安全感",
+  mn:"天府為財庫，穩重能守成",
+  fig:"蕭何", figDesc:"劉邦打天下時穩守後方、管糧草錢庫的第一大管家，論功行賞排第一——天府「財庫、穩健守成、大掌櫃」的原型。",
+  role:"財務長／大掌櫃",
+  story:"天府是那個把後勤和帳管得井井有條的大掌櫃：穩健、保守、精於儲蓄管理，是公司出事時能兜底的「解厄之星」。蕭何從不上前線衝殺，卻靠穩穩守住關中糧倉，成了漢朝開國第一功臣。缺點是太保守、只進不出，容易錯過該賭一把的機會。一句話記住他：守得住江山，就是有時不敢開疆。",
+  visual:"tianfu"},
+ {id:"tianji", name:"天機", wx:"乙木‧陰", dou:"南斗", core:"智慧星｜謀略、機變、思考、善變",
+  person:"軍師、顧問、企劃、動腦者", pros:"聰明、反應快、善謀劃、學習力強", cons:"想太多、易變動、心緒不定、勞心",
+  career:"企劃、顧問、幕僚、命理、需動腦的工作", wealth:"靠智慧規劃生財，宜動不宜守", love:"感情細膩多思，易變動",
+  mn:"天機善謀略，動腦不動蠻力",
+  fig:"諸葛亮 孔明", figDesc:"羽扇綸巾、未出茅廬先定三分天下的軍師，算無遺策卻也「鞠躬盡瘁」操煩到累——天機的智慧與勞心一次到位。",
+  role:"研發長／軍師",
+  story:"天機是公司裡那個腦筋轉最快的軍師：企劃、點子、應變一流，別人還在想問題，他已經推演到第三步。諸葛亮借東風、擺空城計，全靠一顆會算的腦袋。但天機的罩門也在這：想太多、放不下，晚上翻來覆去睡不著，把自己操到鞠躬盡瘁。一句話記住他：最強的頭腦，最累的心。",
+  visual:"tianji"},
+ {id:"tiantong", name:"天同", wx:"壬水‧陽", dou:"南斗", core:"福星｜溫和、享受、知足、重情",
+  person:"好好先生、享福的人、和事佬", pros:"溫和樂天、人緣好、有福氣、易滿足", cons:"缺衝勁、易懶散、依賴、抗壓稍弱",
+  career:"服務、餐飲、休閒、企劃創意等不需硬拼的領域", wealth:"白手起家後享福，財來得平順", love:"溫柔重情，感情豐富",
+  mn:"天同為福星，溫和知足有後福",
+  fig:"蘇東坡", figDesc:"一生被貶卻活得最開心的文豪，「一蓑煙雨任平生」、走到哪吃到哪（東坡肉）——天同福星「樂天知足、最懂享受」的代言人。",
+  role:"福委會主委",
+  story:"天同是辦公室裡最好相處的那個人：隨和、樂天、人緣好，懂得把日子過得有滋味。蘇東坡被貶到天涯海角還能發明東坡肉、寫千古名句，就是天同的本事——再苦也能找到樂子。罩門是企圖心偏弱、容易安逸，需要有人推一把才會動。一句話記住他：快樂是天賦，衝勁要靠人點火。",
+  visual:"tiantong"},
+ {id:"tianliang", name:"天梁", wx:"戊土‧陽", dou:"南斗", core:"蔭星／老人星｜庇蔭、原則、穩重、貴人",
+  person:"長者、醫者、老師、化解災厄的貴人", pros:"有原則、能服眾、遇難呈祥、樂於助人", cons:"愛管、說教、清高、有時孤傲",
+  career:"醫療、教育、公職、宗教命理、監督幕僚", wealth:"不重錢財，常逢貴人化解", love:"重責任照顧，感情較晚熟",
+  mn:"天梁主庇蔭，逢凶能化吉",
+  fig:"姜子牙", figDesc:"八十歲遇文王、渭水垂釣的老國師，資歷深、逢凶化吉、愛提點後輩——天梁「蔭星壽星、導師」的原型。",
+  role:"人資長／資深顧問",
+  story:"天梁是公司裡那位德高望重的老前輩：愛照顧人、也愛說教，遇到難關總能逢凶化吉，最適合當導師、顧問或人資長。姜子牙一把年紀才出山，卻能安邦定國、封神點將，就是天梁的「老而彌堅」。罩門是愛管、清高、有時擺架子。一句話記住他：能罩你也愛唸你的那位大前輩。",
+  visual:"tianliang"},
+ {id:"tianxiang", name:"天相", wx:"壬水‧陽", dou:"南斗", core:"印星｜輔佐、公正、協調、體面",
+  person:"宰相、幕僚長、協調者、輔佐者", pros:"忠誠可靠、重公平、善協調、有品味", cons:"缺主見、易受影響、猶豫、耳根軟",
+  career:"輔佐幕僚、公關協調、服務、代理", wealth:"財務平穩，善為人管財", love:"溫和體貼，重相互扶持",
+  mn:"天相為印星，輔佐公正得人和",
+  fig:"魯肅", figDesc:"東吳忠厚長者，一手促成孫劉聯盟、居中協調不居功——天相「忠厚可靠、愛協調服務、掌印重規則」的宰輔典型。",
+  role:"幕僚長／大宰相",
+  story:"天相是那個忠厚可靠、專門居中協調的幕僚長：重公平、愛服務人、掌「印」重規則，是老闆最信得過的左右手。魯肅在諸葛亮和周瑜之間兩邊斡旋、撐住聯盟大局，就是天相的價值。罩門是缺乏主見、耳根軟、難當機立斷，關鍵時刻容易猶豫。一句話記住他：最好的副手，就差臨門一腳的果斷。",
+  visual:"tianxiang"},
+ {id:"qisha", name:"七殺", wx:"庚金‧陰", dou:"南斗", core:"將星｜開創、決斷、獨立、衝鋒",
+  person:"將軍、創業者、獨當一面者", pros:"果決、獨立、能扛責、開創力強", cons:"剛烈、孤傲、衝動、不易妥協",
+  career:"創業、軍警、業務、需獨當一面的領域", wealth:"大進大出，靠拼搏得財", love:"外剛內柔，感情需主動經營",
+  mn:"七殺為將星，獨當一面能開創",
+  fig:"白起", figDesc:"戰國第一戰神，攻無不克、殺氣凜然、獨當一面——七殺「將星、目標導向、獨立肅殺、大開大闔」的化身。",
+  role:"先鋒部隊長",
+  story:"七殺是那個目標一鎖定就打死不退的先鋒大將：獨立、果決、扛得起責任，大開大闔一往無前，最怕被綁手綁腳、關在辦公室做文書。白起一生七十餘戰未嘗敗績，那股肅殺與獨當一面的氣勢，就是七殺。罩門是太剛、孤傲、衝動、不易妥協。一句話記住他：給他戰場，別給他框框。",
+  visual:"qisha"},
+ /* 中天 */
+ {id:"taiyang", name:"太陽", wx:"丙火‧陽", dou:"中天", core:"光明星｜博愛、付出、名聲、男性長輩",
+  person:"領導者、公眾人物、父親、老闆", pros:"光明磊落、熱心付出、有名望、格局大", cons:"過度付出、勞碌、易衝動、對外好對內急",
+  career:"公職、公眾、政治、需露臉發光的領域", wealth:"重名大於重利，因名得利", love:"熱情大方，付出型",
+  mn:"太陽主光明，博愛付出重名聲",
+  fig:"關羽", figDesc:"義薄雲天、光明磊落，一生重情重義照顧兄弟，死後被萬民奉為關公——太陽「博愛付出、名聲遠播」的化身。",
+  role:"公關長／大家長",
+  story:"太陽像公司裡那個熱心到發光的大家長：對外拚形象、對內罩兄弟，誰有難都第一個跳出來扛。關羽千里走單騎、義釋曹操，講的就是這股光和熱。缺點是光太強會刺眼——付出過頭、脾氣一上來六親不認，對外人客氣、對家人反而急。一句話記住他：照亮所有人，記得留點光給自己。",
+  visual:"taiyang"},
+ {id:"taiyin", name:"太陰", wx:"癸水‧陰", dou:"中天", core:"財星／母星｜內斂、儲蓄、田宅、女性長輩",
+  person:"母親、財務管理者、細膩內斂者", pros:"細膩、體貼、善儲蓄、有藝術感", cons:"情緒化、多愁善感、被動、易鑽牛角尖",
+  career:"財務、房地產、藝術、企劃、幕後", wealth:"善儲蓄置產，重田宅之財", love:"溫柔細膩，重情重家",
+  mn:"太陰主田宅，內斂儲蓄有柔情",
+  fig:"長孫皇后", figDesc:"唐太宗的賢內助，內斂柔和、在幕後輔佐朝政、勸諫君王卻從不居功——太陰「細膩、內斂、幕後理財持家」的女性典型。",
+  role:"幕後營運長",
+  story:"太陰是那個不站台前、卻把一切打理得妥妥貼貼的營運長：細膩、洞察力強、善理財置產，公司的錢和家都靠她穩住。長孫皇后在李世民背後出謀劃策、平衡後宮朝堂，功勞極大卻極低調，正是太陰的化身。罩門是內斂容易想太多、多愁善感、缺點自信。一句話記住他：最強的力量，往往藏在幕後。",
+  visual:"taiyin"},
+];
+
+/* ---------- 四化 ---------- */
+const SIHUA = [
+ {id:"lu", name:"化祿", color:"green", core:"緣起、資源、需求、順遂、財祿",
+  pos:"帶來機會、財源、貴人，事情順利開展、有甜頭", neg:"過多易貪求，來得快去得快，忙於應付機會",
+  mem:"想要、開始、有甜頭 —— 緣分與資源的起點",
+  pal:"入命宮→機運人緣佳｜入財帛→財源順｜入官祿→事業有貴人助｜入夫妻→感情有緣",
+  modern:"心理學看，化祿是「滿足與獎賞」——需求被滿足、事情有了甜頭，帶來動力，也帶來「來得快去得快」的課題。",
+  cycle:"肚子餓循環的終點：吃飽滿足（祿）。忙了一圈、需求被填滿的快樂與收穫。"},
+ {id:"quan", name:"化權", color:"purple", core:"掌控、權力、責任、推動、能力展現",
+  pos:"有主導權、能力被看見、能擔當、事業有衝勁", neg:"壓力大、易強勢霸道、爭權、過勞",
+  mem:"要做、要扛、要主導 —— 權力與責任並存",
+  pal:"入命宮→強勢有主見｜入財帛→積極求財｜入官祿→掌權升遷｜入夫妻→感情主導或爭執",
+  modern:"化權是「掌控欲與能力展現」——想主導、想扛責任的驅動力；用對是領導力，過頭是控制與過勞。",
+  cycle:"肚子餓循環的第二站：找到食物、動手掌握（權）。開始出手掌控局面。"},
+ {id:"ke", name:"化科", color:"cyan", core:"名聲、貴人、修飾、保護、學術",
+  pos:"有名譽、遇貴人、化險為夷、利考試文書、體面", neg:"重面子、易生虛名、緩不濟急、被表象迷惑",
+  mem:"好看、名譽、緩衝 —— 名聲與保護的力量",
+  pal:"入命宮→有名氣風評好｜入財帛→財務有貴人｜入官祿→升遷有名聲｜入夫妻→重門當戶對",
+  modern:"化科是「社會認同與名聲需求」——希望被看見、被肯定、留個好名聲；也可能為面子所累。",
+  cycle:"肚子餓循環的第三站：打卡分享（科）。把成果秀出來、換取名聲與認同。"},
+ {id:"ji", name:"化忌", color:"red", core:"執著、阻塞、結果、課題、虧欠",
+  pos:"善用可轉為專注深入、責任心重，因執著而成專業", neg:"卡關、糾纏、破耗、放不下、是非",
+  mem:"卡住、欠債、放不下 —— 執著與課題所在",
+  pal:"入命宮→勞心執著｜入財帛→財務壓力｜入官祿→事業阻礙｜入夫妻→感情糾葛",
+  modern:"關鍵翻轉：化忌不是凶，是「覺得不夠」的匱乏感——正是驅動人努力的引擎。很多成功經營者的忌就落在財帛、官祿。",
+  cycle:"肚子餓循環的起點：肚子餓、覺得空缺（忌）。這份「不夠」正是一切行動的開關。"},
+];
+
+/* ---------- 十天干四化表（查表器用） ---------- */
+const GANHUA = {
+ "甲":{lu:"廉貞",quan:"破軍",ke:"武曲",ji:"太陽"},
+ "乙":{lu:"天機",quan:"天梁",ke:"紫微",ji:"太陰"},
+ "丙":{lu:"天同",quan:"天機",ke:"文昌",ji:"廉貞"},
+ "丁":{lu:"太陰",quan:"天同",ke:"天機",ji:"巨門"},
+ "戊":{lu:"貪狼",quan:"太陰",ke:"右弼",ji:"天機"},
+ "己":{lu:"武曲",quan:"貪狼",ke:"天梁",ji:"文曲"},
+ "庚":{lu:"太陽",quan:"武曲",ke:"太陰",ji:"天同"},
+ "辛":{lu:"巨門",quan:"太陽",ke:"文曲",ji:"文昌"},
+ "壬":{lu:"天梁",quan:"紫微",ke:"左輔",ji:"武曲"},
+ "癸":{lu:"破軍",quan:"巨門",ke:"太陰",ji:"貪狼"}
+};
+
+/* ---------- 輔星煞曜 ---------- */
+const AUX = [
+ {g:"吉曜", id:"zuofu", name:"左輔", core:"助力星｜貴人、輔助、實質幫助", key:"穩重的左右手，逢主星更添力量",
+  fig:"房玄齡", figDesc:"李世民的賢相，善謀善斷、穩重輔佐——正是「左輔」實質相助的貴人。"},
+ {g:"吉曜", id:"youbi", name:"右弼", core:"助力星｜貴人、輔助、人緣", key:"隨和的左右手，人際貴人相扶",
+  fig:"杜如晦", figDesc:"與房玄齡並稱「房謀杜斷」的名相，隨和果決、居中相助——「右弼」人緣貴人的代表。"},
+ {g:"吉曜", id:"wenchang", name:"文昌", core:"才華星｜文采、考試、正統學問", key:"重條理、利功名考試、正途才學",
+  fig:"韓愈", figDesc:"唐宋八大家之首、「文起八代之衰」的文章宗師——文昌「正統文才、利科考」的化身。"},
+ {g:"吉曜", id:"wenqu", name:"文曲", core:"才華星｜口才、才藝、異路功名", key:"感性、口才與才藝，偏才華表現",
+  fig:"李白", figDesc:"斗酒詩百篇的詩仙，才華洋溢、感性浪漫、走非科舉的異路成名——文曲「才藝口才」的極致。"},
+ {g:"吉曜", id:"tiankui", name:"天魁", core:"貴人星｜陽貴、長輩貴人", key:"明助之貴人，多為長輩、上司提攜",
+  fig:"鮑叔牙", figDesc:"力薦管仲為相、成就一段千古佳話的貴人——天魁「明助長輩、公開提攜」的原型。"},
+ {g:"吉曜", id:"tianyue", name:"天鉞", core:"貴人星｜陰貴、平輩貴人", key:"暗助之貴人，多為平輩、暗中相助",
+  fig:"徐庶", figDesc:"走馬薦諸葛，臨走前暗中舉薦人才——天鉞「暗助平輩、私下相助」的代表。"},
+ {g:"吉曜", id:"lucun", name:"祿存", core:"財星｜財祿、穩定、聚財", key:"保守聚財、性偏孤，逢化祿更佳",
+  fig:"沈萬三", figDesc:"傳說擁有聚寶盆的江南首富，聚財守祿、財富驚人——祿存「穩定聚財」的象徵。"},
+ {g:"煞曜", id:"qingyang", name:"擎羊", core:"煞星｜衝動、刀傷、剛烈", key:"開創也帶傷，主動急進、易有衝突",
+  fig:"張飛", figDesc:"猛烈剛直、勇冠三軍卻性烈易怒、動輒帶傷——擎羊「剛烈衝動、開創帶傷」的寫照。"},
+ {g:"煞曜", id:"tuoluo", name:"陀羅", core:"煞星｜拖延、糾纏、暗傷", key:"反覆不順、暗中拖磨，事情難乾脆",
+  fig:"周瑜", figDesc:"才高卻氣量難平，「賠了夫人又折兵」、糾結內耗而亡——陀羅「糾纏拖磨、暗傷」的典型。"},
+ {g:"煞曜", id:"huoxing", name:"火星", core:"煞星｜爆發、急躁、突發", key:"快速起落、脾氣急，事發突然",
+  fig:"董卓", figDesc:"暴烈急躁、驟然掌權又迅速敗亡——火星「爆發急躁、暴起暴落」的化身。"},
+ {g:"煞曜", id:"lingxing", name:"鈴星", core:"煞星｜陰火、悶燒、暗損", key:"暗中衝突、悶氣耗損，較陰性的火",
+  fig:"司馬懿", figDesc:"隱忍數十年、暗中蓄力，一朝發難奪權——鈴星「陰火悶燒、暗中蓄勢」的最佳寫照。"},
+ {g:"煞曜", id:"dikong", name:"地空", core:"煞星｜空想、破財、看破", key:"想法天馬行空，易不切實際、耗財",
+  fig:"莊子", figDesc:"逍遙看破、天馬行空、視功名如浮雲——地空「空靈超脫、不執著於實利」的代表。"},
+ {g:"煞曜", id:"dijie", name:"地劫", core:"煞星｜劫財、突變、破耗", key:"突發損失、意外破耗，來得措手不及",
+  fig:"馬謖", figDesc:"失守街亭、一招失誤釀成大敗——地劫「突發損失、措手不及」的典型。"},
+ {g:"桃花", id:"hongluan", name:"紅鸞", core:"桃花星｜婚姻、喜慶、正緣", key:"感情機會與喜事，偏正緣婚姻",
+  fig:"卓文君", figDesc:"與司馬相如「鳳求凰」私奔結為佳偶——紅鸞「正緣婚姻、喜慶良緣」的象徵。"},
+ {g:"桃花", id:"tianxi", name:"天喜", core:"桃花星｜喜事、添丁、緣分", key:"歡喜之事、添丁進口，與紅鸞相對",
+  fig:"郭子儀", figDesc:"七子八婿、滿床笏、子孫滿堂福壽雙全——天喜「添丁進口、喜慶滿門」的代表。"},
+ {g:"桃花", id:"xianchi", name:"咸池", core:"桃花星｜情慾、魅力", key:"偏情慾之桃花，魅力吸引力強",
+  fig:"楊貴妃", figDesc:"傾國傾城、「回眸一笑百媚生」——咸池「情慾魅力、萬千寵愛」的化身。"},
+ {g:"桃花", id:"tianyao", name:"天姚", core:"桃花星｜風情、交際、多情", key:"風情萬種、善交際，感情較豐富",
+  fig:"貂蟬", figDesc:"風情萬種、以美人計周旋於群雄之間——天姚「風情交際、多情善媚」的典型。"},
+ {g:"移動", id:"tianma", name:"天馬", core:"驛馬星｜移動、奔波、外出、流動財", key:"主變動奔波；逢祿存/化祿為「祿馬交馳」大吉",
+  fig:"玄奘", figDesc:"萬里西行取經、奔波十七年跨越千山——天馬「驛馬奔波、遠行流動」的極致。"},
+];
+
+/* ---------- 雜曜（乙丙級小星）速查，不列入學習進度 ---------- */
+const MINOR = [
+ /* 科文貴曜 */
+ {g:"科文貴曜", name:"三台", key:"與八座成對，如官階儀仗，主地位、貴顯、增輔佐力"},
+ {g:"科文貴曜", name:"八座", key:"與三台成對，主崇高地位與助力"},
+ {g:"科文貴曜", name:"台輔", key:"與封誥成對，文貴之星，主名銜、榮譽、受肯定"},
+ {g:"科文貴曜", name:"封誥", key:"與台輔成對，主受封、榮譽、文書之貴"},
+ {g:"科文貴曜", name:"龍池", key:"與鳳閣成對，才藝科甲之星，主聰慧、精緻"},
+ {g:"科文貴曜", name:"鳳閣", key:"與龍池成對，主才藝、品味、儀態出眾"},
+ {g:"科文貴曜", name:"天官", key:"與天福成對，主貴氣、爵祿、有官格"},
+ {g:"科文貴曜", name:"天福", key:"與天官成對，主福蔭、貴人、享福"},
+ {g:"科文貴曜", name:"天貴", key:"科名貴顯，利考試、受賞識提拔"},
+ {g:"科文貴曜", name:"天才", key:"主聰明、才智、反應靈敏"},
+ {g:"科文貴曜", name:"天壽", key:"主壽元、穩重、老成持重"},
+ {g:"科文貴曜", name:"天巫", key:"主升遷、繼承、與宗教玄學有緣"},
+ {g:"科文貴曜", name:"天廚", key:"食祿之星，有口福、衣食不缺"},
+ /* 解厄福蔭 */
+ {g:"解厄福蔭", name:"解神", key:"化解之星，主逢凶解厄、大事化小、小事化無"},
+ {g:"解厄福蔭", name:"年解", key:"解厄小星，力量較解神輕，亦能緩解災厄"},
+ {g:"解厄福蔭", name:"天德", key:"福德吉神，主心存善念、逢凶化吉"},
+ {g:"解厄福蔭", name:"月德", key:"福德吉神，主陰德庇佑、遇難有救"},
+ {g:"解厄福蔭", name:"龍德", key:"制化解厄之吉神，逢難能解、消災解難"},
+ /* 空亡虛耗 */
+ {g:"空亡虛耗", name:"天空", key:"主空亡、想法天馬行空易落空（注意：與主煞「地空」是不同星）"},
+ {g:"空亡虛耗", name:"截空", key:"截路空亡，主中途受阻、事情打折扣"},
+ {g:"空亡虛耗", name:"旬空", key:"旬中空亡，主落空、有等於無，宜看破放下"},
+ {g:"空亡虛耗", name:"破碎", key:"主零碎、破耗、不圓滿、易有小損"},
+ {g:"空亡虛耗", name:"天傷", key:"虛耗之氣，主破財耗損（常與天使相對）"},
+ {g:"空亡虛耗", name:"天使", key:"災病之氣，主疾厄、變故（常與天傷相對）"},
+ {g:"空亡虛耗", name:"天哭", key:"與天虛成對，主憂傷、悲泣、心情低落"},
+ {g:"空亡虛耗", name:"天虛", key:"與天哭成對，主空虛、虛耗、不踏實"},
+ /* 孤剋刑煞 */
+ {g:"孤剋刑煞", name:"孤辰", key:"與寡宿成對，孤剋之星，主孤獨少助（尤忌男命）"},
+ {g:"孤剋刑煞", name:"寡宿", key:"與孤辰成對，孤剋之星，主孤寡（尤忌女命）"},
+ {g:"孤剋刑煞", name:"華蓋", key:"主孤高、聰明、有玄學藝術緣，但較孤獨清高"},
+ {g:"孤剋刑煞", name:"陰煞", key:"主小人、暗害、疑神疑鬼、犯陰私"},
+ {g:"孤剋刑煞", name:"蜚廉", key:"主孤剋、是非、易招小人口舌"},
+ {g:"孤剋刑煞", name:"天月", key:"主疾病、病災、體質較弱"},
+ {g:"孤剋刑煞", name:"劫煞", key:"將前三煞之一，主破耗、被劫、突發損失"},
+ {g:"孤剋刑煞", name:"災煞", key:"將前三煞之一，主災厄、意外、血光"},
+ {g:"孤剋刑煞", name:"天煞", key:"將前三煞之一，主剋制、阻礙"},
+];
+
+/* ---------- 新模組 A：雙星組合入門（12 組） ----------
+   type：物理＝兩星特質並存(1+1=2)；化學＝合體長出新特質(1+1≠2) */
+const DUO = [
+ {id:"ziwei_tianfu", name:"紫微天府", stars:["紫微","天府"], type:"化學", core:"帝王＋財庫，雙料領導，穩中求成",
+  detail:"紫微的領導氣度配上天府的財庫與穩健，等於一個既有格局又懂守成的領導者。做事穩、有資源、能服眾，是典型「穩中求勝」，但容易過於保守、放不開手腳去冒險。", mn:"帝王坐財庫，穩穩當老大"},
+ {id:"ziwei_tanlang", name:"紫微貪狼", stars:["紫微","貪狼"], type:"化學", core:"桃花犯主，魅力領導，感情是課題",
+  detail:"帝王星遇上第一桃花星，領導魅力爆棚、人緣極旺，走到哪都是焦點。但貪狼的慾望與桃花會「犯主」，讓感情與慾望成為一生的功課，需靠修養與節制駕馭這股魅力。", mn:"魅力滿點，感情要修"},
+ {id:"ziwei_qisha", name:"紫微七殺", stars:["紫微","七殺"], type:"化學", core:"化殺為權，外靜內剛，愛恨分明",
+  detail:"帝王的威嚴壓住七殺的殺氣，成為「化殺為權」——外表沉穩、內心剛硬，決斷力強、有威嚴。愛恨分明、說一不二，是能扛大局的鐵腕領導，但也容易讓人覺得難親近。", mn:"外靜內剛，鐵腕掌權"},
+ {id:"ziwei_pojun", name:"紫微破軍", stars:["紫微","破軍"], type:"化學", core:"霸氣改革者，敢愛敢恨不受管束",
+  detail:"帝王配上破軍的破壞力，是一個敢掀桌重來的霸氣改革者。不受傳統管束、敢愛敢恨、開創力強，適合開疆闢土，但人生起伏也大，衝過頭需要有人拉一把。", mn:"霸氣改革，敢破敢立"},
+ {id:"wuqu_tianfu", name:"武曲天府", stars:["武曲","天府"], type:"物理", core:"雙財星，什麼錢都敢賺，易成富局",
+  detail:"武曲財星（會賺）＋天府財庫（會守），兩顆財星同框，對錢的敏銳與掌控力加倍，什麼錢都敢賺也存得住，是紫微斗數裡最容易成「富局」的組合之一。缺點是可能太重利、生活較無情趣。", mn:"會賺又會守，財庫滿滿"},
+ {id:"wuqu_qisha", name:"武曲七殺", stars:["武曲","七殺"], type:"物理", core:"拚命三郎，目標不到手不罷休",
+  detail:"武曲的執行力＋七殺的衝鋒，是不折不扣的拚命三郎。目標一鎖定就全力衝刺、不達目的不罷休，事業戰鬥力極強。但過剛易折，要小心把身體和人際都拚掉了。", mn:"目標一咬住，絕不放手"},
+ {id:"wuqu_pojun", name:"武曲破軍", stars:["武曲","破軍"], type:"化學", core:"工作狂＋夢想家，人生大起大落",
+  detail:"務實的武曲遇上愛冒險的破軍，一個要穩、一個要衝，內在充滿矛盾張力——既是埋頭苦幹的工作狂，又是敢賭一把的夢想家。人生大起大落，賺得快也散得快。", mn:"又拚又賭，大起大落"},
+ {id:"lianzhen_tianfu", name:"廉貞天府", stars:["廉貞","天府"], type:"化學", core:"鬥志＋規劃，一加一大於二",
+  detail:"廉貞的企圖心與應變，配上天府的穩健規劃，剛好互補——有衝勁又有章法，能把野心落地執行。是典型「一加一大於二」的組合，事業上很有成就相。", mn:"有野心又有計畫"},
+ {id:"lianzhen_tanlang", name:"廉貞貪狼", stars:["廉貞","貪狼"], type:"物理", core:"雙桃花同宮，人緣即助力也是功課",
+  detail:"次桃花（廉貞）＋第一桃花（貪狼）同宮，魅力與人緣爆表，交際手腕一流，人脈就是最大的助力。但雙桃花也意味感情特別豐富複雜，節制與分寸是一生的功課。", mn:"人緣是助力，也是考題"},
+ {id:"lianzhen_tianxiang", name:"廉貞天相", stars:["廉貞","天相"], type:"化學", core:"戰力＋協調，事業人和兼顧",
+  detail:"廉貞的戰鬥力配上天相的協調與公正，剛柔並濟——既能衝鋒又能安內，事業與人和兼顧。是能獨當一面又不失圓融的組合，適合需要對外拚搏又對內協調的位置。", mn:"能衝能協調，剛柔並濟"},
+ {id:"tiantong_tianliang", name:"天同天梁", stars:["天同","天梁"], type:"物理", core:"福星＋蔭星，與世無爭的貴人命",
+  detail:"福星（天同）＋蔭星（天梁）相會，性情溫和、與世無爭、逢凶化吉，一生多貴人相助。適合公教、顧問、助人的行業，過得自在有福。缺點是企圖心偏弱、容易安逸。", mn:"溫和有福，貴人相隨"},
+ {id:"taiyang_taiyin", name:"太陽太陰", stars:["太陽","太陰"], type:"化學", core:"日月同宮，文武雙全但情緒多變",
+  detail:"太陽（外放、博愛）與太陰（內斂、細膩）同宮，等於一個人同時擁有陽剛與陰柔兩種能量，文武雙全、能屈能伸。但日月的矛盾也讓情緒較起伏、內心常在外放與內收之間擺盪。", mn:"日月同體，剛柔情緒兩極"},
+];
+
+/* ---------- 新模組 B：三大框架 ＋ 常見格局 ---------- */
+const FRAME = [
+ {id:"jiyuetongliang", name:"機月同梁", members:"天機、太陰、天同、天梁 在命財官", risk:"低風險低波動", riskv:15,
+  trait:"善計劃、重安全感、穩紮穩打", stage:"公家機關、大企業、幕僚、流程管理、專業技術",
+  note:"最佳幕僚人才格，適合在穩定體制內把事做細做久。"},
+ {id:"fuxiangchaoyuan", name:"府相朝垣", members:"天府、天相 在命財官", risk:"中庸穩健", riskv:50,
+  trait:"守成管理、資源整合", stage:"管理職、財務、營運、行政",
+  note:"衣食無缺、仕途平穩，長於守成與資源調度。"},
+ {id:"shapolang", name:"殺破狼", members:"七殺、破軍、貪狼 永遠三方會照", risk:"高風險高波動", riskv:90,
+  trait:"敢衝敢變、大好大壞", stage:"創業、業務、開創性與變動大的工作",
+  note:"三顆星相對位置固定，只要一顆在命宮，另兩顆必在財帛與官祿。"},
+];
+const FRAME_NOTE = "框架沒有好壞，就像 i 人 e 人——重點是把自己放進對的模式。殺破狼去考公務員、機月同梁去衝創業，都是天賦的錯置。";
+
+const PATTERNS = [
+ {name:"君臣慶會", desc:"紫微得左輔右弼、又有天府天相會照，帝王身邊良臣環繞，是大格局、大事業之象。"},
+ {name:"紫府同宮", desc:"紫微（帝王）＋天府（財庫）同坐寅、申宮，資源雄厚、格局穩大，天生有領導與聚財的本錢。"},
+ {name:"府相朝垣", desc:"命宮三方會齊天府、天相，衣食無缺、仕途亨通，一生較平穩少大風浪。"},
+ {name:"機月同梁", desc:"天機、太陰、天同、天梁會齊，最佳幕僚人才格，適合公職、專業與流程性工作。"},
+ {name:"陽梁昌祿", desc:"太陽、天梁、文昌、祿存會齊，讀書考試、學術功名的貴人格，利公職與專業證照。"},
+ {name:"日照雷門", desc:"太陽在卯宮坐命、又逢白天出生，如旭日東昇、朝氣蓬勃，主光明磊落、事業發達。"},
+ {name:"月朗天門", desc:"太陰在亥宮坐命、又逢夜晚出生，如皓月當空、靜水深流，主內斂聰慧、財富漸積。"},
+ {name:"殺破狼格", desc:"三方會齊七殺、破軍、貪狼，開創衝鋒、變動大，適合創業與開拓，但需承受起伏。"},
+ {name:"火貪／鈴貪", desc:"貪狼遇火星或鈴星，能量瞬間引爆，主「橫發」——突然的暴發運，來得快要懂得守。"},
+ {name:"三奇嘉會", desc:"化祿、化權、化科三吉化在命財官會齊，先天資源豐厚、名利雙收，是難得的好格局。"},
+];
+const PATTERN_NOTE = "格局是入門索引，不是判決書。吉格逢煞會破格，凶格逢吉能轉化，後天努力永遠算數。";
+
+/* ---------- 新模組 C：大限流年觀念課（5 卡，純觀念不排盤） ---------- */
+const DAXIAN = [
+ {id:"dx1", title:"人生像接力賽", em:"🏃", body:"本命盤是你的「先天體質」，大限是每十年換一次的跑道，流年則是今年的天氣。三層一起看，才知道這一年的處境。"},
+ {id:"dx2", title:"大限怎麼走", em:"🧭", body:"大限每十年移動一宮。陽男陰女順時針走、陰男陽女逆時針走（先有個觀念就好，實際交給排盤軟體）。每走一步，就走進不同的人生宮位。"},
+ {id:"dx3", title:"疊宮的概念", em:"🔲", body:"大限的命宮會疊在本命某一宮上。例如這十年大限命宮疊在福德宮，代表這十年的主軸和「心靈、享受、價值觀」特別有關。"},
+ {id:"dx4", title:"四化是引動開關", em:"⚡", body:"本命四化是先天定象（像基因），大限與流年的四化則是後天引動（像事件的開關）。基因決定傾向，開關決定何時發生。"},
+ {id:"dx5", title:"為什麼不用自己排", em:"🔮", body:"v2 不教排盤。用現成排盤軟體幾秒就能得到命盤，把力氣花在「讀懂它」，才是真正的重點。"},
+];
+
+/* ---------- v3 未來藍圖（規劃中，本版先列計劃） ---------- */
+const V3PLAN = [
+ {em:"🤖",t:"自動排盤 / 自動判盤",d:"接 AI 或排盤引擎，輸入生辰自動出盤、自動判讀（留給 v3）。目前可先用下方 fatemaster 一鍵排盤，本站專注教你「讀懂」。"},
+ {em:"💡",t:"廟旺利陷亮度系統",d:"同一顆星在不同宮位有旺弱亮度（廟／旺／利／陷），影響力道強弱——進階判盤的關鍵，v3 補上。"},
+ {em:"🌀",t:"飛星四化 · 自化",d:"北派進階：宮干飛化、自化，讓四化在宮位間流動串連，看出事件的來龍去脈。"},
+ {em:"🔢",t:"144 種星宮組合全收錄",d:"從入門 12 組雙星，擴充到完整的星宮組合圖鑑，一顆星在每個宮位的差異全解。"},
+];
+
+/* ---------- 等級 ---------- */
+const LEVELS = [
+ {lv:1, title:"初識命盤",       xp:0},
+ {lv:2, title:"熟悉十二宮",     xp:60},
+ {lv:3, title:"掌握十四主星",   xp:150},
+ {lv:4, title:"理解輔星煞曜",   xp:280},
+ {lv:5, title:"初懂四化",       xp:430},
+ {lv:6, title:"能看三方四正",   xp:620},
+ {lv:7, title:"能做主題判讀",   xp:850},
+ {lv:8, title:"能看大限流年",   xp:1120},
+ {lv:9, title:"能做完整命盤分析",xp:1450},
+ {lv:10,title:"可教學建立案例庫",xp:1850},
+];
+
+/* ---------- 題庫 ---------- */
+const QUESTIONS = [
+ /* == 十二宮 == */
+ {id:"p01",t:"single",topic:"宮位",d:"基礎",q:"想看一個人的事業與職涯發展，主要先看哪一宮？",o:["命宮","官祿宮","夫妻宮","疾厄宮"],a:"官祿宮",e:"官祿宮代表事業、職涯、工作型態與社會定位。"},
+ {id:"p02",t:"single",topic:"宮位",d:"基礎",q:"判斷婚姻與配偶，主要看哪一宮？",o:["夫妻宮","兄弟宮","子女宮","福德宮"],a:"夫妻宮",e:"夫妻宮掌管婚姻、配偶條件與相處模式。"},
+ {id:"p03",t:"single",topic:"宮位",d:"基礎",q:"「財庫」、能不能守得住財富，主要看哪一宮？",o:["財帛宮","田宅宮","福德宮","官祿宮"],a:"田宅宮",e:"財帛宮看賺與流動，田宅宮才是財庫、看能否守財。"},
+ {id:"p04",t:"single",topic:"宮位",d:"基礎",q:"命宮的對宮是哪一宮？（一定要一起看）",o:["遷移宮","官祿宮","財帛宮","福德宮"],a:"遷移宮",e:"命宮與遷移宮為對宮（命遷線），看內在與外在表現。"},
+ {id:"p05",t:"single",topic:"宮位",d:"基礎",q:"想了解健康與體質，主要看哪一宮？",o:["疾厄宮","福德宮","父母宮","命宮"],a:"疾厄宮",e:"疾厄宮反映身體狀況、易犯病位與抗壓性。"},
+ {id:"p06",t:"single",topic:"宮位",d:"基礎",q:"「福德宮」主要反映什麼？",o:["賺錢能力","精神享受與內在福報","子女多寡","不動產"],a:"精神享受與內在福報",e:"福德宮看精神品質、興趣、價值觀與快樂來源。"},
+ {id:"p07",t:"single",topic:"宮位",d:"進階",q:"父母宮除了看雙親，還常兼看什麼？",o:["文書契約與長輩緣","子女教養","配偶條件","兄弟感情"],a:"文書契約與長輩緣",e:"父母宮又稱相貌宮，兼看長輩、上司、文書與外在形象。"},
+ {id:"p08",t:"single",topic:"宮位",d:"基礎",q:"想看在外地發展、出外運與社會形象，看哪一宮？",o:["遷移宮","交友宮","命宮","官祿宮"],a:"遷移宮",e:"遷移宮主外出、環境機遇與他人眼中的你。"},
+ {id:"p09",t:"single",topic:"宮位",d:"進階",q:"交友宮（奴僕宮）主要看什麼？",o:["朋友部屬與人際助力","配偶","父母","不動產"],a:"朋友部屬與人際助力",e:"交友宮看平輩交情、下屬與人脈助力或阻力。"},
+ {id:"p10",t:"single",topic:"宮位",d:"進階",q:"子女宮除了子女，還代表什麼？",o:["部屬、創造力與桃花","金錢收入","長輩","健康"],a:"部屬、創造力與桃花",e:"子女宮兼看晚輩、部屬、創造力、作品與性態度。"},
+ {id:"p11",t:"multi",topic:"宮位",d:"進階",q:"判斷「財運」時，除了財帛宮，通常還要參看哪些宮位？",o:["田宅宮","官祿宮","福德宮","子女宮"],a:["田宅宮","官祿宮","福德宮"],e:"財運看財帛(收入)、田宅(財庫)、官祿(賺錢來源)、福德(價值觀與享受)。"},
+ {id:"p12",t:"multi",topic:"宮位",d:"進階",q:"判斷「事業」時，常一起參看哪些宮位？",o:["官祿宮","命宮","財帛宮","疾厄宮"],a:["官祿宮","命宮","財帛宮"],e:"事業以官祿為主，並看命宮特質與財帛收入表現。"},
+ {id:"p13",t:"scenario",topic:"宮位",d:"進階",q:"阿明想投資房地產、評估自己「置產與守財」能力，最該優先看哪一宮？",o:["財帛宮","田宅宮","兄弟宮","遷移宮"],a:"田宅宮",e:"田宅宮是財庫，掌管不動產與能否守住財富。"},
+ {id:"p14",t:"fill",topic:"宮位",d:"基礎",q:"「◯宮」代表人格、本質與一生的基本格局，是整張命盤的起點。（填一字）",a:"命",e:"命宮是判斷性格與人生主軸的核心。"},
+ {id:"p15",t:"fill",topic:"宮位",d:"進階",q:"財帛宮看賺錢與現金流，而「◯◯宮」才是財庫、看能不能守住財。（填二字）",a:"田宅",e:"田宅宮為財庫，主守成與不動產。"},
+ {id:"p16",t:"match",topic:"宮位",d:"基礎",q:"配對宮位與其主要職掌",pairs:{"官祿宮":"事業職涯","夫妻宮":"婚姻配偶","疾厄宮":"健康體質","福德宮":"精神享受"},e:"每一宮各有主掌領域，是判盤的基礎。"},
+ {id:"p17",t:"match",topic:"宮位",d:"進階",q:"配對宮位與其主要職掌",pairs:{"遷移宮":"出外與環境","田宅宮":"不動產財庫","交友宮":"朋友部屬","父母宮":"長輩與文書"},e:"熟記各宮職掌，才能快速定位問題。"},
+
+ /* == 十四主星 == */
+ {id:"s01",t:"single",topic:"主星",d:"基礎",q:"被稱為「財星」，重執行、紀律與結果的主星是？",o:["紫微","武曲","天機","天同"],a:"武曲",e:"武曲為財星，主執行、紀律與結果導向。"},
+ {id:"s02",t:"single",topic:"主星",d:"基礎",q:"「帝王星」，主尊貴、領導與地位的是？",o:["太陽","紫微","天府","七殺"],a:"紫微",e:"紫微為帝王星，主領導、尊貴與格局。"},
+ {id:"s03",t:"single",topic:"主星",d:"基礎",q:"主智慧、謀略與機變，適合當幕僚軍師的星是？",o:["天機","巨門","廉貞","破軍"],a:"天機",e:"天機為智慧星，善謀略、機變。"},
+ {id:"s04",t:"single",topic:"主星",d:"基礎",q:"被稱為「福星」，溫和、知足、重享受的星是？",o:["天同","天梁","天相","太陰"],a:"天同",e:"天同為福星，溫和知足、有後福。"},
+ {id:"s05",t:"single",topic:"主星",d:"基礎",q:"「將星」，主開創、決斷、獨當一面的是？",o:["破軍","七殺","武曲","貪狼"],a:"七殺",e:"七殺為將星，果決獨立、開創力強。"},
+ {id:"s06",t:"single",topic:"主星",d:"進階",q:"主口才、分析與鑽研，但易有口舌是非的「暗星」是？",o:["巨門","天機","廉貞","太陰"],a:"巨門",e:"巨門為暗星，口才與專業強，也易生口舌。"},
+ {id:"s07",t:"single",topic:"主星",d:"進階",q:"桃花／慾望星，多才多藝、交際手腕強的是？",o:["貪狼","廉貞","太陰","天同"],a:"貪狼",e:"貪狼為桃花慾望星，多才多藝、社交力強。"},
+ {id:"s08",t:"single",topic:"主星",d:"進階",q:"主「破舊立新」、開創變動的耗星是？",o:["七殺","破軍","武曲","擎羊"],a:"破軍",e:"破軍為耗星，主破舊立新、變動開創。"},
+ {id:"s09",t:"single",topic:"主星",d:"進階",q:"「財庫星」，穩重保守、善管理守成的是？",o:["武曲","天府","太陰","祿存"],a:"天府",e:"天府為財庫、善守；武曲為財星、善賺與執行。"},
+ {id:"s10",t:"single",topic:"主星",d:"進階",q:"「蔭星／老人星」，主庇蔭、逢凶化吉、有原則的是？",o:["天梁","天相","天同","太陽"],a:"天梁",e:"天梁為蔭星，遇難呈祥、有原則能服眾。"},
+ {id:"s11",t:"single",topic:"主星",d:"進階",q:"「印星」，主輔佐、公正、協調，像宰相的是？",o:["天相","天梁","天府","紫微"],a:"天相",e:"天相為印星，忠誠輔佐、重公平協調。"},
+ {id:"s12",t:"single",topic:"主星",d:"進階",q:"主光明、博愛付出、重名聲，代表男性長輩的是？",o:["太陽","太陰","紫微","廉貞"],a:"太陽",e:"太陽主光明博愛，重名，代表父親等男性長輩。"},
+ {id:"s13",t:"single",topic:"主星",d:"進階",q:"主內斂儲蓄、田宅之財，代表女性長輩的是？",o:["太陰","太陽","天府","武曲"],a:"太陰",e:"太陰主田宅儲蓄，代表母親等女性長輩。"},
+ {id:"s14",t:"single",topic:"主星",d:"進階",q:"下列哪顆星屬「桃花」，感情濃烈、也稱次桃花？",o:["廉貞","武曲","天梁","七殺"],a:"廉貞",e:"廉貞為囚星，也是次桃花，感情濃烈易糾葛。"},
+ {id:"s15",t:"multi",topic:"主星",d:"進階",q:"下列哪些是「殺破狼」格局的三顆星？",o:["七殺","破軍","貪狼","天府"],a:["七殺","破軍","貪狼"],e:"殺破狼主開創變動，人生起伏大、適合開創。"},
+ {id:"s16",t:"multi",topic:"主星",d:"進階",q:"下列哪些主星以「財」著稱？",o:["武曲","太陰","天府","巨門"],a:["武曲","太陰","天府"],e:"武曲財星、太陰財星(儲蓄田宅)、天府財庫。"},
+ {id:"s17",t:"scenario",topic:"主星",d:"進階",q:"阿華命宮武曲、官祿宮七殺，最適合哪一類工作？",o:["單純文書行政","執行管理、工程技術、創業開拓","純藝術療癒","休閒服務"],a:"執行管理、工程技術、創業開拓",e:"武曲重執行財務，七殺重開創突破，適合需決斷與行動力的領域。"},
+ {id:"s18",t:"scenario",topic:"主星",d:"進階",q:"某人多才多藝、社交強、但易分心貪玩，較可能是哪顆星坐命？",o:["天府","貪狼","天梁","天相"],a:"貪狼",e:"貪狼多才藝、慾望多，社交強但易分心。"},
+ {id:"s19",t:"scenario",topic:"主星",d:"進階",q:"一個人溫和知足、人緣好但缺衝勁、容易安逸，命宮較可能是？",o:["七殺","天同","武曲","破軍"],a:"天同",e:"天同為福星，溫和知足但衝勁較弱。"},
+ {id:"s20",t:"fill",topic:"主星",d:"基礎",q:"武曲口訣：「武曲重財務，做事講◯◯」。（填二字）",a:"效率",e:"武曲務實果斷，做事講效率。"},
+ {id:"s21",t:"match",topic:"主星",d:"基礎",q:"配對主星與核心特質",pairs:{"武曲":"財務執行","天機":"智慧變化","太陽":"光明付出","貪狼":"慾望才藝"},e:"抓住每顆主星的核心關鍵字，是記憶的第一步。"},
+ {id:"s22",t:"match",topic:"主星",d:"進階",q:"配對主星與核心特質",pairs:{"紫微":"領導尊貴","七殺":"開創決斷","巨門":"口才是非","天同":"溫和享福"},e:"主星特質彼此對照，更容易分辨。"},
+ {id:"s23",t:"match",topic:"主星",d:"進階",q:"配對主星與核心特質",pairs:{"天府":"穩重守成","天梁":"庇蔭原則","天相":"輔佐公正","太陰":"內斂儲蓄"},e:"南斗與中天諸星，各有穩定溫和的特質。"},
+
+ /* == 四化 == */
+ {id:"h01",t:"single",topic:"四化",d:"基礎",q:"四化中，代表「資源、財祿、緣起與順遂」的是？",o:["化祿","化權","化科","化忌"],a:"化祿",e:"化祿主緣起、資源與財祿，帶來機會與甜頭。"},
+ {id:"h02",t:"single",topic:"四化",d:"基礎",q:"四化中，代表「掌控、權力、責任與推動」的是？",o:["化祿","化權","化科","化忌"],a:"化權",e:"化權主權力與責任，帶來主導力也帶來壓力。"},
+ {id:"h03",t:"single",topic:"四化",d:"基礎",q:"四化中，代表「名聲、貴人、保護與修飾」的是？",o:["化祿","化權","化科","化忌"],a:"化科",e:"化科主名聲與貴人，能化險為夷、利文書。"},
+ {id:"h04",t:"single",topic:"四化",d:"基礎",q:"四化中，代表「執著、阻礙、虧欠與課題」的是？",o:["化祿","化權","化科","化忌"],a:"化忌",e:"化忌主執著與阻塞，是課題與是非所在。"},
+ {id:"h05",t:"single",topic:"四化",d:"進階",q:"記憶法「卡住、欠債、放不下」對應哪一化？",o:["化忌","化權","化祿","化科"],a:"化忌",e:"化忌＝執著放不下，卡關與虧欠。"},
+ {id:"h06",t:"single",topic:"四化",d:"進階",q:"記憶法「要做、要扛、要主導」對應哪一化？",o:["化權","化祿","化科","化忌"],a:"化權",e:"化權＝掌控與責任，要做、要扛、要主導。"},
+ {id:"h07",t:"multi",topic:"四化",d:"進階",q:"關於「化忌」，下列敘述何者正確？（可複選）",o:["代表執著與阻塞","善用可成就專注與專業","一定是壞事無法轉化","常帶來是非糾纏"],a:["代表執著與阻塞","善用可成就專注與專業","常帶來是非糾纏"],e:"化忌是課題所在，善用其專注特質可轉為專業，並非全然壞事。"},
+ {id:"h08",t:"scenario",topic:"四化",d:"進階",q:"某人化權入官祿宮，較可能出現什麼狀況？",o:["事業掌權、升遷、有主導力","事業毫無起色","完全與工作無關","只影響感情"],a:"事業掌權、升遷、有主導力",e:"化權入官祿，主事業掌權、有衝勁與升遷，但也可能壓力大。"},
+ {id:"h09",t:"scenario",topic:"四化",d:"進階",q:"化祿入財帛宮，通常代表？",o:["財源順暢、有進財機會","一定破財","與錢無關","只影響健康"],a:"財源順暢、有進財機會",e:"化祿入財帛，主財源順、進財機會多。"},
+ {id:"h10",t:"fill",topic:"四化",d:"進階",q:"化科主名聲，能遇「◯◯」化險為夷。（填二字）",a:"貴人",e:"化科帶來貴人相助與保護，化險為夷。"},
+ {id:"h11",t:"match",topic:"四化",d:"基礎",q:"配對四化與其核心意義",pairs:{"化祿":"資源緣起","化權":"掌控責任","化科":"名聲貴人","化忌":"執著阻礙"},e:"祿權科忌四化，是紫微斗數判盤的關鍵動力。"},
+
+ /* == 綜合概念 == */
+ {id:"c01",t:"single",topic:"綜合",d:"進階",q:"「三方四正」指的是？",o:["本宮加對宮與兩個三合宮","只有本宮","本宮加左右兩宮","全部十二宮"],a:"本宮加對宮與兩個三合宮",e:"三方四正＝本宮＋對宮＋三合兩宮，四宮一起參看。"},
+ {id:"c02",t:"single",topic:"綜合",d:"進階",q:"看盤時，通常「第一步」先看哪裡？",o:["命宮主星","財帛宮","大限","福德宮"],a:"命宮主星",e:"判盤先看命宮主星，定下基本格局與性格。"},
+ {id:"c03",t:"single",topic:"綜合",d:"進階",q:"為什麼看命宮一定要連遷移宮一起看？",o:["因為遷移宮是命宮的對宮","因為兩者無關","因為遷移宮管財","只是習慣而已"],a:"因為遷移宮是命宮的對宮",e:"對宮的力量會直接影響本宮，命遷必須合看。"},
+ {id:"c04",t:"fill",topic:"綜合",d:"進階",q:"把「本宮＋對宮＋三合兩宮」一起看的方法，稱為三方◯◯。（填二字）",a:"四正",e:"三方四正是紫微斗數最基本的看盤結構。"},
+ {id:"c05",t:"single",topic:"綜合",d:"基礎",q:"命宮的「三方四正」是哪三個宮位（加本命）？",o:["財帛宮、官祿宮、遷移宮","兄弟宮、夫妻宮、子女宮","田宅宮、福德宮、父母宮","疾厄宮、交友宮、田宅宮"],a:"財帛宮、官祿宮、遷移宮",e:"命宮三方四正＝命、財帛、官祿(三合)＋遷移(對宮)，即「命財官」加對宮。"},
+
+ /* ============ v2 新增題庫（x 開頭） ============ */
+ /* -- 主星案例情境題 ×20 -- */
+ {id:"x01",t:"scenario",topic:"主星",d:"進階",q:"公司要找一位不用鞭策就自動拚到底、目標不達不罷休的先鋒業務，哪顆主星坐命最典型？",o:["七殺","天同","天相","太陰"],a:"七殺",e:"七殺目標導向、獨立衝鋒，不達目的不罷休。"},
+ {id:"x02",t:"scenario",topic:"主星",d:"進階",q:"一位部屬點子超多、反應快、擅長企劃，但常想太多、晚上失眠，較可能是哪顆星？",o:["天機","武曲","天府","巨門"],a:"天機",e:"天機智慧星，善謀多思，也易勞心失眠。"},
+ {id:"x03",t:"scenario",topic:"主星",d:"進階",q:"誰最適合當公司的「大掌櫃」——穩健保守、精於守財、能兜底解厄？",o:["天府","貪狼","破軍","太陽"],a:"天府",e:"天府財庫星，穩健守成、善管理，是解厄之星。"},
+ {id:"x04",t:"scenario",topic:"主星",d:"進階",q:"團隊裡最會交際、才藝多、人脈廣，但容易分心貪玩的是？",o:["貪狼","天梁","天相","武曲"],a:"貪狼",e:"貪狼桃花慾望星，多才多藝、社交力強但易分心。"},
+ {id:"x05",t:"scenario",topic:"主星",d:"進階",q:"要找一位口才辯才一流、適合當發言人或談判的人，哪顆星最合適？",o:["巨門","天同","天府","太陰"],a:"巨門",e:"巨門主口才辯才，善分析質疑。"},
+ {id:"x06",t:"scenario",topic:"主星",d:"進階",q:"一位主管務實、重紀律、對數字和錢敏銳、使命必達卻不擅表達情感，較可能是？",o:["武曲","廉貞","天同","天梁"],a:"武曲",e:"武曲財星，務實剛毅、結果導向。"},
+ {id:"x07",t:"scenario",topic:"主星",d:"進階",q:"誰最像公司裡「逢凶化吉、愛照顧後輩也愛說教」的資深導師？",o:["天梁","七殺","破軍","貪狼"],a:"天梁",e:"天梁蔭星壽星，逢凶化吉、樂於提點後輩。"},
+ {id:"x08",t:"scenario",topic:"主星",d:"進階",q:"一個人隨和樂天、人緣好、懂享受，但企圖心偏弱需要被推，較可能是？",o:["天同","武曲","七殺","紫微"],a:"天同",e:"天同福星，溫和知足但衝勁弱。"},
+ {id:"x09",t:"scenario",topic:"主星",d:"進階",q:"帶團隊扛目標、愛面子重排場、需要一群得力幹部才發揮的是？",o:["紫微","巨門","太陰","天機"],a:"紫微",e:"紫微帝王星，得輔則貴、無輔則孤。"},
+ {id:"x10",t:"scenario",topic:"主星",d:"進階",q:"亦正亦邪、陽剛時是戰將、陰柔時重感情又幽默的雙面人物是？",o:["廉貞","天府","天相","天同"],a:"廉貞",e:"廉貞囚星兼次桃花，剛柔並存、亦正亦邪。"},
+ {id:"x11",t:"scenario",topic:"主星",d:"進階",q:"阿明想創業做開拓性、要敢砍掉重練的事業，命宮哪顆星最對味？",o:["破軍","天府","天同","太陰"],a:"破軍",e:"破軍主破舊立新、開創變動，適合開拓型事業。"},
+ {id:"x12",t:"scenario",topic:"主星",d:"進階",q:"熱心照顧所有人、對外拚形象重名聲、光太強時脾氣也大的是？",o:["太陽","太陰","天機","天相"],a:"太陽",e:"太陽光明博愛、重名聲，付出過頭時脾氣也大。"},
+ {id:"x13",t:"scenario",topic:"主星",d:"進階",q:"細膩內斂、洞察力強、善理財置產但容易想太多缺自信的是？",o:["太陰","貪狼","武曲","廉貞"],a:"太陰",e:"太陰內斂細膩、善儲蓄置產。"},
+ {id:"x14",t:"scenario",topic:"主星",d:"進階",q:"忠厚可靠、愛居中協調服務、掌印重規則但難當機立斷的是？",o:["天相","七殺","巨門","破軍"],a:"天相",e:"天相印星，忠厚協調但缺果斷。"},
+ {id:"x15",t:"scenario",topic:"主星",d:"基礎",q:"諸葛亮足智多謀、鞠躬盡瘁，最能對應哪顆主星？",o:["天機","紫微","武曲","七殺"],a:"天機",e:"諸葛亮的軍師智謀正是天機的代表。"},
+ {id:"x16",t:"scenario",topic:"主星",d:"基礎",q:"項羽破釜沉舟、大起大落，最能對應哪顆主星？",o:["破軍","天府","天相","天梁"],a:"破軍",e:"項羽敢破敢立、起伏大，正是破軍寫照。"},
+ {id:"x17",t:"scenario",topic:"主星",d:"進階",q:"曹操「治世能臣、亂世奸雄」的雙面性，最像哪顆星？",o:["廉貞","天同","太陽","天府"],a:"廉貞",e:"廉貞亦正亦邪、剛柔並存，正如曹操。"},
+ {id:"x18",t:"scenario",topic:"主星",d:"進階",q:"范蠡能助勾踐復國、又能經商成陶朱公，能文能武又善財，對應哪顆星？",o:["武曲","貪狼","巨門","天機"],a:"武曲",e:"武曲財星、能文能武，正是范蠡的寫照。"},
+ {id:"x19",t:"scenario",topic:"主星",d:"進階",q:"姜子牙八十出山、資歷深又能逢凶化吉，最像哪顆星？",o:["天梁","七殺","破軍","太陽"],a:"天梁",e:"天梁蔭星壽星，老而彌堅、逢凶化吉。"},
+ {id:"x20",t:"scenario",topic:"主星",d:"進階",q:"某人像唐伯虎——風流才子、多才多藝、桃花處處，對應哪顆星？",o:["貪狼","天府","天相","天梁"],a:"貪狼",e:"唐伯虎多才多藝又桃花旺，正是貪狼。"},
+
+ /* -- 雙星組合題 ×10 -- */
+ {id:"x21",t:"single",topic:"雙星",d:"進階",q:"「帝王＋財庫，穩中求成」是哪組雙星？",o:["紫微天府","紫微七殺","武曲破軍","廉貞貪狼"],a:"紫微天府",e:"紫微（帝王）＋天府（財庫），雙料領導、穩中求成。"},
+ {id:"x22",t:"single",topic:"雙星",d:"進階",q:"「化殺為權，外靜內剛」指的是哪組雙星？",o:["紫微七殺","紫微貪狼","武曲七殺","廉貞天相"],a:"紫微七殺",e:"帝王壓住殺氣，化殺為權、外靜內剛。"},
+ {id:"x23",t:"single",topic:"雙星",d:"進階",q:"兩顆財星同宮、什麼錢都敢賺、易成富局的是？",o:["武曲天府","天同天梁","太陽太陰","紫微破軍"],a:"武曲天府",e:"武曲（財星）＋天府（財庫），雙財易成富局。"},
+ {id:"x24",t:"single",topic:"雙星",d:"進階",q:"「福星＋蔭星，與世無爭的貴人命」是？",o:["天同天梁","武曲七殺","廉貞天府","紫微貪狼"],a:"天同天梁",e:"天同（福）＋天梁（蔭），溫和有福、貴人相隨。"},
+ {id:"x25",t:"single",topic:"雙星",d:"進階",q:"「日月同宮、文武雙全但情緒多變」是哪組？",o:["太陽太陰","紫微天府","武曲破軍","廉貞天相"],a:"太陽太陰",e:"太陽太陰同宮，剛柔並具但情緒起伏。"},
+ {id:"x26",t:"multi",topic:"雙星",d:"進階",q:"下列哪些屬於「化學變化」型的雙星（合體長出新特質）？",o:["紫微七殺","武曲天府","廉貞貪狼","太陽太陰"],a:["紫微七殺","太陽太陰"],e:"紫微七殺化殺為權、太陽太陰日月相激，屬化學變化；武曲天府、廉貞貪狼多為特質並存的物理變化。"},
+ {id:"x27",t:"single",topic:"雙星",d:"進階",q:"「桃花犯主，魅力領導，感情是課題」指哪組？",o:["紫微貪狼","紫微破軍","武曲七殺","廉貞天相"],a:"紫微貪狼",e:"帝王遇第一桃花，魅力強但感情是功課。"},
+ {id:"x28",t:"single",topic:"雙星",d:"進階",q:"「拚命三郎，目標不到手不罷休」是哪組雙星？",o:["武曲七殺","天同天梁","紫微天府","廉貞天府"],a:"武曲七殺",e:"武曲執行＋七殺衝鋒，拚命三郎。"},
+ {id:"x29",t:"single",topic:"雙星",d:"進階",q:"「雙桃花同宮，人緣即助力也是功課」是？",o:["廉貞貪狼","紫微貪狼","太陽太陰","武曲破軍"],a:"廉貞貪狼",e:"次桃花＋第一桃花同宮，人緣旺、也要節制。"},
+ {id:"x30",t:"fill",topic:"雙星",d:"進階",q:"紫微加破軍是敢破敢立的「霸氣◯◯者」。（填二字）",a:"改革",e:"紫微破軍為霸氣改革者，敢愛敢恨不受管束。"},
+
+ /* -- 三大框架 / 格局題 ×10 -- */
+ {id:"x31",t:"single",topic:"框架",d:"進階",q:"「七殺、破軍、貪狼永遠三方會照」屬於哪個框架？",o:["殺破狼","機月同梁","府相朝垣","君臣慶會"],a:"殺破狼",e:"殺破狼三星相對位置固定，永遠三方會照。"},
+ {id:"x32",t:"single",topic:"框架",d:"進階",q:"善計劃、重安全感、適合公家與大企業幕僚的低波動框架是？",o:["機月同梁","殺破狼","府相朝垣","火貪格"],a:"機月同梁",e:"機月同梁低風險低波動，最佳幕僚人才格。"},
+ {id:"x33",t:"single",topic:"框架",d:"進階",q:"中庸穩健、守成管理、適合管理與財務營運的框架是？",o:["府相朝垣","殺破狼","機月同梁","三奇嘉會"],a:"府相朝垣",e:"府相朝垣以天府天相為主，守成管理、資源整合。"},
+ {id:"x34",t:"multi",topic:"框架",d:"基礎",q:"下列哪三顆星組成「殺破狼」？",o:["七殺","破軍","貪狼","天府"],a:["七殺","破軍","貪狼"],e:"殺破狼＝七殺、破軍、貪狼，開創變動格。"},
+ {id:"x35",t:"single",topic:"框架",d:"進階",q:"「太陽、天梁、文昌、祿存會齊」利讀書考試的貴人格是？",o:["陽梁昌祿","君臣慶會","火貪格","月朗天門"],a:"陽梁昌祿",e:"陽梁昌祿是讀書考試、學術功名的貴人格。"},
+ {id:"x36",t:"single",topic:"框架",d:"進階",q:"貪狼遇火星或鈴星，主突然暴發運的格局是？",o:["火貪／鈴貪","三奇嘉會","紫府同宮","日照雷門"],a:"火貪／鈴貪",e:"火貪/鈴貪主橫發，能量瞬間引爆。"},
+ {id:"x37",t:"single",topic:"框架",d:"進階",q:"化祿、化權、化科三吉化在命財官會齊，先天資源豐厚的是？",o:["三奇嘉會","君臣慶會","府相朝垣","機月同梁"],a:"三奇嘉會",e:"三奇嘉會＝祿權科三化會齊，名利雙收。"},
+ {id:"x38",t:"scenario",topic:"框架",d:"進階",q:"一個殺破狼命格的人硬去考公務員求安穩，最可能的問題是？",o:["天賦錯置、綁手綁腳難發揮","一定會失敗","完全沒差","會馬上發財"],a:"天賦錯置、綁手綁腳難發揮",e:"框架沒有好壞，但把開創型放進穩定體制易埋沒天賦。"},
+ {id:"x39",t:"single",topic:"框架",d:"進階",q:"關於「格局」，下列觀念何者正確？",o:["格局是入門索引，吉格逢煞會破、凶格逢吉能轉","格局決定一切無法改變","凶格一定倒楣","吉格一定成功"],a:"格局是入門索引，吉格逢煞會破、凶格逢吉能轉",e:"格局是索引不是判決書，後天努力永遠算數。"},
+ {id:"x40",t:"fill",topic:"框架",d:"進階",q:"「紫微得左輔右弼、府相會照」的大格局稱「◯臣慶會」。（填一字）",a:"君",e:"君臣慶會：帝有良臣，大格局。"},
+
+ /* -- 四化查表與觀念題 ×12 -- */
+ {id:"x41",t:"single",topic:"四化",d:"進階",q:"甲年生人，哪顆星化忌？",o:["太陽","太陰","巨門","貪狼"],a:"太陽",e:"甲：廉貞化祿、破軍化權、武曲化科、太陽化忌。"},
+ {id:"x42",t:"single",topic:"四化",d:"進階",q:"乙年生人，哪顆星化祿？",o:["天機","天梁","紫微","太陰"],a:"天機",e:"乙：天機化祿、天梁化權、紫微化科、太陰化忌。"},
+ {id:"x43",t:"single",topic:"四化",d:"進階",q:"丙年生人，天機化什麼？",o:["化權","化祿","化科","化忌"],a:"化權",e:"丙：天同化祿、天機化權、文昌化科、廉貞化忌。"},
+ {id:"x44",t:"single",topic:"四化",d:"進階",q:"丁年生人，太陰化什麼？",o:["化祿","化權","化科","化忌"],a:"化祿",e:"丁：太陰化祿、天同化權、天機化科、巨門化忌。"},
+ {id:"x45",t:"single",topic:"四化",d:"進階",q:"戊年生人，哪顆星化忌？",o:["天機","貪狼","太陰","右弼"],a:"天機",e:"戊：貪狼化祿、太陰化權、右弼化科、天機化忌。"},
+ {id:"x46",t:"single",topic:"四化",d:"進階",q:"己年生人，武曲化什麼？",o:["化祿","化權","化科","化忌"],a:"化祿",e:"己：武曲化祿、貪狼化權、天梁化科、文曲化忌。"},
+ {id:"x47",t:"single",topic:"四化",d:"進階",q:"庚年生人，哪顆星化祿？",o:["太陽","武曲","太陰","天同"],a:"太陽",e:"庚：太陽化祿、武曲化權、太陰化科、天同化忌。"},
+ {id:"x48",t:"single",topic:"四化",d:"進階",q:"辛年生人，哪顆星化祿？",o:["巨門","太陽","文曲","文昌"],a:"巨門",e:"辛：巨門化祿、太陽化權、文曲化科、文昌化忌。"},
+ {id:"x49",t:"single",topic:"四化",d:"進階",q:"壬年生人，哪顆星化忌？",o:["武曲","天梁","紫微","左輔"],a:"武曲",e:"壬：天梁化祿、紫微化權、左輔化科、武曲化忌。"},
+ {id:"x50",t:"single",topic:"四化",d:"進階",q:"癸年生人，哪顆星化忌？",o:["貪狼","破軍","巨門","太陰"],a:"貪狼",e:"癸：破軍化祿、巨門化權、太陰化科、貪狼化忌。"},
+ {id:"x51",t:"scenario",topic:"四化",d:"進階",q:"現代觀點認為「化忌」代表什麼？",o:["覺得不夠的匱乏感，也是努力的驅動力","絕對的凶災","一定貧窮","與心理無關"],a:"覺得不夠的匱乏感，也是努力的驅動力",e:"化忌是主觀「覺得不夠」，匱乏感正是驅動力，非客觀貧窮。"},
+ {id:"x52",t:"multi",topic:"四化",d:"進階",q:"關於四化，下列何者正確？（可複選）",o:["祿隨忌走，多的常流向覺得空缺處","四化沒有絕對好壞","一堆祿必定是好事","生年四化是先天定象"],a:["祿隨忌走，多的常流向覺得空缺處","四化沒有絕對好壞","生年四化是先天定象"],e:"祿隨忌走、四化無絕對好壞、生年四化為先天定象；一堆祿擠在疾厄反而可能是隱憂。"},
+
+ /* -- 六條線與宮位案例題 ×8 -- */
+ {id:"x53",t:"single",topic:"宮位",d:"進階",q:"「命宮 ↔ 遷移宮」這條線稱為？",o:["命遷線","夫官線","財福線","子田線"],a:"命遷線",e:"命遷線＝內在個性 ↔ 外在表現與出外運。"},
+ {id:"x54",t:"single",topic:"宮位",d:"進階",q:"「夫妻宮 ↔ 官祿宮」這條線稱為？",o:["夫官線","兄友線","疾父線","財福線"],a:"夫官線",e:"夫官線＝感情態度 ↔ 事業價值，內外投入的平衡。"},
+ {id:"x55",t:"single",topic:"宮位",d:"進階",q:"「財帛宮 ↔ 福德宮」這條線稱為？",o:["財福線","子田線","命遷線","兄友線"],a:"財福線",e:"財福線＝賺錢方式 ↔ 花錢享受，是價值觀線。"},
+ {id:"x56",t:"single",topic:"宮位",d:"進階",q:"被稱為「家運線」、看守不守得住家與財的是哪條線？",o:["子田線（子女↔田宅）","命遷線","夫官線","疾父線"],a:"子田線（子女↔田宅）",e:"子田線＝晚輩桃花 ↔ 家庭不動產，是家運線。"},
+ {id:"x57",t:"scenario",topic:"宮位",d:"進階",q:"關於夫妻宮，下列何者正確？",o:["代表你會喜歡的類型＋你在感情中的態度","直接等於配偶本人長相","只看有沒有結婚","與你自己無關"],a:"代表你會喜歡的類型＋你在感情中的態度",e:"夫妻宮是擇偶傾向與相處態度，不等於配偶本人。"},
+ {id:"x58",t:"scenario",topic:"宮位",d:"進階",q:"「兄弟宮凶」除了手足對你兇，還可能代表？",o:["你對他們也強勢（雙向對待）","你一定沒有兄弟","與合夥無關","只影響健康"],a:"你對他們也強勢（雙向對待）",e:"宮位是雙向對待關係，凶也反映你對對方的態度。"},
+ {id:"x59",t:"fill",topic:"宮位",d:"進階",q:"「疾厄宮 ↔ 父母宮」這條兼管文書與健康的線，稱疾◯線。（填一字）",a:"父",e:"疾父線＝身體健康 ↔ 遺傳長輩與文書。"},
+ {id:"x60",t:"scenario",topic:"宮位",d:"進階",q:"阿華月月有進帳卻總存不下錢，除了財帛宮，最該一起看哪一宮找「財庫」？",o:["田宅宮","遷移宮","交友宮","父母宮"],a:"田宅宮",e:"財帛看賺與流動，田宅才是財庫、看能否守財。"},
+
+ /* -- 大限流年觀念題 ×4 -- */
+ {id:"x61",t:"single",topic:"大限",d:"基礎",q:"紫微斗數裡，「每十年換一次的跑道」指的是？",o:["大限","流年","本命盤","三方四正"],a:"大限",e:"本命是先天體質、大限是每十年的跑道、流年是今年天氣。"},
+ {id:"x62",t:"single",topic:"大限",d:"基礎",q:"「流年」比較像下列何者？",o:["今年的天氣","先天基因","十年跑道","固定不變的命"],a:"今年的天氣",e:"流年是當年的引動，像今年的天氣。"},
+ {id:"x63",t:"scenario",topic:"大限",d:"進階",q:"某人這十年大限命宮疊在「福德宮」，代表這十年主軸偏向？",o:["心靈、享受與價值觀","一定發大財","只看健康","與心境無關"],a:"心靈、享受與價值觀",e:"疊宮看大限命宮落在本命哪一宮，福德宮主心靈享受價值觀。"},
+ {id:"x64",t:"single",topic:"大限",d:"基礎",q:"關於排盤，v2 的建議是？",o:["用現成軟體排盤，把力氣花在讀懂","一定要手工排盤","不需要命盤","只看生肖"],a:"用現成軟體排盤，把力氣花在讀懂",e:"v2 不教排盤，善用排盤軟體、專注於判讀。"},
+];
+
+/* ==========================================================================
+   應用邏輯
+   ========================================================================== */
+const KEY="ziwei_learn_v2";
+const OLDKEY="ziwei_learn_v1";
+const DEFAULT={xp:0,learned:{palace:[],star:[],sihua:[],aux:[],duo:[],frame:[],daxian:[]},quiz:{answered:0,correct:0},wrong:{},streak:{count:0,last:""},bestScore:0,cleared:false,sound:true};
+let S=load();
+
+/* 合併：以 DEFAULT 為底補齊所有新欄位（learned 新增 duo/frame/daxian 桶） */
+function merge(r){return Object.assign({},DEFAULT,r,{learned:Object.assign({},DEFAULT.learned,r.learned),quiz:Object.assign({},DEFAULT.quiz,r.quiz)});}
+function load(){
+ // 1) 先讀 v2
+ try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.learned)return merge(r);}catch(e){}
+ // 2) 沒有 v2 → 讀 v1 無痛遷移：深拷貝＋補新欄位，寫回 v2（v1 保留不刪，當備份）
+ try{const o=JSON.parse(localStorage.getItem(OLDKEY));if(o&&o.learned){const m=merge(o);try{localStorage.setItem(KEY,JSON.stringify(m));}catch(e){}return m;}}catch(e){}
+ // 3) 全新使用者
+ return JSON.parse(JSON.stringify(DEFAULT));
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+const todayStr=()=>new Date().toISOString().slice(0,10);
+function touchStreak(){const t=todayStr();if(S.streak.last===t)return;const y=new Date(Date.now()-864e5).toISOString().slice(0,10);S.streak.count=(S.streak.last===y)?S.streak.count+1:1;S.streak.last=t;save();}
+
+/* ---- 等級計算 ---- */
+function levelInfo(xp){let cur=LEVELS[0];for(const L of LEVELS)if(xp>=L.xp)cur=L;const idx=LEVELS.indexOf(cur);const next=LEVELS[idx+1]||null;const base=cur.xp;const need=next?next.xp:cur.xp;const prog=next?Math.min(1,(xp-base)/(need-base)):1;return{lv:cur.lv,title:cur.title,next,base,need,prog,max:!next};}
+function totalLearned(){const L=S.learned;return L.palace.length+L.star.length+L.sihua.length+L.aux.length+L.duo.length+L.frame.length+L.daxian.length;}
+const TOTAL_CARDS=PALACES.length+STARS.length+SIHUA.length+AUX.length+DUO.length+FRAME.length+DAXIAN.length;
+
+/* ---- 加 XP + 升級偵測 ---- */
+function addXP(n){const before=levelInfo(S.xp).lv;S.xp+=n;const after=levelInfo(S.xp).lv;save();updatePill();if(after>before){ceremony(after);}return after>before;}
+function updatePill(){const L=levelInfo(S.xp);document.getElementById("lvpill").innerHTML=`<b>Lv.${L.lv}</b> · ${S.xp} XP`;}
+
+/* ---- 音效 (Web Audio 合成) ---- */
+let AC=null;
+function beep(seq){if(!S.sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const t0=AC.currentTime;seq.forEach((n,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=n.type||"sine";o.frequency.value=n.f;const st=t0+(n.t||i*0.09);g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(n.v||0.16,st+0.012);g.gain.exponentialRampToValueAtTime(0.0001,st+(n.d||0.16));o.connect(g);g.connect(AC.destination);o.start(st);o.stop(st+(n.d||0.16)+0.02);});}catch(e){}}
+const SFX={
+ tap:()=>beep([{f:520,d:0.06,v:0.08,type:"triangle"}]),
+ ok:()=>beep([{f:660,d:0.1},{f:880,d:0.12,t:0.08},{f:1180,d:0.18,t:0.17}]),
+ no:()=>beep([{f:200,d:0.18,type:"sawtooth",v:0.12},{f:150,d:0.22,t:0.1,type:"sawtooth",v:0.1}]),
+ learn:()=>beep([{f:700,d:0.1,type:"triangle"},{f:1050,d:0.16,t:0.09,type:"triangle"}]),
+ level:()=>beep([{f:523,d:0.14},{f:659,d:0.14,t:0.12},{f:784,d:0.16,t:0.24},{f:1047,d:0.4,t:0.36,v:0.2}]),
+};
+
+/* ---- 小工具 ---- */
+const $=s=>document.querySelector(s);
+const view=()=>$("#view");
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+let toastT=null;
+function toast(msg){const el=$("#toast");el.textContent=msg;el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),1900);}
+
+/* ---- 路由 ---- */
+let CUR="home";
+function go(route){CUR=route;SFX.tap();closeModal();window.scrollTo(0,0);document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.route===route));render();}
+document.querySelectorAll("#nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.route)));
+
+function render(){touchStreak();const v=view();
+ if(CUR==="home")v.innerHTML=viewHome();
+ else if(CUR==="learn")v.innerHTML=viewLearn();
+ else if(CUR==="palace")v.innerHTML=viewPalace();
+ else if(CUR==="star")v.innerHTML=viewStar();
+ else if(CUR==="sihua")v.innerHTML=viewSihua();
+ else if(CUR==="aux")v.innerHTML=viewAux();
+ else if(CUR==="duo")v.innerHTML=viewDuo();
+ else if(CUR==="frame")v.innerHTML=viewFrame();
+ else if(CUR==="daxian")v.innerHTML=viewDaxian();
+ else if(CUR==="quiz")v.innerHTML=viewQuizHub();
+ else if(CUR==="wrong")v.innerHTML=viewWrong();
+ else if(CUR==="me")v.innerHTML=viewMe();
+ updatePill();
+}
+
+/* ======================= 首頁 ======================= */
+function viewHome(){
+ const L=levelInfo(S.xp);
+ const acc=S.quiz.answered?Math.round(S.quiz.correct/S.quiz.answered*100):0;
+ const wrongN=Object.values(S.wrong).filter(w=>!w.resolved).length;
+ return `
+ <div class="hero">
+   <div class="seal">紫</div>
+   <div class="eyebrow">ZIWEI DOU SHU</div>
+   <h1>星曜<span>研習</span></h1>
+   <p class="tag">從命盤結構到主星四化，一步步讀懂自己的星盤</p>
+   <div class="rankrow">
+     <div class="rankname"><small>Lv.${L.lv}</small>${esc(L.title)}</div>
+     <div class="xpnum">${L.max?"已達最高等級":`距下一階 ${L.need-S.xp} XP`}</div>
+   </div>
+   <div class="bar"><i style="width:${Math.round(L.prog*100)}%"></i></div>
+ </div>
+
+ <div class="stats3">
+   <div class="stat gold"><b>${totalLearned()}</b><span>已學星曜 / ${TOTAL_CARDS}</span></div>
+   <div class="stat purple"><b>${acc}%</b><span>測驗正確率</span></div>
+   <div class="stat green"><b>${S.streak.count}</b><span>連續學習天</span></div>
+ </div>
+
+ <div class="section-gap"></div>
+ <div class="eyebrow">開始學習</div>
+ <div class="tiles">
+   <div class="tile" onclick="go('palace')"><div class="em">🏛️</div><div><h3>十二宮</h3><p>命盤十二個人生舞台</p></div><div class="bar thin mini"><i style="width:${pct('palace')}%"></i></div></div>
+   <div class="tile" onclick="go('star')"><div class="em">⭐</div><div><h3>十四主星</h3><p>星曜性格＋歷史人物</p></div><div class="bar thin mini"><i style="width:${pct('star')}%"></i></div></div>
+   <div class="tile" onclick="go('sihua')"><div class="em">🔮</div><div><h3>四化</h3><p>祿權科忌＋十天干查表</p></div><div class="bar thin mini"><i style="width:${pct('sihua')}%"></i></div></div>
+   <div class="tile" onclick="go('aux')"><div class="em">✧</div><div><h3>輔星煞曜</h3><p>吉曜煞曜桃花驛馬</p></div><div class="bar thin mini"><i style="width:${pct('aux')}%"></i></div></div>
+   <div class="tile" onclick="go('duo')"><div class="em">♊</div><div><h3>雙星組合<span class="newdot">NEW</span></h3><p>命宮兩星的化學變化</p></div><div class="bar thin mini"><i style="width:${pct('duo')}%"></i></div></div>
+   <div class="tile" onclick="go('frame')"><div class="em">🗺️</div><div><h3>框架與格局<span class="newdot">NEW</span></h3><p>三大框架＋常見格局</p></div><div class="bar thin mini"><i style="width:${pct('frame')}%"></i></div></div>
+   <div class="tile" onclick="go('daxian')"><div class="em">⏳</div><div><h3>大限流年<span class="newdot">NEW</span></h3><p>先天、大限、流年觀念</p></div><div class="bar thin mini"><i style="width:${pct('daxian')}%"></i></div></div>
+   <div class="tile big" onclick="go('quiz')"><div class="em">✍️</div><div><h3>開始測驗</h3><p>120 題題庫 · 章節 · 隨機 · 錯題重練${wrongN?` · 待複習 ${wrongN} 題`:""}</p></div><div class="arrow">›</div></div>
+ </div>`;
+}
+function pct(cat){const map={palace:PALACES.length,star:STARS.length,sihua:SIHUA.length,aux:AUX.length,duo:DUO.length,frame:FRAME.length,daxian:DAXIAN.length};return Math.round(S.learned[cat].length/map[cat]*100);}
+
+/* ======================= 學習中心 ======================= */
+function viewLearn(){
+ const rows=[
+  {r:"palace",em:"🏛️",n:"十二宮",d:"命宮、財帛、官祿……人生的十二個舞台",cat:"palace",tot:PALACES.length},
+  {r:"star",em:"⭐",n:"十四主星",d:"紫微、武曲、七殺……星曜性格＋代表人物",cat:"star",tot:STARS.length},
+  {r:"sihua",em:"🔮",n:"四化",d:"祿權科忌的能量變化＋十天干查表器",cat:"sihua",tot:SIHUA.length},
+  {r:"aux",em:"✧",n:"輔星煞曜",d:"吉曜、煞曜、桃花、驛馬的加減力量",cat:"aux",tot:AUX.length},
+  {r:"duo",em:"♊",n:"雙星組合",d:"命宮兩顆主星的物理與化學變化（12 組）",cat:"duo",tot:DUO.length},
+  {r:"frame",em:"🗺️",n:"框架與格局",d:"三大命盤框架＋10 個常見格局圖鑑",cat:"frame",tot:FRAME.length},
+  {r:"daxian",em:"⏳",n:"大限流年",d:"本命、大限、流年的觀念課（不排盤）",cat:"daxian",tot:DAXIAN.length},
+ ];
+ return `<div class="eyebrow">學習中心</div><h2 class="title">星曜研習</h2>
+ <p class="lead">建議依序：宮位（舞台）→ 主星（演員）→ 四化（劇情）→ 輔星（配角）→ 雙星（合演）→ 框架格局（劇本）→ 大限流年（時間軸）。點卡片閱讀，讀完標記「已學會」可累積經驗值。</p>
+ <div class="hub">${rows.map(x=>`
+   <div class="card hubcard tap" onclick="go('${x.r}')">
+     <div class="em">${x.em}</div>
+     <div class="info"><h3>${x.n}</h3><p>${x.d}</p>
+       <div class="bar thin"><i style="width:${Math.round(S.learned[x.cat].length/x.tot*100)}%"></i></div>
+     </div>
+     <div style="text-align:right"><div class="chip gold" style="margin-bottom:6px">${S.learned[x.cat].length}/${x.tot}</div><div class="arrow" style="color:var(--muted2);font-size:20px">›</div></div>
+   </div>`).join("")}</div>`;
+}
+
+/* ======================= 十二宮（命盤格） ======================= */
+const CHART_ORDER=["fu","zi","cai","ji","xiong","","","qian","ming","","","jiao","mu","fude","tian","guan"];
+/* 4x4：外圈 12 宮，中間 2x2 為 center。上面順序對應格子(1..16)，"" 代表 center 佔位 */
+function viewPalace(){
+ const done=S.learned.palace.length;
+ // 依 4x4 邊框排列
+ const perim=["fu","zi","cai","ji", "qian","tian", "ming","fude", "xiong","mu","guan","jiao"];
+ // 手工鋪 16 格：4x4，中間 (r2c2,r2c3,r3c2,r3c3) 為 center
+ const cellsTop=["fu","zi","cai","ji"];
+ const rowL=["qian","xiong"], rowR=["tian","mu"];
+ const cellsBot=["fude","guan","jiao","ming"];
+ const P=id=>PALACES.find(p=>p.id===id);
+ const cellHTML=id=>{const p=P(id);const dn=S.learned.palace.includes(id);return `<div class="cell${dn?' done':''}" onclick="openPalace('${id}')"><div class="nm">${p.name}</div><div class="zh">${p.en}</div></div>`;};
+ return `<div class="eyebrow">命盤 · 十二宮</div><h2 class="title">十二宮</h2>
+ <p class="lead">十二宮如同命盤的十二個「人生舞台」，環繞排列。點任一宮位深入了解。</p>
+ <div class="chart">
+   ${cellHTML("fu")}${cellHTML("zi")}${cellHTML("cai")}${cellHTML("ji")}
+   ${cellHTML("qian")}
+   <div class="center"><div class="big">命</div><div class="cap">已通 ${done} / 12 宮</div><div class="bar thin pg"><i style="width:${Math.round(done/12*100)}%"></i></div></div>
+   ${cellHTML("tian")}
+   ${cellHTML("xiong")}
+   ${cellHTML("mu")}
+   ${cellHTML("guan")}${cellHTML("jiao")}${cellHTML("fude")}${cellHTML("ming")}
+ </div>
+ <div class="note"><b>小提醒：</b>看盤要看「三方四正」——本宮 + 對宮 + 兩個三合宮，四宮一起參看，不能只看單一宮位。例如判斷事業，除了官祿宮，也要參看命宮與財帛宮。</div>
+ <div class="grouphdr">🎯 三方四正 · 互動命盤</div>
+ <div class="svgwrap" id="sanfangBox">${svgSanfang()}</div>
+ <div class="grouphdr">↔️ 六條線 · 對沖軸線</div>
+ <div class="svgwrap">${svgSixLines()}</div>`;
+}
+function openPalace(id){const p=PALACES.find(x=>x.id===id);const dn=S.learned.palace.includes(id);
+ openSheet(`
+  <div class="head">
+    <div class="glyphL pp">${p.name.slice(0,1)}</div>
+    <div><h2>${p.name}</h2><div class="row"><span class="chip purple">${p.en}</span><span class="chip">人生宮位</span></div></div>
+  </div>
+  <div class="core-box"><div class="k">核心意義</div><div class="v">${p.core}</div></div>
+  <div class="field"><div class="k">代表人事物</div><div class="v">${esc(p.rep)}</div></div>
+  <div class="field"><div class="k">生活案例</div><div class="v">${esc(p.cs)}</div></div>
+  <div class="field"><div class="k">所屬軸線 · 六條線</div><div class="v">${esc(p.line)}</div></div>
+  <div class="field"><div class="k">可觀察事項</div><div class="v">${esc(p.obs)}</div></div>
+  <div class="field"><div class="k">常見誤解</div><div class="v">${esc(p.myth)}</div></div>
+  <div class="field"><div class="k">三方四正 · 合看宮位</div><div class="v">${esc(p.pair)}</div></div>
+  ${learnBtn("palace",id,dn)}
+ `);
+}
+
+/* ======================= 十四主星 ======================= */
+function viewStar(){
+ const groups=[["北斗","北斗諸星 · 開創掌權","🔥"],["南斗","南斗諸星 · 穩重輔佐","🌊"],["中天","中天日月 · 光明內斂","☯"]];
+ let html=`<div class="eyebrow">星曜 · 十四主星</div><h2 class="title">十四主星</h2>
+ <p class="lead">主星是命盤的主角，決定一個人的性格底色與行事風格。依北斗、南斗、中天三系分類學習。</p>`;
+ groups.forEach(([g,label])=>{
+  html+=`<div class="grouphdr">${label}</div><div class="cardlist">`;
+  STARS.filter(s=>s.dou===g).forEach(s=>{const dn=S.learned.star.includes(s.id);
+   html+=`<div class="card lc${dn?' done':''} tap" onclick="openStar('${s.id}')">
+     <div class="gly">${s.name.slice(0,1)}</div>
+     <div class="body"><h4>${s.name}</h4><div class="sub">${s.wx}　${s.core.split("｜")[0]}</div></div>
+     <div class="mk">${dn?"✦":"○"}</div></div>`;
+  });
+  html+=`</div>`;
+ });
+ html+=`<div class="grouphdr">🎯 主星四象限圖</div><div class="svgwrap">${svgQuadrant()}</div>`;
+ return html;
+}
+function openStar(id){const s=STARS.find(x=>x.id===id);const dn=S.learned.star.includes(id);
+ const F=(k,v)=>`<div class="field"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>`;
+ openSheet(`
+  <div class="head">
+    <div class="glyphL">${esc(s.name.slice(0,1))}</div>
+    <div><h2>${esc(s.name)}</h2><div class="row"><span class="chip gold">${esc(s.wx)}</span><span class="chip">${esc(s.dou)}</span><span class="chip purple">${esc(s.role)}</span></div></div>
+  </div>
+  <div class="core-box"><div class="k">核心象徵</div><div class="v">${esc(s.core)}</div></div>
+  <div class="tabs">
+    <button class="tab on" onclick="starTab(this,'ess')">本質</button>
+    <button class="tab" onclick="starTab(this,'cas')">案例 · 人物</button>
+    <button class="tab" onclick="starTab(this,'img')">一圖看懂</button>
+  </div>
+  <div class="tabpane" id="tab_ess">
+    ${F("人物比喻",s.person)}${F("性格優勢",s.pros)}${F("性格缺點",s.cons)}
+    ${F("事業傾向",s.career)}${F("財務模式",s.wealth)}${F("感情特質",s.love)}
+    <div class="mnem"><div class="k">口訣</div><div class="v">${esc(s.mn)}</div></div>
+  </div>
+  <div class="tabpane" id="tab_cas" hidden>
+    <div class="figcard">
+      <div class="figname">${esc(s.fig)}</div>
+      <div class="figrole">現代角色：${esc(s.role)}</div>
+      <div class="figdesc">${esc(s.figDesc)}</div>
+    </div>
+    <div class="field"><div class="k">案例故事</div><div class="v" style="line-height:1.85">${esc(s.story)}</div></div>
+  </div>
+  <div class="tabpane" id="tab_img" hidden>
+    <div class="svgwrap" style="text-align:center">${svgTotem(s,160)}<div class="svg-hint">${esc(s.name)}圖騰 · ${esc(s.core.split("｜")[0])}</div></div>
+  </div>
+  ${learnBtn("star",id,dn)}
+ `);
+}
+
+/* ======================= 四化 ======================= */
+function viewSihua(){
+ return `<div class="eyebrow">動力 · 四化</div><h2 class="title">四化</h2>
+ <p class="lead">四化（化祿、化權、化科、化忌）是紫微斗數的靈魂——它讓靜態的星盤「動」起來，指出資源、權力、名聲與課題落在哪裡。</p>
+ <div class="cardlist">
+ ${SIHUA.map(h=>{const dn=S.learned.sihua.includes(h.id);
+   return `<div class="card lc${dn?' done':''} tap" onclick="openSihua('${h.id}')">
+     <div class="gly" style="color:var(--${h.color})">${h.name.slice(1)}</div>
+     <div class="body"><h4>${h.name}</h4><div class="sub">${h.core}</div></div>
+     <div class="mk">${dn?"✦":"○"}</div></div>`;}).join("")}
+ </div>
+ <div class="note"><b>記憶訣：</b>祿＝有甜頭（資源）、權＝要主導（責任）、科＝重名譽（貴人）、忌＝放不下（課題）。<br><b>肚子餓循環：</b>餓了（忌）→ 找吃的（權）→ 打卡分享（科）→ 吃飽滿足（祿）。<b style="color:var(--gold)">化忌不是凶，是「覺得不夠」的驅動力。</b></div>
+ <div class="grouphdr">🔄 四化能量循環圖</div>
+ <div class="svgwrap">${svgSihuaCycle()}</div>
+ ${ganhuaTool()}`;
+}
+function openSihua(id){const h=SIHUA.find(x=>x.id===id);const dn=S.learned.sihua.includes(id);
+ openSheet(`
+  <div class="head">
+    <div class="glyphL" style="color:var(--${h.color})">${h.name.slice(1)}</div>
+    <div><h2>${h.name}</h2><div class="row"><span class="chip ${h.color}">四化</span></div></div>
+  </div>
+  <div class="core-box"><div class="k">核心意思</div><div class="v" style="color:var(--${h.color})">${h.core}</div></div>
+  <div class="field"><div class="k">正面表現</div><div class="v">${esc(h.pos)}</div></div>
+  <div class="field"><div class="k">負面 / 課題</div><div class="v">${esc(h.neg)}</div></div>
+  <div class="field"><div class="k">現代心理解讀</div><div class="v">${esc(h.modern)}</div></div>
+  <div class="field"><div class="k">肚子餓循環位置</div><div class="v">${esc(h.cycle)}</div></div>
+  <div class="field"><div class="k">落入不同宮位</div><div class="v">${esc(h.pal)}</div></div>
+  <div class="mnem"><div class="k">記憶法</div><div class="v">${esc(h.mem)}</div></div>
+  ${learnBtn("sihua",id,dn)}
+ `);
+}
+
+/* ======================= 輔星煞曜 ======================= */
+function viewAux(){
+ const groups=[["吉曜","吉曜 · 貴人助力","green"],["煞曜","煞曜 · 壓力破耗","red"],["桃花","桃花曜 · 人緣感情","rose"],["移動","驛馬 · 移動變化","cyan"]];
+ let html=`<div class="eyebrow">配角 · 輔星煞曜</div><h2 class="title">輔星煞曜</h2>
+ <p class="lead">輔星與雜曜是命盤的「配角」，替主星加分或扣分。先分類記憶大方向，不必一開始就死背全部。</p>`;
+ groups.forEach(([g,label,c])=>{
+  html+=`<div class="grouphdr" style="color:var(--${c})">${label}</div><div class="cardlist">`;
+  AUX.filter(a=>a.g===g).forEach(a=>{const dn=S.learned.aux.includes(a.id);
+   html+=`<div class="card lc${dn?' done':''} tap" onclick="openAux('${a.id}')">
+     <div class="gly" style="color:var(--${c})">${a.name.slice(0,1)}</div>
+     <div class="body"><h4>${a.name}</h4><div class="sub">${a.core}</div></div>
+     <div class="mk">${dn?"✦":"○"}</div></div>`;
+  });
+  html+=`</div>`;
+ });
+ html+=renderMinor();
+ return html;
+}
+function renderMinor(){
+ const groups=[
+  ["科文貴曜","gold","多成對出現的加分小星，替主星增添才華、貴氣與地位。"],
+  ["解厄福蔭","green","逢凶化吉的吉神，關鍵時刻幫你化解災厄。"],
+  ["空亡虛耗","cyan","扣分小星，主落空、破耗、虛而不實——提醒別把事情想太滿。"],
+  ["孤剋刑煞","red","扣分小星，主孤剋、是非、病災——是提醒注意的方向，非絕對凶。"],
+ ];
+ let h=`<div class="grouphdr" style="margin-top:26px">🔎 更多雜曜 · 小星速查</div>
+ <p class="lead" style="margin-bottom:6px">命盤上除了主星與上面的輔星煞曜，還有許多「雜曜（小星）」。以下為參考速查，<b>不列入學習進度</b>。</p>`;
+ groups.forEach(([g,c,intro])=>{
+  h+=`<div class="grouphdr" style="color:var(--${c})">${g}</div><p style="font-size:12px;color:var(--muted);margin:0 0 8px">${esc(intro)}</p><div class="minorgrid">`;
+  MINOR.filter(m=>m.g===g).forEach(m=>{h+=`<div class="minorcard" style="border-left:3px solid var(--${c})"><b>${esc(m.name)}</b><span>${esc(m.key)}</span></div>`;});
+  h+=`</div>`;
+ });
+ h+=`<div class="note" style="margin-top:18px"><b>命盤角落那些字是什麼？</b><br>「博士十二神（博士·力士·青龍…）」「長生十二神（長生·沐浴·冠帶…）」「歲前／將前十二神」等，是隨大限流年<b>轉動的神煞系統</b>，用來輔助判斷流年吉凶；角落的 3~12、13~22 是<b>大限</b>（十年運）、流年數字是虛歲對照。這些屬進階排盤內容，本站先聚焦在主星與雜曜。<br>另外盤上偶見的「副德、副旬」等「副X」，是對照用的副星，影響力較輕，參考即可。</div>`;
+ return h;
+}
+function openAux(id){const a=AUX.find(x=>x.id===id);const dn=S.learned.aux.includes(id);
+ const cmap={"吉曜":"green","煞曜":"red","桃花":"rose","移動":"cyan"};const c=cmap[a.g];
+ openSheet(`
+  <div class="head">
+    <div class="glyphL" style="color:var(--${c})">${a.name.slice(0,1)}</div>
+    <div><h2>${a.name}</h2><div class="row"><span class="chip ${c}">${a.g}</span></div></div>
+  </div>
+  <div class="core-box"><div class="k">星曜性質</div><div class="v" style="color:var(--${c})">${esc(a.core)}</div></div>
+  <div class="field"><div class="k">關鍵理解</div><div class="v">${esc(a.key)}</div></div>
+  <div class="figcard"><div class="figname">${esc(a.fig)}</div><div class="figdesc">${esc(a.figDesc)}</div></div>
+  ${learnBtn("aux",id,dn)}
+ `);
+}
+
+/* ======================= 雙星組合（新模組 A） ======================= */
+function viewDuo(){
+ return `<div class="eyebrow">進階 · 雙星組合</div><h2 class="title">雙星組合入門</h2>
+ <p class="lead">命宮有兩顆主星時，像一對「連體嬰」——各有個性，有時和樂、有時吵架。<b style="color:var(--gold)">物理變化</b>是兩星特質並存（1+1=2）；<b style="color:var(--purple)">化學變化</b>是合體長出新特質（1+1≠2）。先收錄 12 組常見組合。</p>
+ <div class="cardlist">
+ ${DUO.map(d=>{const dn=S.learned.duo.includes(d.id);const tc=d.type==="化學"?"purple":"gold";
+   return `<div class="card lc${dn?' done':''} tap" onclick="openDuo('${d.id}')">
+     <div class="gly" style="color:var(--${tc})">${esc(d.name.slice(0,2))}</div>
+     <div class="body"><h4>${esc(d.name)} <span class="chip ${tc}" style="font-size:10px;padding:1px 7px">${d.type}</span></h4><div class="sub">${esc(d.core)}</div></div>
+     <div class="mk">${dn?"✦":"○"}</div></div>`;}).join("")}
+ </div>`;
+}
+function openDuo(id){const d=DUO.find(x=>x.id===id);const dn=S.learned.duo.includes(id);const tc=d.type==="化學"?"purple":"gold";
+ openSheet(`
+  <div class="head">
+    <div class="glyphL" style="color:var(--${tc})">${esc(d.name.slice(0,2))}</div>
+    <div><h2>${esc(d.name)}</h2><div class="row"><span class="chip ${tc}">${d.type}變化</span>${d.stars.map(s=>`<span class="chip">${esc(s)}</span>`).join("")}</div></div>
+  </div>
+  <div class="core-box"><div class="k">一句話定位</div><div class="v" style="color:var(--${tc})">${esc(d.core)}</div></div>
+  <div class="field"><div class="k">詳細解讀</div><div class="v">${esc(d.detail)}</div></div>
+  <div class="mnem"><div class="k">口訣</div><div class="v">${esc(d.mn)}</div></div>
+  ${learnBtn("duo",id,dn)}
+ `);
+}
+
+/* ======================= 框架與格局（新模組 B） ======================= */
+function viewFrame(){
+ return `<div class="eyebrow">進階 · 命盤框架</div><h2 class="title">框架與格局</h2>
+ <p class="lead">先看大框架，再看細格局，才不會迷失在上百個名詞裡。每個人的命盤，必屬三大框架之一。</p>
+ <div class="spectrum">
+   <div class="spectrum-bar"></div>
+   <div class="spectrum-labels"><span>機月同梁<br><small>穩</small></span><span>府相朝垣<br><small>中</small></span><span>殺破狼<br><small>衝</small></span></div>
+ </div>
+ <div class="grouphdr">三大框架 · 每人必屬其一</div>
+ <div class="cardlist">
+ ${FRAME.map(f=>{const dn=S.learned.frame.includes(f.id);
+   return `<div class="card lc${dn?' done':''} tap" onclick="openFrame('${f.id}')">
+     <div class="gly">${esc(f.name.slice(0,2))}</div>
+     <div class="body"><h4>${esc(f.name)}</h4><div class="sub">${esc(f.risk)}｜${esc(f.trait)}</div></div>
+     <div class="mk">${dn?"✦":"○"}</div></div>`;}).join("")}
+ </div>
+ <div class="note"><b>重要：</b>${esc(FRAME_NOTE)}</div>
+ <div class="grouphdr">▲ 殺破狼三角圖</div>
+ <div class="svgwrap">${svgShapolang()}</div>
+ <div class="grouphdr">常見格局圖鑑 · 入門 10 個</div>
+ <div class="note" style="border-style:solid;border-color:var(--gold-d);color:var(--gold);margin:0 0 12px">${esc(PATTERN_NOTE)}</div>
+ <div class="cardlist">
+ ${PATTERNS.map(p=>`<div class="card" style="padding:13px 15px"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 4px;color:var(--gold)">${esc(p.name)}</h4><div style="font-size:12.5px;color:var(--muted);line-height:1.65">${esc(p.desc)}</div></div>`).join("")}
+ </div>`;
+}
+function openFrame(id){const f=FRAME.find(x=>x.id===id);const dn=S.learned.frame.includes(id);
+ openSheet(`
+  <div class="head"><div class="glyphL">${esc(f.name.slice(0,2))}</div>
+   <div><h2>${esc(f.name)}</h2><div class="row"><span class="chip gold">${esc(f.risk)}</span></div></div></div>
+  <div class="core-box"><div class="k">性格風險屬性</div><div class="v">${esc(f.trait)}</div></div>
+  <div class="field"><div class="k">成員星</div><div class="v">${esc(f.members)}</div></div>
+  <div class="field"><div class="k">適合舞台</div><div class="v">${esc(f.stage)}</div></div>
+  <div class="field"><div class="k">重點觀念</div><div class="v">${esc(f.note)}</div></div>
+  ${learnBtn("frame",id,dn)}
+ `);
+}
+
+/* ======================= 大限流年（新模組 C） ======================= */
+function viewDaxian(){
+ return `<div class="eyebrow">時間軸 · 大限流年</div><h2 class="title">大限流年觀念課</h2>
+ <p class="lead">本命是先天體質、大限是每十年的跑道、流年是今年的天氣。v2 只教觀念、不排盤——把力氣花在讀懂。</p>
+ <div class="svgwrap">${svgDaxianAxis()}</div>
+ <div class="cardlist">
+ ${DAXIAN.map(x=>{const dn=S.learned.daxian.includes(x.id);
+   return `<div class="card lc${dn?' done':''} tap" onclick="openDaxian('${x.id}')">
+     <div class="gly">${x.em}</div>
+     <div class="body"><h4>${esc(x.title)}</h4><div class="sub">${esc(x.body.slice(0,24))}…</div></div>
+     <div class="mk">${dn?"✦":"○"}</div></div>`;}).join("")}
+ </div>
+ <div class="note"><b>提醒：</b>需要命盤時，用你已有的排盤軟體（如 fatemaster）幾秒就能排好，重點是讀懂它。</div>`;
+}
+function openDaxian(id){const x=DAXIAN.find(d=>d.id===id);const dn=S.learned.daxian.includes(id);
+ openSheet(`
+  <div class="head"><div class="glyphL">${x.em}</div><div><h2>${esc(x.title)}</h2><div class="row"><span class="chip purple">大限流年</span></div></div></div>
+  <div class="field"><div class="v" style="font-size:15px;line-height:1.8">${esc(x.body)}</div></div>
+  ${learnBtn("daxian",id,dn)}
+ `);
+}
+
+/* ======================= 十天干四化查表器 ======================= */
+function ganhuaTool(){
+ const stems=Object.keys(GANHUA);
+ return `<div class="grouphdr">🔧 十天干四化查表器</div>
+ <div class="card" style="padding:16px">
+   <p style="font-size:12.5px;color:var(--muted);margin:0 0 12px">選「出生年天干」，看哪四顆星化祿、權、科、忌。</p>
+   <div class="ganpick">${stems.map(g=>`<button class="ganbtn" data-g="${g}" onclick="showGanhua('${g}')">${g}</button>`).join("")}</div>
+   <div id="ganResult" style="margin-top:14px"><p style="font-size:12px;color:var(--muted2);text-align:center;padding:8px">☝️ 點上面的天干開始查</p></div>
+ </div>`;
+}
+function showGanhua(g){
+ SFX.tap();
+ document.querySelectorAll('.ganbtn').forEach(b=>b.classList.toggle('on',b.dataset.g===g));
+ const h=GANHUA[g];const rows=[["祿","lu","green"],["權","quan","purple"],["科","ke","cyan"],["忌","ji","red"]];
+ document.getElementById('ganResult').innerHTML=`<div class="ganrows">${rows.map(([label,k,c])=>`<div class="ganrow"><span class="chip ${c}" style="min-width:54px;justify-content:center">化${label}</span><b style="font-family:'Noto Serif TC',serif;font-size:19px;color:var(--${c})">${esc(h[k])}</b></div>`).join("")}</div><p style="font-size:11.5px;color:var(--muted2);margin:12px 0 0;line-height:1.7"><b style="color:var(--gold-d)">${g}</b> 年生人：${esc(h.lu)}化祿、${esc(h.quan)}化權、${esc(h.ke)}化科、${esc(h.ji)}化忌。</p>`;
+}
+
+/* ======================= 十四主星 SVG 圖騰 ======================= */
+const STAR_COLOR={ziwei:"purple",tianji:"cyan",taiyang:"gold",wuqu:"gold",tiantong:"green",lianzhen:"red",tianfu:"gold",taiyin:"cyan",tanlang:"rose",jumen:"purple",tianxiang:"cyan",tianliang:"green",qisha:"red",pojun:"red"};
+function svgTotem(s,size){
+ size=size||120;
+ const c=STAR_COLOR[s.id]||"gold";const ch=s.name.slice(0,1);
+ let rays="";const n=12;
+ for(let i=0;i<n;i++){const a=i*(360/n);rays+=`<line x1="60" y1="60" x2="60" y2="13" stroke="var(--${c})" stroke-width="${i%2?1:2}" opacity="${i%2?0.22:0.5}" transform="rotate(${a} 60 60)"/>`;}
+ return `<svg viewBox="0 0 120 120" class="totem" width="${size}" height="${size}" role="img" aria-label="${esc(s.name)}圖騰">
+   <defs><radialGradient id="tg_${s.id}" cx="50%" cy="42%" r="62%">
+     <stop offset="0%" stop-color="var(--${c})" stop-opacity="0.5"/>
+     <stop offset="55%" stop-color="var(--${c})" stop-opacity="0.10"/>
+     <stop offset="100%" stop-color="var(--${c})" stop-opacity="0"/></radialGradient></defs>
+   <circle cx="60" cy="60" r="58" fill="url(#tg_${s.id})"/>
+   <g>${rays}</g>
+   <circle cx="60" cy="60" r="46" fill="none" stroke="var(--${c})" stroke-width="0.8" opacity="0.3"/>
+   <circle cx="60" cy="60" r="40" fill="none" stroke="var(--${c})" stroke-width="1.5" opacity="0.55"/>
+   <text x="60" y="62" text-anchor="middle" dominant-baseline="central" font-family="'Noto Serif TC',serif" font-weight="900" font-size="44" fill="var(--${c})">${esc(ch)}</text>
+ </svg>`;
+}
+function starTab(btn,which){SFX.tap();btn.parentNode.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');['ess','cas','img'].forEach(k=>{const p=document.getElementById('tab_'+k);if(p)p.hidden=(k!==which);});}
+
+/* ======================= 三方四正 互動命盤（SVG） =======================
+   任一宮的三方四正＝本宮＋對宮(index+6)＋兩三合宮(index±4)，依 PALACES 標準序計算 */
+let SANFANG_SEL=null;
+function sanfangPick(id){SFX.tap();SANFANG_SEL=id;const el=document.getElementById('sanfangBox');if(el)el.innerHTML=svgSanfang();}
+function svgSanfang(){
+ const pos={fu:[0,0],zi:[1,0],cai:[2,0],ji:[3,0],qian:[0,1],tian:[3,1],xiong:[0,2],mu:[3,2],guan:[0,3],jiao:[1,3],fude:[2,3],ming:[3,3]};
+ const idxOf=id=>PALACES.findIndex(p=>p.id===id);
+ const nm=id=>PALACES.find(p=>p.id===id).name;
+ const sel=SANFANG_SEL;let selSet={},hint='點任一宮，看它的三方四正（本宮＋對宮＋兩個三合宮）';
+ if(sel){const i=idxOf(sel);const opp=PALACES[(i+6)%12].id,t1=PALACES[(i+4)%12].id,t2=PALACES[(i+8)%12].id;
+  selSet={[sel]:'self',[opp]:'opp',[t1]:'tri',[t2]:'tri'};
+  hint=`看 <b style="color:var(--gold)">${nm(sel)}</b>，要合看 <b style="color:var(--cyan)">${nm(t1)}</b>、<b style="color:var(--cyan)">${nm(t2)}</b>（三合）＋ <b style="color:var(--red)">${nm(opp)}</b>（對宮）`;}
+ const cell=id=>{const p=pos[id];const x=p[0]*80,y=p[1]*80;const P=PALACES.find(z=>z.id===id);const st=selSet[id];
+  const fill=st==='self'?'rgba(231,197,125,.28)':st==='opp'?'rgba(224,106,80,.24)':st==='tri'?'rgba(104,183,214,.22)':'rgba(27,23,54,.55)';
+  const stk=st==='self'?'var(--gold)':st==='opp'?'var(--red)':st==='tri'?'var(--cyan)':'var(--line2)';
+  return `<g onclick="sanfangPick('${id}')" style="cursor:pointer">
+    <rect x="${x+3}" y="${y+3}" width="74" height="74" rx="10" fill="${fill}" stroke="${stk}" stroke-width="${st?2:1}"/>
+    <text x="${x+40}" y="${st?y+38:y+42}" text-anchor="middle" dominant-baseline="central" font-family="'Noto Serif TC',serif" font-weight="700" font-size="16" fill="${st?stk:'var(--muted)'}">${esc(P.name)}</text>
+    ${st?`<text x="${x+40}" y="${y+58}" text-anchor="middle" font-size="9" fill="${stk}">${st==='self'?'本宮':st==='opp'?'對宮':'三合'}</text>`:''}
+  </g>`;};
+ return `<svg viewBox="0 0 320 320" width="100%" style="max-width:360px;display:block;margin:0 auto" role="img" aria-label="三方四正互動命盤">
+   <rect x="83" y="83" width="154" height="154" rx="12" fill="rgba(156,124,240,.10)" stroke="var(--line2)"/>
+   <text x="160" y="150" text-anchor="middle" font-family="'Noto Serif TC',serif" font-weight="900" font-size="29" fill="var(--gold)">三方</text>
+   <text x="160" y="184" text-anchor="middle" font-family="'Noto Serif TC',serif" font-weight="900" font-size="29" fill="var(--purple)">四正</text>
+   ${Object.keys(pos).map(cell).join('')}
+ </svg>
+ <div class="svg-hint">${hint}</div>`;
+}
+
+/* ======================= 其餘教學 SVG ======================= */
+/* 四化能量循環圖：忌→權→科→祿 順時針 */
+function svgSihuaCycle(){
+ const nodes=[["忌","red","餓·空缺"],["權","purple","掌握"],["科","cyan","分享"],["祿","green","滿足"]];
+ const cx=140,cy=120,r=80;let g="";
+ nodes.forEach((nd,i)=>{const a=(-90+i*90)*Math.PI/180;const x=+(cx+r*Math.cos(a)).toFixed(1),y=+(cy+r*Math.sin(a)).toFixed(1);
+   g+=`<circle cx="${x}" cy="${y}" r="29" fill="rgba(6,5,14,.55)" stroke="var(--${nd[1]})" stroke-width="2"/>
+   <text x="${x}" y="${y-3}" text-anchor="middle" dominant-baseline="central" font-family="'Noto Serif TC',serif" font-weight="900" font-size="23" fill="var(--${nd[1]})">${nd[0]}</text>
+   <text x="${x}" y="${y+16}" text-anchor="middle" font-size="8.5" fill="var(--muted)">${nd[2]}</text>`;});
+ return `<svg viewBox="0 0 280 240" width="100%" style="max-width:330px;display:block;margin:0 auto">
+   <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="4 5"/>
+   <text x="${cx}" y="${cy-6}" text-anchor="middle" font-family="'Noto Serif TC',serif" font-weight="700" font-size="13" fill="var(--muted)">肚子餓</text>
+   <text x="${cx}" y="${cy+13}" text-anchor="middle" font-family="'Noto Serif TC',serif" font-weight="700" font-size="13" fill="var(--muted)">循環</text>${g}
+ </svg><div class="svg-hint">餓了(忌)→掌握(權)→分享(科)→滿足(祿)，順時針一圈</div>`;
+}
+/* 殺破狼三角圖 */
+function svgShapolang(){
+ const pts=[["七殺","命宮",140,52,"red"],["貪狼","財帛",60,182,"rose"],["破軍","官祿",220,182,"purple"]];
+ let g=`<polygon points="140,64 74,170 206,170" fill="rgba(224,106,80,.07)" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="5 4"/>`;
+ pts.forEach(p=>{g+=`<circle cx="${p[2]}" cy="${p[3]}" r="33" fill="rgba(6,5,14,.5)" stroke="var(--${p[4]})" stroke-width="2"/>
+   <text x="${p[2]}" y="${p[3]-4}" text-anchor="middle" font-family="'Noto Serif TC',serif" font-weight="900" font-size="19" fill="var(--${p[4]})">${p[0]}</text>
+   <text x="${p[2]}" y="${p[3]+15}" text-anchor="middle" font-size="9" fill="var(--muted)">${p[1]}</text>`;});
+ return `<svg viewBox="0 0 280 230" width="100%" style="max-width:330px;display:block;margin:0 auto">${g}</svg>
+ <div class="svg-hint">七殺、破軍、貪狼永遠三方會照——一顆坐命，另兩顆必在財帛與官祿</div>`;
+}
+/* 大限接力時間軸 */
+function svgDaxianAxis(){
+ const segs=6,x0=24,x1=264,seg=(x1-x0)/segs,cols=["purple","gold","cyan","green","rose","red"];let g="";
+ for(let k=0;k<segs;k++){const sx=x0+k*seg;g+=`<rect x="${sx.toFixed(1)}" y="46" width="${(seg-4).toFixed(1)}" height="22" rx="5" fill="var(--${cols[k]})" opacity="0.72"/>
+   <text x="${(sx+seg/2-2).toFixed(1)}" y="61" text-anchor="middle" font-size="9.5" fill="#0E0C1A" font-weight="700">${k*10}–${k*10+9}</text>`;}
+ return `<svg viewBox="0 0 288 108" width="100%" style="max-width:360px;display:block;margin:0 auto">
+   <text x="144" y="26" text-anchor="middle" font-family="'Noto Serif TC',serif" font-weight="700" font-size="13" fill="var(--gold)">人生大限 · 每十年一棒</text>${g}
+   <text x="24" y="90" font-size="9" fill="var(--muted2)">出生</text>
+   <text x="264" y="90" text-anchor="end" font-size="9" fill="var(--muted2)">百歲→</text>
+ </svg><div class="svg-hint">本命＝先天體質、大限＝每十年跑道、流年＝今年天氣</div>`;
+}
+/* 主星四象限圖 */
+function svgQuadrant(){
+ const P={qisha:[70,56],pojun:[112,96],wuqu:[54,122],lianzhen:[150,70],ziwei:[220,56],taiyang:[254,98],tanlang:[248,178],tianji:[58,176],tianxiang:[108,214],tianliang:[54,246],tiantong:[150,252],tianfu:[210,196],taiyin:[172,230],jumen:[250,244]};
+ let dots="";Object.keys(P).forEach(id=>{const x=P[id][0],y=P[id][1],c=STAR_COLOR[id],nm=STARS.find(s=>s.id===id).name;
+   dots+=`<circle cx="${x}" cy="${y}" r="16" fill="rgba(6,5,14,.55)" stroke="var(--${c})" stroke-width="1.5"/><text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-family="'Noto Serif TC',serif" font-size="11" font-weight="700" fill="var(--${c})">${esc(nm)}</text>`;});
+ return `<svg viewBox="0 0 300 300" width="100%" style="max-width:350px;display:block;margin:0 auto">
+   <line x1="150" y1="12" x2="150" y2="288" stroke="var(--line2)"/><line x1="12" y1="150" x2="288" y2="150" stroke="var(--line2)"/>
+   <text x="150" y="20" text-anchor="middle" font-size="10.5" fill="var(--gold)" font-weight="700">主動·開創</text>
+   <text x="150" y="296" text-anchor="middle" font-size="10.5" fill="var(--cyan)" font-weight="700">穩定·合作</text>
+   <text x="14" y="146" font-size="10.5" fill="var(--green)" font-weight="700">內斂·支援</text>
+   <text x="286" y="146" text-anchor="end" font-size="10.5" fill="var(--purple)" font-weight="700">外顯·領導</text>${dots}
+ </svg><div class="svg-hint">14 主星的性格落點（類 DISC 四象限），供直覺參考</div>`;
+}
+/* 六條線軸線圖 */
+function svgSixLines(){
+ const L=[["命宮","遷移宮","命遷線","gold"],["兄弟宮","交友宮","兄友線","green"],["夫妻宮","官祿宮","夫官線","purple"],["子女宮","田宅宮","子田線","cyan"],["財帛宮","福德宮","財福線","rose"],["疾厄宮","父母宮","疾父線","red"]];
+ let rows="";L.forEach((l,i)=>{const y=26+i*36;rows+=`<line x1="78" y1="${y}" x2="212" y2="${y}" stroke="var(--${l[3]})" stroke-width="2"/>
+   <circle cx="78" cy="${y}" r="4" fill="var(--${l[3]})"/><circle cx="212" cy="${y}" r="4" fill="var(--${l[3]})"/>
+   <text x="70" y="${y+4}" text-anchor="end" font-family="'Noto Serif TC',serif" font-size="12.5" fill="var(--text)">${l[0]}</text>
+   <text x="220" y="${y+4}" font-family="'Noto Serif TC',serif" font-size="12.5" fill="var(--text)">${l[1]}</text>
+   <text x="145" y="${y-6}" text-anchor="middle" font-size="9" fill="var(--${l[3]})" font-weight="700">${l[2]}</text>`;});
+ return `<svg viewBox="0 0 300 240" width="100%" style="max-width:360px;display:block;margin:0 auto">${rows}</svg>
+ <div class="svg-hint">六條對沖軸線：每宮與對宮是一組人生課題，一定要一起看</div>`;
+}
+
+/* ---- 學會按鈕 ---- */
+function learnBtn(cat,id,dn){
+ if(dn)return `<div class="actions"><div class="doneflag">✦ 已學會此星曜</div><button class="btn btn-ghost" onclick="unlearn('${cat}','${id}')">取消標記</button></div>`;
+ return `<div class="actions"><button class="btn btn-g" onclick="markLearn('${cat}','${id}')">✓ 標記已學會 · +10 XP</button></div>`;
+}
+function markLearn(cat,id){if(!S.learned[cat].includes(id)){S.learned[cat].push(id);SFX.learn();const up=addXP(10);if(!up)toast("已學會 +10 XP ✦");checkClear();}closeModal();render();}
+function unlearn(cat,id){S.learned[cat]=S.learned[cat].filter(x=>x!==id);S.xp=Math.max(0,S.xp-10);save();closeModal();render();}
+function checkClear(){if(totalLearned()>=TOTAL_CARDS&&!S.cleared){S.cleared=true;save();}}
+
+/* ======================= 測驗中心 ======================= */
+function viewQuizHub(){
+ const wrongN=Object.values(S.wrong).filter(w=>!w.resolved).length;
+ return `<div class="eyebrow">練習 · 測驗</div><h2 class="title">測驗</h2>
+ <p class="lead">透過測驗檢驗學習成果。答對 +5 XP；答錯會自動收進錯題本，之後可重練。</p>
+ <div class="qhub-mode">
+   <div class="card modecard tap" onclick="chapterPick()"><div class="em">📚</div><div class="info"><h3>章節測驗</h3><p>選一個主題集中練習</p></div><div class="arrow">›</div></div>
+   <div class="card modecard tap" onclick="startQuiz(pickRandom(10))"><div class="em">🎲</div><div class="info"><h3>隨機測驗</h3><p>各主題混合 10 題</p></div><div class="arrow">›</div></div>
+   <div class="card modecard tap" onclick="startWrongQuiz()" style="${wrongN?'':'opacity:.55'}"><div class="em">🔁</div><div class="info"><h3>錯題重練</h3><p>${wrongN?`複習你答錯的 ${wrongN} 題`:"目前沒有錯題，繼續保持"}</p></div><div class="arrow">›</div></div>
+ </div>`;
+}
+function chapterPick(){SFX.tap();const topics=[["宮位","十二宮","🏛️"],["主星","十四主星","⭐"],["四化","祿權科忌","🔮"],["雙星","雙星組合","♊"],["框架","框架與格局","🗺️"],["大限","大限流年","⏳"],["綜合","觀念綜合","🧭"]];
+ view().innerHTML=`<div class="eyebrow">章節測驗</div><h2 class="title">選擇主題</h2>
+ <p class="lead">每個章節隨機出最多 10 題。</p>
+ <div class="topicpick">${topics.map(([tp,label])=>{const n=QUESTIONS.filter(q=>q.topic===tp).length;return `<button onclick="startQuiz(pickTopic('${tp}',10))">${label}<span>${n} 題題庫</span></button>`;}).join("")}
+ <button onclick="startQuiz(pickRandom(12))" style="grid-column:1/-1;text-align:center">綜合大考 · 全主題 12 題<span>不分章節混合測驗</span></button></div>
+ <div style="margin-top:16px"><button class="btn btn-ghost" onclick="go('quiz')">← 返回</button></div>`;
+}
+function pickTopic(tp,n){return shuffle(QUESTIONS.filter(q=>q.topic===tp)).slice(0,n);}
+function pickRandom(n){return shuffle(QUESTIONS).slice(0,n);}
+
+/* ---- 測驗進行 ---- */
+let Q={list:[],i:0,correct:0,answered:false,mode:"normal"};
+function startQuiz(list,mode){if(!list.length){toast("題庫不足");return;}Q={list,i:0,correct:0,answered:false,mode:mode||"normal"};SFX.tap();renderQ();}
+function startWrongQuiz(){const ids=Object.keys(S.wrong).filter(id=>!S.wrong[id].resolved);const list=shuffle(QUESTIONS.filter(q=>ids.includes(q.id)));if(!list.length){toast("目前沒有錯題 ✦");return;}startQuiz(list,"wrong");}
+
+function renderQ(){
+ const q=Q.list[Q.i];Q.answered=false;Q.sel=(q.t==="multi")?[]:null;Q.match={};
+ const prog=Math.round((Q.i)/Q.list.length*100);
+ const typeLabel={single:"單選題",multi:"多選題（可複選）",fill:"填空題",match:"配對題",scenario:"情境題"}[q.t];
+ let body="";
+ if(q.t==="single"||q.t==="scenario"){body=`<div class="opts" id="opts">${shuffle(q.o).map(o=>`<div class="opt" data-v="${esc(o)}" onclick="pickOne(this)"><div class="box">✓</div><div>${esc(o)}</div></div>`).join("")}</div>`;}
+ else if(q.t==="multi"){body=`<div class="opts" id="opts">${shuffle(q.o).map(o=>`<div class="opt multi" data-v="${esc(o)}" onclick="pickMulti(this)"><div class="box">✓</div><div>${esc(o)}</div></div>`).join("")}</div>`;}
+ else if(q.t==="fill"){body=`<input class="fillbox" id="fillin" placeholder="輸入答案" autocomplete="off" onkeydown="if(event.key==='Enter')submitQ()">`;}
+ else if(q.t==="match"){const rights=shuffle(Object.values(q.pairs));body=`<div id="opts">${Object.keys(q.pairs).map(k=>`<div class="matchrow" data-k="${esc(k)}"><div class="ml">${esc(k)}</div><select onchange="Q.match['${esc(k)}']=this.value"><option value="">— 選擇 —</option>${rights.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join("")}</select></div>`).join("")}</div>`;}
+ view().innerHTML=`<div class="qwrap">
+   <div class="qtop"><span>${Q.mode==="wrong"?"🔁 錯題重練":"第 "+(Q.i+1)+" / "+Q.list.length+" 題"}</span><span class="chip green">✓ ${Q.correct}</span></div>
+   <div class="bar qprog"><i style="width:${prog}%"></i></div>
+   <div class="qcard">
+     <div class="qtype">${typeLabel}</div>
+     <p class="qtext">${esc(q.q)}</p>
+     ${body}
+     <div id="explbox"></div>
+     <div style="margin-top:18px" id="qbtn"><button class="btn btn-p" onclick="submitQ()">送出答案</button></div>
+   </div>
+   <div style="margin-top:14px"><button class="btn btn-ghost" onclick="quitQuiz()">結束測驗</button></div>
+ </div>`;
+}
+function pickOne(el){if(Q.answered)return;SFX.tap();document.querySelectorAll("#opts .opt").forEach(o=>o.classList.remove("sel"));el.classList.add("sel");Q.sel=el.dataset.v;}
+function pickMulti(el){if(Q.answered)return;SFX.tap();el.classList.toggle("sel");const v=el.dataset.v;if(Q.sel.includes(v))Q.sel=Q.sel.filter(x=>x!==v);else Q.sel.push(v);}
+
+function normFill(s){return String(s||"").trim().replace(/\s/g,"").replace(/宮$/,"");}
+function submitQ(){
+ if(Q.answered){nextQ();return;}
+ const q=Q.list[Q.i];let ok=false,correctText="";
+ if(q.t==="single"||q.t==="scenario"){if(Q.sel==null){toast("請先選一個答案");return;}ok=(Q.sel===q.a);correctText=q.a;}
+ else if(q.t==="multi"){if(!Q.sel.length){toast("請至少選一項");return;}const A=q.a.slice().sort().join("|");const B=Q.sel.slice().sort().join("|");ok=(A===B);correctText=q.a.join("、");}
+ else if(q.t==="fill"){const inp=$("#fillin").value;if(!inp.trim()){toast("請輸入答案");return;}ok=(normFill(inp)===normFill(q.a));correctText=q.a;}
+ else if(q.t==="match"){const keys=Object.keys(q.pairs);if(keys.some(k=>!Q.match[k])){toast("請完成所有配對");return;}ok=keys.every(k=>Q.match[k]===q.pairs[k]);correctText=keys.map(k=>k+"→"+q.pairs[k]).join("；");}
+
+ Q.answered=true;
+ // 視覺標記
+ if(q.t==="single"||q.t==="scenario"||q.t==="multi"){document.querySelectorAll("#opts .opt").forEach(o=>{o.classList.add("locked");o.onclick=null;const v=o.dataset.v;const isAns=(q.t==="multi")?q.a.includes(v):v===q.a;const chosen=(q.t==="multi")?Q.sel.includes(v):v===Q.sel;if(isAns)o.classList.add("correct");else if(chosen)o.classList.add("wrong");});}
+ else if(q.t==="fill"){const el=$("#fillin");el.disabled=true;el.style.borderColor=ok?"var(--ok)":"var(--no)";el.style.color=ok?"var(--ok)":"var(--no)";}
+ else if(q.t==="match"){document.querySelectorAll(".matchrow").forEach(r=>{const k=r.dataset.k;const good=Q.match[k]===q.pairs[k];r.classList.add(good?"mok":"mno");r.querySelector("select").disabled=true;});}
+
+ if(ok){Q.correct++;SFX.ok();S.quiz.correct++;if(Q.mode==="wrong"&&S.wrong[q.id]){S.wrong[q.id].resolved=true;}}
+ else{SFX.no();if(!S.wrong[q.id])S.wrong[q.id]={count:0,resolved:false};S.wrong[q.id].count++;S.wrong[q.id].resolved=false;S.wrong[q.id].last=todayStr();}
+ S.quiz.answered++;save();
+
+ $("#explbox").innerHTML=`<div class="expl ${ok?'ok':'no'}"><div class="r">${ok?"✓ 答對了":"✗ 答錯了"}</div>
+   ${ok?"":`<div style="margin-bottom:6px">正確答案：<span class="ans">${esc(correctText)}</span></div>`}
+   <div>${esc(q.e)}</div></div>`;
+ const last=Q.i>=Q.list.length-1;
+ $("#qbtn").innerHTML=`<button class="btn ${ok?'btn-g':'btn-p'}" onclick="${last?'finishQuiz()':'nextQ()'}">${last?"看成績 →":"下一題 →"}</button>`;
+ if(ok)addXP(5);
+}
+function nextQ(){Q.i++;renderQ();}
+function quitQuiz(){if(Q.i>0||Q.answered){finishQuiz();}else{go('quiz');}}
+
+function finishQuiz(){
+ const total=Q.answered?Q.i+1:Q.i; // 已作答題數
+ const done=Math.max(1,Q.list.length);
+ const correct=Q.correct;const rate=Math.round(correct/done*100);
+ if(rate>S.bestScore){S.bestScore=rate;save();}
+ SFX.level.call&&null;
+ let msg,em;
+ if(rate===100){em="🏆";msg="滿分！星盤了然於心";}
+ else if(rate>=80){em="✨";msg="表現優異，繼續精進";}
+ else if(rate>=60){em="📖";msg="不錯，錯題再複習一輪";}
+ else{em="🌱";msg="打好基礎，回學習中心再讀一次";}
+ const wrongN=Object.values(S.wrong).filter(w=>!w.resolved).length;
+ view().innerHTML=`<div class="result">
+   <div style="font-size:52px">${em}</div>
+   <div class="score">${correct}<small>/${done}</small></div>
+   <div class="rankname" style="font-size:20px;margin-bottom:4px">正確率 ${rate}%</div>
+   <div class="rmsg">${msg}</div>
+   <div class="rstats">
+     <div class="stat green"><b>+${correct*5}</b><span>本次獲得 XP</span></div>
+     <div class="stat gold"><b>${wrongN}</b><span>待複習錯題</span></div>
+   </div>
+   <div class="grid" style="gap:10px">
+     ${wrongN?`<button class="btn btn-p" onclick="startWrongQuiz()">🔁 立即重練錯題</button>`:``}
+     <button class="btn btn-g" onclick="go('quiz')">再測一次</button>
+     <button class="btn btn-ghost" onclick="go('home')">回首頁</button>
+   </div>
+ </div>`;
+ window.scrollTo(0,0);
+}
+
+/* ======================= 錯題本 ======================= */
+function viewWrong(){
+ const ids=Object.keys(S.wrong).filter(id=>!S.wrong[id].resolved);
+ if(!ids.length)return `<div class="eyebrow">複習 · 錯題本</div><h2 class="title">錯題本</h2>
+   <div class="empty"><div class="em">🎯</div><p style="font-family:'Noto Serif TC',serif;font-size:18px;color:var(--gold)">目前沒有待複習的錯題</p><p>去測驗練習，答錯的題目會自動收集到這裡，方便你重點加強。</p><div style="max-width:260px;margin:18px auto 0"><button class="btn btn-p" onclick="go('quiz')">前往測驗</button></div></div>`;
+ const items=ids.map(id=>{const q=QUESTIONS.find(x=>x.id===id);const w=S.wrong[id];return{q,w};}).filter(x=>x.q);
+ const topicChip={"宮位":"purple","主星":"gold","四化":"cyan","綜合":"green","雙星":"rose","框架":"red","大限":"cyan"};
+ return `<div class="eyebrow">複習 · 錯題本</div><h2 class="title">錯題本</h2>
+ <p class="lead">共 ${items.length} 題待加強。答對後會自動移出錯題本。</p>
+ <div style="margin-bottom:16px"><button class="btn btn-p" onclick="startWrongQuiz()">🔁 重練全部錯題（${items.length} 題）</button></div>
+ <div class="cardlist">${items.map(({q,w})=>`
+   <div class="card wrongitem tap" onclick="openWrong('${q.id}')">
+     <div class="top"><span class="chip ${topicChip[q.topic]||''}">${q.topic}</span><span class="cnt">✗ 答錯 ${w.count} 次</span></div>
+     <div class="q">${esc(q.q)}</div>
+   </div>`).join("")}</div>`;
+}
+function openWrong(id){const q=QUESTIONS.find(x=>x.id===id);
+ let ansText=Array.isArray(q.a)?q.a.join("、"):(q.t==="match"?Object.entries(q.pairs).map(([k,v])=>k+"→"+v).join("；"):q.a);
+ openSheet(`
+  <div class="head"><div class="glyphL pp">?</div><div><h2 style="font-size:20px">錯題解析</h2><div class="row"><span class="chip">${q.topic}</span></div></div></div>
+  <div class="field"><div class="k">題目</div><div class="v" style="font-family:'Noto Serif TC',serif;font-size:16px">${esc(q.q)}</div></div>
+  <div class="core-box"><div class="k">正確答案</div><div class="v">${esc(ansText)}</div></div>
+  <div class="field"><div class="k">解析</div><div class="v">${esc(q.e)}</div></div>
+  <div class="actions"><button class="btn btn-p" onclick="closeModal();startQuiz([QUESTIONS.find(x=>x.id==='${id}')],'wrong')">🔁 單獨重練這題</button></div>
+ `);
+}
+
+/* ======================= 我的 ======================= */
+function viewMe(){
+ const L=levelInfo(S.xp);const acc=S.quiz.answered?Math.round(S.quiz.correct/S.quiz.answered*100):0;
+ const badges=computeBadges();
+ return `<div class="eyebrow">個人 · 修習進度</div><h2 class="title">我的研習</h2>
+ <div class="card" style="margin-bottom:16px">
+   <div class="rankrow"><div class="rankname"><small>Lv.${L.lv}</small>${esc(L.title)}</div><div class="xpnum">${S.xp} XP</div></div>
+   <div class="bar"><i style="width:${Math.round(L.prog*100)}%"></i></div>
+   <div class="stats3" style="margin-bottom:0"><div class="stat gold"><b>${totalLearned()}</b><span>已學 /${TOTAL_CARDS}</span></div><div class="stat purple"><b>${S.quiz.answered}</b><span>已答題數</span></div><div class="stat green"><b>${acc}%</b><span>正確率</span></div></div>
+ </div>
+
+ <div class="grouphdr">修習階級</div>
+ <div class="rankladder">${LEVELS.map(x=>{const reached=S.xp>=x.xp;const cur=x.lv===L.lv;return `<div class="rl ${cur?'cur':(reached?'reached':'')}"><div class="lv">Lv.${x.lv}</div><div class="nm">${esc(x.title)}</div><div class="st">${cur?"● 目前":(reached?"✓":x.xp+" XP")}</div></div>`;}).join("")}</div>
+
+ <div class="grouphdr">成就徽章</div>
+ <div class="badges">${badges.map(b=>`<div class="badge ${b.got?'got':''}"><div class="em">${b.got?b.em:"🔒"}</div><div><div class="bn">${b.n}</div><div class="bd">${b.d}</div></div></div>`).join("")}</div>
+
+ <div class="grouphdr">未來藍圖 · v3</div>
+ <p style="font-size:12px;color:var(--muted);margin:0 0 10px">規劃中的進階功能，讓系統更完整（本版先列計劃）：</p>
+ <div class="cardlist">${V3PLAN.map(x=>`<div class="card" style="padding:13px 15px"><h4 style="font-family:'Noto Serif TC',serif;font-size:15px;margin:0 0 4px"><span style="margin-right:6px">${x.em}</span>${esc(x.t)} <span class="chip" style="font-size:9px;padding:1px 6px;color:var(--muted2)">規劃中</span></h4><div style="font-size:12px;color:var(--muted);line-height:1.6">${esc(x.d)}</div></div>`).join("")}</div>
+ <a href="https://www.fatemaster.ai/zh/workspace/ziwei-doushu" target="_blank" rel="noopener" style="text-decoration:none;display:block;margin-top:12px"><div class="btn btn-ghost">🔮 前往自動排盤（fatemaster）→</div></a>
+
+ <div class="grouphdr">設定</div>
+ <div class="setrow"><div class="l"><b>音效</b><span>答題與升級的合成音效</span></div><div class="toggle ${S.sound?'on':''}" onclick="toggleSound(this)"></div></div>
+ <div class="setrow" onclick="resetAll()" style="cursor:pointer"><div class="l"><b style="color:var(--red)">清除學習紀錄</b><span>重設所有進度、經驗值與錯題（此裝置）</span></div><div class="arrow" style="color:var(--muted2);font-size:20px">›</div></div>
+ <div class="note" style="margin-top:14px">學習紀錄儲存在此瀏覽器（本機）。換裝置或清除瀏覽資料會消失。日後若要跨裝置同步，可再接雲端（Firebase / 後端）。</div>`;
+}
+function computeBadges(){
+ const full=c=>S.learned[c].length>= ({palace:PALACES.length,star:STARS.length,sihua:SIHUA.length,aux:AUX.length,duo:DUO.length,frame:FRAME.length,daxian:DAXIAN.length}[c]);
+ return [
+  {n:"命盤入門",d:"學會全部十二宮",em:"🏛️",got:full("palace")},
+  {n:"星曜通曉",d:"學會全部十四主星",em:"⭐",got:full("star")},
+  {n:"四化貫通",d:"學會全部四化",em:"🔮",got:full("sihua")},
+  {n:"眾星羅列",d:"學會全部輔星煞曜",em:"✧",got:full("aux")},
+  {n:"雙星入門",d:"學會全部 12 組雙星",em:"♊",got:full("duo")},
+  {n:"識得格局",d:"學會三大框架",em:"🗺️",got:full("frame")},
+  {n:"懂看大限",d:"學會大限流年 5 卡",em:"⏳",got:full("daxian")},
+  {n:"百題磨練",d:"累積答題滿 100 題",em:"✍️",got:S.quiz.answered>=100},
+  {n:"星盤大師",d:"單次測驗拿到滿分",em:"🏆",got:S.bestScore>=100},
+ ];
+}
+function toggleSound(el){S.sound=!S.sound;save();el.classList.toggle("on",S.sound);if(S.sound)SFX.ok();}
+function resetAll(){if(confirm("確定要清除所有學習紀錄嗎？此動作無法復原。")){S=JSON.parse(JSON.stringify(DEFAULT));save();toast("已清除，重新開始 ✦");go('home');}}
+
+/* ======================= Modal ======================= */
+function openSheet(inner){const m=$("#modal");m.className="modal";m.innerHTML=`<div class="sheet" onclick="event.stopPropagation()"><div class="grab"></div>${inner}</div>`;m.onclick=closeModal;document.body.style.overflow="hidden";}
+function closeModal(){const m=$("#modal");m.className="";m.innerHTML="";document.body.style.overflow="";}
+
+/* ======================= 升級儀式 ======================= */
+function ceremony(newLv){const L=LEVELS.find(x=>x.lv===newLv);if(!L)return;SFX.level();const el=$("#lvup");el.hidden=false;el.className="lvup";
+ el.innerHTML=`<div class="ray"></div><div class="burst"><div class="up">L E V E L　U P</div><div class="lvbig">Lv.<span>${L.lv}</span></div><div class="ttl">${esc(L.title)}</div><div class="tap">點擊任意處繼續</div></div>`;
+ el.querySelector(".burst").classList.add("shake");
+ el.onclick=()=>{el.hidden=true;el.className="";el.innerHTML="";};
+}
+
+/* ======================= 啟動 ======================= */
+render();
+</script>
+</body>
+</html>
