@@ -368,6 +368,36 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .figname::before{content:"🎭 ";font-size:15px}
 .figrole{font-size:12px;color:var(--purple);font-weight:700;margin-bottom:8px}
 .figdesc{font-size:13.5px;color:var(--text);line-height:1.7}
+/* 排盤表單 */
+.formrow{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.formrow>label{flex:none;width:64px;font-size:13px;color:var(--muted);font-weight:700}
+.formrow select{flex:1;padding:11px 12px;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:inherit;font-size:15px}
+.segbtns{flex:1;display:flex;gap:8px}
+.segbtn{flex:1;padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;transition:.14s}
+.segbtn.on{background:linear-gradient(135deg,var(--purple-d),var(--purple));border-color:var(--purple);color:#fff}
+.segbtn:active{transform:scale(.96)}
+/* 排盤命盤 */
+.cs-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cs-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,minmax(82px,auto));gap:4px;min-width:344px}
+.cs-cell{border:1px solid var(--line);border-radius:9px;background:linear-gradient(160deg,var(--panel2),var(--panel));padding:5px 6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden}
+.cs-cell:active{transform:scale(.98)}
+.cs-cell:hover{border-color:var(--purple-d)}
+.cs-top{display:flex;justify-content:space-between;align-items:baseline;gap:3px}
+.cs-pname{font-family:"Noto Serif TC",serif;font-weight:700;font-size:11.5px;color:var(--gold);white-space:nowrap}
+.cs-gz{font-size:9px;color:var(--muted2);white-space:nowrap}
+.cs-majs{display:flex;flex-wrap:wrap;gap:3px}
+.cs-star{font-family:"Noto Serif TC",serif;font-weight:700;font-size:12.5px;color:var(--text);line-height:1.3;white-space:nowrap}
+.cs-star sub{font-size:8px;color:var(--muted);margin-left:1px;vertical-align:baseline}
+.cs-star em,.cs-min em{font-style:normal;font-size:8.5px;font-weight:700;padding:0 2px;border-radius:3px;margin-left:1px;color:#fff;vertical-align:top}
+.m-green{background:var(--green)}.m-purple{background:var(--purple)}.m-cyan{background:var(--cyan)}.m-red{background:var(--red)}.m-gold{background:var(--gold-d)}
+.cs-mins{display:flex;flex-wrap:wrap;gap:2px 4px}
+.cs-min{font-size:10px;color:var(--muted);white-space:nowrap}
+.cs-bot{margin-top:auto;font-size:8.5px;color:var(--muted2)}
+.cs-empty{color:var(--muted2)}
+.cs-center{grid-column:2/4;grid-row:2/4;border:1px solid var(--line2);border-radius:11px;background:radial-gradient(circle at 50% 35%,rgba(156,124,240,.14),var(--bg2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px;text-align:center}
+.cs-cbig{font-family:"Noto Serif TC",serif;font-weight:900;font-size:19px;color:var(--gold)}
+.cs-cinfo{font-size:10.5px;color:var(--muted);line-height:1.4}
+.cs-cdate{font-size:9.5px;color:var(--muted2)}
 .miaopick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .miaobtn{padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:15px;font-weight:700;cursor:pointer;transition:.14s}
 .miaobtn:active{transform:scale(.95)}
@@ -627,6 +657,8 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
 })();
 </script>
 <!-- USLED AUTH END (</head> 前) -->
+<!-- 紫微排盤引擎 iztro（開源） -->
+<script src="https://cdn.jsdelivr.net/npm/iztro@2.5.8/dist/iztro.min.js"></script>
 </head>
 <body class="auth-checking">
 
@@ -702,7 +734,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v3.0";
+const APP_VERSION = "v3.1";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1217,10 +1249,10 @@ const BRIGHT_LEVELS=[
 
 /* ---------- v3 未來藍圖（規劃中，本版先列計劃） ---------- */
 const V3PLAN = [
- {em:"✅",t:"廟旺利陷亮度系統",d:"已完成！在「學習」頁 →「🔆 廟旺利陷亮度」查每顆星在 12 宮的亮度。", done:true},
- {em:"🌀",t:"飛星四化 · 自化",d:"北派進階：宮干飛化、自化，讓四化在宮位間流動串連，看出事件的來龍去脈。（需先有排盤功能）"},
+ {em:"✅",t:"自動排盤",d:"已完成！首頁「🪐 自動排盤」輸入生日，就排出你的命盤（主星·廟旺·四化·大限·神煞）。", done:true},
+ {em:"✅",t:"廟旺利陷亮度系統",d:"已完成！「學習」頁 →「🔆 廟旺利陷亮度」查每顆星在 12 宮的亮度。", done:true},
+ {em:"🌀",t:"飛星四化 · 自化",d:"北派進階：宮干飛化、自化，讓四化在宮位間流動串連，看出事件的來龍去脈。（排盤已就緒，可接著做）"},
  {em:"🔢",t:"144 種星宮組合全收錄",d:"從 24 組雙星，擴充到完整的星宮組合圖鑑，一顆星在每個宮位的差異全解。"},
- {em:"🤖",t:"自動排盤 / 自動判盤",d:"接 AI 或排盤引擎，輸入生辰自動出盤、自動判讀。目前可先用下方 fatemaster 一鍵排盤，本站專注教你「讀懂」。"},
 ];
 
 /* ---------- 等級 ---------- */
@@ -1449,6 +1481,7 @@ function render(){touchStreak();const v=view();
  else if(CUR==="daxian")v.innerHTML=viewDaxian();
  else if(CUR==="shensha")v.innerHTML=viewShensha();
  else if(CUR==="miao")v.innerHTML=viewMiao();
+ else if(CUR==="chart")v.innerHTML=viewChart();
  else if(CUR==="quiz")v.innerHTML=viewQuizHub();
  else if(CUR==="wrong")v.innerHTML=viewWrong();
  else if(CUR==="me")v.innerHTML=viewMe();
@@ -1482,6 +1515,7 @@ function viewHome(){
  <div class="section-gap"></div>
  <div class="eyebrow">開始學習</div>
  <div class="tiles">
+   <div class="tile big" onclick="go('chart')" style="border-color:var(--gold-d);background:radial-gradient(120% 100% at 90% -10%,var(--gold-glow),var(--panel))"><div class="em">🪐</div><div><h3>自動排盤<span class="newdot">NEW</span></h3><p>輸入生日 → 排出你的命盤（主星·廟旺·四化·大限·神煞）</p></div><div class="arrow">›</div></div>
    <div class="tile" onclick="go('palace')"><div class="em">🏛️</div><div><h3>十二宮</h3><p>命盤十二個人生舞台</p></div><div class="bar thin mini"><i style="width:${pct('palace')}%"></i></div></div>
    <div class="tile" onclick="go('star')"><div class="em">⭐</div><div><h3>十四主星</h3><p>星曜性格＋歷史人物</p></div><div class="bar thin mini"><i style="width:${pct('star')}%"></i></div></div>
    <div class="tile" onclick="go('sihua')"><div class="em">🔮</div><div><h3>四化</h3><p>祿權科忌＋十天干查表</p></div><div class="bar thin mini"><i style="width:${pct('sihua')}%"></i></div></div>
@@ -1508,6 +1542,7 @@ function viewLearn(){
   {r:"daxian",em:"⏳",n:"大限流年",d:"本命、大限、流年的觀念課（不排盤）",cat:"daxian",tot:DAXIAN.length},
   {r:"shensha",em:"🎖️",n:"神煞十二神",d:"命盤角落那些會轉動的字（青龍、長生…）附例子",cat:"shensha",tot:SHENSHA.length},
   {r:"miao",em:"🔆",n:"廟旺利陷亮度",d:"查每顆星在 12 宮的亮度（燈泡有亮有暗）",tool:true},
+  {r:"chart",em:"🪐",n:"自動排盤",d:"輸入生日排出你的命盤，主星廟旺四化大限神煞全都有",tool:true},
  ];
  return `<div class="eyebrow">學習中心</div><h2 class="title">星曜研習</h2>
  <p class="lead">建議依序：宮位（舞台）→ 主星（演員）→ 四化（劇情）→ 輔星（配角）→ 雙星（合演）→ 框架格局（劇本）→ 大限流年（時間軸）。點卡片閱讀，讀完標記「已學會」可累積經驗值。</p>
@@ -1855,6 +1890,84 @@ function showMiao(id){
  const cells=BRANCHES.map((b,i)=>{const lv=arr[i];const c=LVCOLOR[lv];return `<div class="miaocell" style="border-color:var(--${c})"><div class="mb">${b}</div><div class="ml" style="color:var(--${c})">${lv}</div></div>`;}).join("");
  const best=BRANCHES.filter((b,i)=>arr[i]==='廟');const worst=BRANCHES.filter((b,i)=>arr[i]==='陷');
  document.getElementById('miaoResult').innerHTML=`<div class="card" style="padding:14px"><div style="font-family:'Noto Serif TC',serif;font-weight:900;font-size:18px;color:var(--gold);margin-bottom:10px">${esc(s.name)}　亮度地圖</div><div class="miaogrid">${cells}</div><p style="font-size:12.5px;color:var(--muted);margin:13px 0 0;line-height:1.8">最亮（廟）：<b style="color:var(--gold)">${best.length?best.join("、")+" 宮":"—"}</b><br>最暗（陷）：<b style="color:var(--red)">${worst.length?worst.join("、")+" 宮":"—"}</b></p></div>`;
+}
+
+/* ======================= 自動排盤（v3 功能二，接 iztro 開源引擎） ======================= */
+const SHICHEN=[["早子時","00:00–00:59",0],["丑時","01:00–02:59",1],["寅時","03:00–04:59",2],["卯時","05:00–06:59",3],["辰時","07:00–08:59",4],["巳時","09:00–10:59",5],["午時","11:00–12:59",6],["未時","13:00–14:59",7],["申時","15:00–16:59",8],["酉時","17:00–18:59",9],["戌時","19:00–20:59",10],["亥時","21:00–22:59",11],["晚子時","23:00–23:59",12]];
+const CHART_KEY="ziwei_chart_input";
+let CHART=null;
+function loadChartInput(){try{return JSON.parse(localStorage.getItem(CHART_KEY))||{};}catch(e){return {};}}
+function saveChartInput(o){try{localStorage.setItem(CHART_KEY,JSON.stringify(o));}catch(e){}}
+function viewChart(){
+ const s=loadChartInput();
+ const opt=(arr,sel)=>arr.map(v=>`<option value="${v}"${String(v)===String(sel)?" selected":""}>${v}</option>`).join("");
+ const yrs=[];for(let y=2026;y>=1930;y--)yrs.push(y);
+ return `<div class="eyebrow">個人 · 自動排盤</div><h2 class="title">自動排盤</h2>
+ <p class="lead">輸入出生資料，自動排出你的紫微命盤（主星、廟旺、四化、大限、神煞全都有）。引擎為開源 iztro。<b>資料只算在你手機本機、不上傳</b>。</p>
+ <div class="card" style="padding:16px">
+   <div class="formrow"><label>曆法</label><div class="segbtns"><button class="segbtn ${s.cal!=="lunar"?"on":""}" data-cal="solar" onclick="pickSeg(this,'cCal','cal')">國曆(陽曆)</button><button class="segbtn ${s.cal==="lunar"?"on":""}" data-cal="lunar" onclick="pickSeg(this,'cCal','cal')">農曆</button></div></div>
+   <div class="formrow"><label>出生年</label><select id="cY">${opt(yrs,s.y||1990)}</select></div>
+   <div class="formrow"><label>月／日</label><div style="display:flex;gap:8px;flex:1"><select id="cM" style="flex:1">${opt(Array.from({length:12},(_,i)=>i+1),s.m||1)}</select><select id="cD" style="flex:1">${opt(Array.from({length:31},(_,i)=>i+1),s.d||1)}</select></div></div>
+   <div class="formrow"><label>時辰</label><select id="cT">${SHICHEN.map(t=>`<option value="${t[2]}"${String(t[2])===String(s.ti)?" selected":""}>${t[0]}（${t[1]}）</option>`).join("")}</select></div>
+   <div class="formrow"><label>性別</label><div class="segbtns"><button class="segbtn ${s.g!=="女"?"on":""}" data-g="男" onclick="pickSeg(this,'cG','g')">男</button><button class="segbtn ${s.g==="女"?"on":""}" data-g="女" onclick="pickSeg(this,'cG','g')">女</button></div></div>
+   <input type="hidden" id="cCal" value="${s.cal||"solar"}"><input type="hidden" id="cG" value="${s.g||"男"}">
+   <button class="btn btn-g" style="margin-top:10px" onclick="submitChart()">✨ 開始排盤</button>
+ </div>
+ <div id="chartOut" style="margin-top:16px"></div>`;
+}
+function pickSeg(b,hid,attr){b.parentNode.querySelectorAll(".segbtn").forEach(x=>x.classList.remove("on"));b.classList.add("on");document.getElementById(hid).value=b.dataset[attr];}
+function submitChart(){
+ if(typeof iztro==="undefined"){toast("排盤引擎載入中，請稍候再按一次");return;}
+ const cal=document.getElementById("cCal").value,g=document.getElementById("cG").value;
+ const y=+document.getElementById("cY").value,m=+document.getElementById("cM").value,d=+document.getElementById("cD").value,ti=+document.getElementById("cT").value;
+ saveChartInput({cal,y,m,d,ti,g});
+ const dateStr=y+"-"+m+"-"+d;
+ try{
+  CHART=(cal==="lunar")?iztro.astro.byLunar(dateStr,ti,g,false,true,"zh-TW"):iztro.astro.bySolar(dateStr,ti,g,true,"zh-TW");
+ }catch(e){toast("排盤失敗："+(e.message||e));return;}
+ SFX.ok();
+ document.getElementById("chartOut").innerHTML=renderChart(CHART);
+ setTimeout(()=>{const el=document.getElementById("chartOut");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});},80);
+}
+const M4C={"祿":"green","權":"purple","科":"cyan","忌":"red"};
+function renderChart(a){
+ const GP={"巳":[1,1],"午":[2,1],"未":[3,1],"申":[4,1],"辰":[1,2],"酉":[4,2],"卯":[1,3],"戌":[4,3],"寅":[1,4],"丑":[2,4],"子":[3,4],"亥":[4,4]};
+ let cells="";
+ a.palaces.forEach((p,idx)=>{
+   const g=GP[p.earthlyBranch];if(!g)return;
+   const maj=p.majorStars.map(st=>`<span class="cs-star">${esc(st.name)}${st.brightness?`<sub>${esc(st.brightness)}</sub>`:""}${st.mutagen?`<em class="m-${M4C[st.mutagen]||"gold"}">${esc(st.mutagen)}</em>`:""}</span>`).join("");
+   const minr=p.minorStars.map(st=>`<span class="cs-min">${esc(st.name)}${st.mutagen?`<em class="m-${M4C[st.mutagen]||"gold"}">${esc(st.mutagen)}</em>`:""}</span>`).join("");
+   const dec=(p.decadal&&p.decadal.range)?p.decadal.range[0]+"-"+p.decadal.range[1]:"";
+   cells+=`<div class="cs-cell" style="grid-column:${g[0]};grid-row:${g[1]}" onclick="openChartPalace(${idx})">
+     <div class="cs-top"><span class="cs-pname">${esc(p.name)}${p.isBodyPalace?"·身":""}</span><span class="cs-gz">${esc(p.heavenlyStem)}${esc(p.earthlyBranch)}</span></div>
+     <div class="cs-majs">${maj||'<span class="cs-empty">—</span>'}</div>
+     <div class="cs-mins">${minr}</div>
+     <div class="cs-bot">${dec?"大限 "+dec:""}</div>
+   </div>`;
+ });
+ const gd=loadChartInput().g||"";
+ const center=`<div class="cs-center">
+   <div class="cs-cbig">命盤</div>
+   <div class="cs-cinfo">${esc(gd)}｜${esc(a.zodiac||"")} ${esc(a.sign||"")}</div>
+   <div class="cs-cinfo" style="color:var(--gold)">${esc(a.fiveElementsClass||"")}</div>
+   <div class="cs-cinfo">命主 ${esc(a.soul||"")}／身主 ${esc(a.body||"")}</div>
+   <div class="cs-cdate">陽 ${esc(a.solarDate||"")}</div>
+   <div class="cs-cdate">農 ${esc(a.lunarDate||"")}</div>
+ </div>`;
+ return `<div class="cs-wrap"><div class="cs-grid">${cells}${center}</div></div>
+ <div class="note">👆 點任一宮，看完整星曜與白話解說。星旁小字是<b>廟旺亮度</b>、彩色標籤是<b>四化</b>（<span style="color:var(--green)">祿</span>／<span style="color:var(--purple)">權</span>／<span style="color:var(--cyan)">科</span>／<span style="color:var(--red)">忌</span>）。</div>`;
+}
+function openChartPalace(idx){
+ const p=CHART.palaces[idx];
+ const row=(st,kind)=>`<div class="ssrow"><div class="ssname" style="width:auto;min-width:48px;font-size:16px">${esc(st.name)}</div><div class="ssbody"><div class="ssm">${kind}${st.brightness?"　亮度 <b>"+esc(st.brightness)+"</b>":""}${st.mutagen?'　<b style="color:var(--'+(M4C[st.mutagen]||"gold")+')">化'+esc(st.mutagen)+"</b>":""}</div></div></div>`;
+ openSheet(`
+  <div class="head"><div class="glyphL pp">${esc(p.name.slice(0,1))}</div><div><h2>${esc(p.name)}${p.isBodyPalace?" · 身宮":""}</h2><div class="row"><span class="chip purple">${esc(p.heavenlyStem)}${esc(p.earthlyBranch)}</span>${(p.decadal&&p.decadal.range)?`<span class="chip">大限 ${p.decadal.range[0]}-${p.decadal.range[1]}</span>`:""}</div></div></div>
+  ${p.majorStars.length?`<div class="grouphdr" style="margin-top:8px">主星</div>${p.majorStars.map(s=>row(s,"主星")).join("")}`:'<div class="note" style="margin-top:8px">此宮無主星（借對宮主星參看）</div>'}
+  ${p.minorStars.length?`<div class="grouphdr">輔星</div>${p.minorStars.map(s=>row(s,"輔星")).join("")}`:""}
+  ${p.adjectiveStars.length?`<div class="grouphdr">雜曜</div><div style="font-size:13px;color:var(--muted);line-height:1.9">${p.adjectiveStars.map(s=>esc(s.name)).join("、")}</div>`:""}
+  <div class="grouphdr">神煞十二神</div><div style="font-size:12.5px;color:var(--muted);line-height:2">長生：${esc(p.changsheng12)}｜博士：${esc(p.boshi12)}<br>歲前：${esc(p.suiqian12)}｜將前：${esc(p.jiangqian12)}</div>
+  <div class="note" style="margin-top:14px">想懂這些星的意思？回「學習」各單元查——主星、輔星煞曜、廟旺利陷、神煞十二神都有白話解說。</div>
+ `);
 }
 
 /* ======================= 十天干四化查表器 ======================= */
