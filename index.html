@@ -410,11 +410,13 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .cs-cinfo{font-size:12px;color:var(--muted);line-height:1.5}
 .cs-cdate{font-size:10.5px;color:var(--muted2)}
 .cs-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
-.fhrows{display:grid;gap:7px;margin-top:10px}
-.fhrow{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.fhrows{display:grid;gap:12px;margin-top:10px}
+.fhrow{display:flex;align-items:center;gap:8px;font-size:14px}
 .fhstar{font-family:"Noto Serif TC",serif;font-size:15px;color:var(--text)}
 .fharr{color:var(--muted2)}
 .fhself{color:var(--gold);font-size:12px}
+.fhdesc{font-size:12.5px;color:var(--muted);line-height:1.65;margin:4px 0 0 54px}
+.fhdesc b{color:var(--text)}
 .miaopick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .miaobtn{padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:15px;font-weight:700;cursor:pointer;transition:.14s}
 .miaobtn:active{transform:scale(.95)}
@@ -754,7 +756,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v3.8";
+const APP_VERSION = "v3.9";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1995,8 +1997,15 @@ function renderChart(a){
    cap=`<div class="note">👆 點任一宮，會畫出它的<b style="color:var(--cyan)">三合</b>與<b style="color:var(--red)">對宮</b>連線。星旁小字是廟旺、彩標是四化（<span style="color:var(--green)">祿</span><span style="color:var(--purple)">權</span><span style="color:var(--cyan)">科</span><span style="color:var(--red)">忌</span>），底排是長生·博士十二神＋大限。</div>`;
  }
  let fhPanel="";
- if(sel!=null){const fh=feihuaOf(a,sel);const nm2=b=>a.palaces.find(x=>x.earthlyBranch===b).name;
-   if(fh)fhPanel=`<div class="note" style="border-color:var(--cyan)"><b style="color:var(--cyan)">🌀 ${nm2(selB)}（宮干 ${esc(a.palaces[sel].heavenlyStem)}）飛出的四化：</b><div class="fhrows">${fh.map(r=>`<div class="fhrow"><span class="chip ${r.color}" style="min-width:44px;justify-content:center">化${r.label}</span><b class="fhstar">${esc(r.star)}</b><span class="fharr">→</span><span>${esc(r.locName)}${r.self?' <b class="fhself">⚡自化</b>':''}</span></div>`).join("")}</div><div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.7">「<b style="color:var(--gold)">⚡自化</b>」＝這化落在本宮自己就有的星上，能量會自動引動、較留不住。這是北派看「宮位互相牽動」的招式，詳見「🌀 飛星四化」單元。</div></div>`;
+ if(sel!=null){const fh=feihuaOf(a,sel);const nm2=b=>a.palaces.find(x=>x.earthlyBranch===b).name;const src=nm2(selB);
+   const dm={"祿":"有緣、加分——把好處、資源、歡喜帶過去","權":"掌控、用力——主導、推動、放大那個宮的事","科":"貴人、名聲——讓它平順、有面子、化解難關","忌":"放不下、消耗——牽掛甚至拖累那個宮（最該注意）"};
+   const rowHtml=fh?fh.map(function(r){
+     const desc=r.self
+       ? `⚡ 自化${r.label}：這股力量落在本宮自己的星（${esc(r.star)}）上，會<b>自動引動、留不住</b>`
+       : `<b>${esc(src)}</b> 對「<b>${esc(r.locName)}</b>」${dm[r.label]}`;
+     return `<div class="fhitem"><div class="fhrow"><span class="chip ${r.color}" style="min-width:44px;justify-content:center">化${r.label}</span><b class="fhstar">${esc(r.star)}</b><span class="fharr">→</span><span>${esc(r.locName)}${r.self?' <b class="fhself">⚡自化</b>':''}</span></div><div class="fhdesc">${desc}</div></div>`;
+   }).join(""):"";
+   if(fh)fhPanel=`<div class="note" style="border-color:var(--cyan)"><b style="color:var(--cyan)">🌀 ${esc(src)}（宮干 ${esc(a.palaces[sel].heavenlyStem)}）飛出的四化</b><div style="font-size:11.5px;color:var(--muted);margin:3px 0 2px">每一條＝「${esc(src)} 這個宮，如何牽動另一個宮」，照白話念就會看了：</div><div class="fhrows">${rowHtml}</div><div style="font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.7">💡 讀法：把「來源宮 → 落點宮」用上面的意義串起來，再放回三方四正、大限流年一起看。想系統學：點「🌀 飛星四化」單元。</div></div>`;
  }
  return `<div class="cs-wrap"><div class="cs-grid">${cells}${center}${sanfangSvg(sel,a)}</div></div>${cap}${fhPanel}
  <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">📐 三方四正是怎麼來的？（公式）</b><br>地支有<b>四組三合</b>：申子辰、寅午戌、亥卯未、巳酉丑（三個地支排成 120° 三角）；還有<b>六沖</b>：子↔午、丑↔未、寅↔申、卯↔酉、辰↔戌、巳↔亥（正對面 180°）。<br>「<b>三方</b>」＝本宮＋同一組三合的另兩宮（三角形的另兩個角）；「<b>四正</b>」＝再加上對宮（正對面那宮）。四宮一起看＝三方四正。</div>`;
@@ -2027,14 +2036,32 @@ function feihuaOf(a,idx){
 }
 /* ======================= 飛星四化·自化（v3 功能三，概念） ======================= */
 function viewFeixing(){
+ const cc=(bd,c,t,d)=>`<div class="card" style="padding:14px 15px;border-left:4px solid var(--${c})"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 5px;color:var(--${c})">${t}</h4><div style="font-size:13.5px;color:var(--muted);line-height:1.75">${d}</div></div>`;
  return `<div class="eyebrow">進階 · 北派</div><h2 class="title">飛星四化 · 自化</h2>
- <p class="lead">生年四化是「老天先天給你的」；飛星四化是「宮位之間互相牽動」的後天結構。這是北派看盤的關鍵招式，用最白話帶你懂。</p>
+ <p class="lead">生年四化是「老天先天給你的」；飛星四化是看「宮位之間怎麼互相牽動」的後天結構。這是北派看盤的關鍵招式——別怕，跟著下面一步步就懂了。</p>
+
+ <div class="grouphdr">先熱身：祿權科忌像「四季」</div>
+ <div class="note">古人把四化想成一年四季的循環：<b style="color:var(--green)">化祿＝春</b>（因緣開始、資源冒出來）→ <b style="color:var(--purple)">化權＝夏</b>（成長、掌權、壯大）→ <b style="color:var(--cyan)">化科＝秋</b>（收成、名聲、貴人）→ <b style="color:var(--red)">化忌＝冬</b>（收藏、結束、放不下）。<b>祿是「因」（起點）、忌是「果」（結局）</b>——記住這個順序，後面就好懂。</div>
+
+ <div class="grouphdr">三個核心觀念</div>
  <div class="cardlist">
-   <div class="card" style="padding:14px 15px;border-left:4px solid var(--purple)"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 5px;color:var(--purple)">① 什麼是宮干四化</h4><div style="font-size:13.5px;color:var(--muted);line-height:1.75">每個宮位除了有星，還有自己的「天干」（宮干）。這個宮干會讓四顆星產生祿、權、科、忌——等於<b>每個宮都有自己的一組四化</b>。</div></div>
-   <div class="card" style="padding:14px 15px;border-left:4px solid var(--cyan)"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 5px;color:var(--cyan)">② 飛星（飛化）</h4><div style="font-size:13.5px;color:var(--muted);line-height:1.75">這四化會像<b>射箭</b>一樣「飛」到那四顆星所在的宮位。比喻：命宮往外射出四條線（祿權科忌），射中哪些宮，就代表<b>命宮的能量牽動到那些宮</b>——看出「這個宮如何影響別的宮」。</div></div>
-   <div class="card" style="padding:14px 15px;border-left:4px solid var(--gold)"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 5px;color:var(--gold)">③ 自化（⚡）</h4><div style="font-size:13.5px;color:var(--muted);line-height:1.75">如果飛出的化，剛好落在「<b>自己宮位裡本來就有的星</b>」上，叫「自化」。比喻：箭還沒射出去，就自己引爆了。自化代表這個宮的特質會<b>自動發生、比較留不住</b>。</div></div>
+   ${cc(1,"purple","① 什麼是「宮干四化」","每個宮位除了有星，還有自己的「天干」（宮干）。這個宮干會讓四顆星產生祿、權、科、忌——等於<b>每個宮都有自己的一組四化</b>。（哪個天干化哪顆星，就是「十天干四化表」，四化單元有查表器可查）")}
+   ${cc(2,"cyan","② 飛星（飛化）","這四化會像<b>射箭</b>一樣「飛」到那四顆星所在的宮位。比喻：某個宮往外射出四條線（祿權科忌），射中哪些宮，就代表<b>這個宮的能量牽動到那些宮</b>——看出「這個宮如何影響、牽動別的宮」。")}
+   ${cc(3,"gold","③ 自化（⚡）","如果飛出的化，剛好落在「<b>自己宮位裡本來就有的星</b>」上，叫「自化」。比喻：箭還沒射出去就自己引爆了。自化代表這個宮的特質會<b>自動發生、比較留不住</b>，是解盤的關鍵點。")}
  </div>
- <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">怎麼看你自己的飛化？</b><br>去「🪐 排盤」<b>點任一宮</b>，命盤下面就會列出「這個宮的宮干飛出的四化，各自落在哪個宮、有沒有自化」，一目了然。</div>`;
+
+ <div class="grouphdr">飛出去的四化，各是什麼意思？</div>
+ <div class="cardlist">
+   ${cc("l","green","飛化祿 → 有緣、加分 🟢","來源宮「疼、喜歡」目標宮，把好處、資源、歡喜帶過去。<br><b>例：</b>官祿宮化祿入財帛宮＝你的工作幫你賺錢、事業有財緣。")}
+   ${cc("l","purple","飛化權 → 掌控、用力 🟣","來源宮對目標宮強力介入、主導、放大。<br><b>例：</b>命宮化權入官祿宮＝你會很積極地掌控、衝刺自己的事業。")}
+   ${cc("l","cyan","飛化科 → 貴人、名聲 🔵","來源宮給目標宮好名聲、貴人、平順、化解難關。<br><b>例：</b>官祿宮化科入遷移宮＝事業帶來名聲、在外有面子有貴人。")}
+   ${cc("l","red","飛化忌 → 放不下、消耗 🔴","來源宮牽掛、執著、消耗目標宮——<b>最關鍵、最該注意的一條</b>。<br><b>例：</b>官祿宮化忌入田宅宮＝為了事業把家庭／財庫都投進去、顧不到家。")}
+ </div>
+
+ <div class="grouphdr">實戰：怎麼看？四步驟</div>
+ <div class="note"><b>① 先看</b>四化來自哪個宮的<b>宮干</b> → <b>② 這天干</b>讓哪四顆星化祿權科忌 → <b>③ 這四顆星</b>各落在哪個宮 → <b>④ 把「來源宮 → 落點宮」</b>用上面的意義串起來，再放回三方四正、大限流年一起看。<br><br><b style="color:var(--gold)">走一遍範例：</b>假設「夫妻宮化忌入財帛宮」——夫妻(感情)對財帛(錢)放不下、會消耗＝<b>感情容易為錢起衝突、或另一半是花錢的地方</b>。這就是飛星在講的「一個宮牽動另一個宮」。</div>
+
+ <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">馬上練習！</b><br>去「🪐 排盤」<b>點任一宮</b>，命盤下面會列出這宮飛出的四化落點，而且<b>每一條都附白話解讀</b>，照著念、對照上面四步驟，你就會看飛星了。多點幾個宮練手感！</div>`;
 }
 
 /* ======================= 十天干四化查表器 ======================= */
