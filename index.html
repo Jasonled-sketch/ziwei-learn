@@ -368,6 +368,14 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .figname::before{content:"🎭 ";font-size:15px}
 .figrole{font-size:12px;color:var(--purple);font-weight:700;margin-bottom:8px}
 .figdesc{font-size:13.5px;color:var(--text);line-height:1.7}
+.miaopick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.miaobtn{padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:15px;font-weight:700;cursor:pointer;transition:.14s}
+.miaobtn:active{transform:scale(.95)}
+.miaobtn.on{background:linear-gradient(135deg,var(--purple-d),var(--purple));border-color:var(--purple);color:#fff;box-shadow:0 4px 12px var(--purple-glow)}
+.miaogrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.miaocell{border:1px solid var(--line2);border-radius:9px;padding:7px 2px;text-align:center;background:var(--bg2)}
+.miaocell .mb{font-size:11px;color:var(--muted)}
+.miaocell .ml{font-family:"Noto Serif TC",serif;font-weight:900;font-size:17px;line-height:1.25}
 .ssrow{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
 .ssname{flex:none;width:52px;font-family:"Noto Serif TC",serif;font-weight:900;font-size:17px;color:var(--gold);line-height:1.3}
 .ssbody{flex:1;min-width:0}
@@ -397,6 +405,7 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
   .nav button{font-size:11px}
   .stat b{font-size:19px}
   .minorgrid{grid-template-columns:1fr}
+  .miaogrid{grid-template-columns:repeat(4,1fr)}
 }
 </style>
 
@@ -693,7 +702,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v2.4";
+const APP_VERSION = "v3.0";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1176,12 +1185,42 @@ const SHENSHA = [
   ]}
 ];
 
+/* ---------- 廟旺利陷亮度系統（星 × 12地支，資料來自 iztro 開源庫，已用實盤驗證） ----------
+   陣列順序為地支 子丑寅卯辰巳午未申酉戌亥 */
+const BRANCHES=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+const BRIGHT={
+ ziwei:["平","廟","旺","旺","得","旺","廟","廟","旺","旺","得","旺"],
+ tianji:["廟","陷","得","旺","利","平","廟","陷","得","旺","利","平"],
+ taiyang:["陷","不","旺","廟","旺","旺","旺","得","得","陷","不","陷"],
+ wuqu:["旺","廟","得","利","廟","平","旺","廟","得","利","廟","平"],
+ tiantong:["旺","不","利","平","平","廟","陷","不","旺","平","平","廟"],
+ lianzhen:["平","利","廟","平","利","陷","平","利","廟","平","利","陷"],
+ tianfu:["廟","廟","廟","得","廟","得","旺","廟","得","旺","廟","得"],
+ taiyin:["廟","廟","旺","陷","陷","陷","不","不","利","不","旺","廟"],
+ tanlang:["旺","廟","平","利","廟","陷","旺","廟","平","利","廟","陷"],
+ jumen:["旺","不","廟","廟","陷","旺","旺","不","廟","廟","陷","旺"],
+ tianxiang:["廟","廟","廟","陷","得","得","廟","得","廟","陷","得","得"],
+ tianliang:["廟","旺","廟","廟","廟","陷","廟","旺","陷","得","廟","陷"],
+ qisha:["旺","廟","廟","旺","廟","平","旺","廟","廟","廟","廟","平"],
+ pojun:["廟","旺","得","陷","旺","平","廟","旺","得","陷","旺","平"],
+};
+const LVCOLOR={"廟":"gold","旺":"green","得":"cyan","利":"purple","平":"muted2","不":"rose","陷":"red"};
+const BRIGHT_LEVELS=[
+ {n:"廟",c:"gold",d:"最亮！火力全開，優點發揮到極致"},
+ {n:"旺",c:"green",d:"狀態很好，表現亮眼有力"},
+ {n:"得",c:"cyan",d:"得地有力，穩穩發揮"},
+ {n:"利",c:"purple",d:"小有助力，還算順手"},
+ {n:"平",c:"muted2",d:"不上不下，普普通通"},
+ {n:"不",c:"rose",d:"不得地，有點使不上力"},
+ {n:"陷",c:"red",d:"最暗，力量大打折、缺點容易浮現"},
+];
+
 /* ---------- v3 未來藍圖（規劃中，本版先列計劃） ---------- */
 const V3PLAN = [
- {em:"🤖",t:"自動排盤 / 自動判盤",d:"接 AI 或排盤引擎，輸入生辰自動出盤、自動判讀（留給 v3）。目前可先用下方 fatemaster 一鍵排盤，本站專注教你「讀懂」。"},
- {em:"💡",t:"廟旺利陷亮度系統",d:"同一顆星在不同宮位有旺弱亮度（廟／旺／利／陷），影響力道強弱——進階判盤的關鍵，v3 補上。"},
- {em:"🌀",t:"飛星四化 · 自化",d:"北派進階：宮干飛化、自化，讓四化在宮位間流動串連，看出事件的來龍去脈。"},
+ {em:"✅",t:"廟旺利陷亮度系統",d:"已完成！在「學習」頁 →「🔆 廟旺利陷亮度」查每顆星在 12 宮的亮度。", done:true},
+ {em:"🌀",t:"飛星四化 · 自化",d:"北派進階：宮干飛化、自化，讓四化在宮位間流動串連，看出事件的來龍去脈。（需先有排盤功能）"},
  {em:"🔢",t:"144 種星宮組合全收錄",d:"從 24 組雙星，擴充到完整的星宮組合圖鑑，一顆星在每個宮位的差異全解。"},
+ {em:"🤖",t:"自動排盤 / 自動判盤",d:"接 AI 或排盤引擎，輸入生辰自動出盤、自動判讀。目前可先用下方 fatemaster 一鍵排盤，本站專注教你「讀懂」。"},
 ];
 
 /* ---------- 等級 ---------- */
@@ -1409,6 +1448,7 @@ function render(){touchStreak();const v=view();
  else if(CUR==="frame")v.innerHTML=viewFrame();
  else if(CUR==="daxian")v.innerHTML=viewDaxian();
  else if(CUR==="shensha")v.innerHTML=viewShensha();
+ else if(CUR==="miao")v.innerHTML=viewMiao();
  else if(CUR==="quiz")v.innerHTML=viewQuizHub();
  else if(CUR==="wrong")v.innerHTML=viewWrong();
  else if(CUR==="me")v.innerHTML=viewMe();
@@ -1450,6 +1490,7 @@ function viewHome(){
    <div class="tile" onclick="go('frame')"><div class="em">🗺️</div><div><h3>框架與格局<span class="newdot">NEW</span></h3><p>三大框架＋常見格局</p></div><div class="bar thin mini"><i style="width:${pct('frame')}%"></i></div></div>
    <div class="tile" onclick="go('daxian')"><div class="em">⏳</div><div><h3>大限流年<span class="newdot">NEW</span></h3><p>先天、大限、流年觀念</p></div><div class="bar thin mini"><i style="width:${pct('daxian')}%"></i></div></div>
    <div class="tile" onclick="go('shensha')"><div class="em">🎖️</div><div><h3>神煞十二神<span class="newdot">NEW</span></h3><p>青龍長生那類·附例子</p></div><div class="bar thin mini"><i style="width:${pct('shensha')}%"></i></div></div>
+   <div class="tile" onclick="go('miao')"><div class="em">🔆</div><div><h3>廟旺利陷<span class="newdot">NEW</span></h3><p>星曜在12宮的亮度</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">工具</div></div>
    <div class="tile big" onclick="go('quiz')"><div class="em">✍️</div><div><h3>開始測驗</h3><p>120 題題庫 · 章節 · 隨機 · 錯題重練${wrongN?` · 待複習 ${wrongN} 題`:""}</p></div><div class="arrow">›</div></div>
  </div>`;
 }
@@ -1466,17 +1507,23 @@ function viewLearn(){
   {r:"frame",em:"🗺️",n:"框架與格局",d:"三大命盤框架＋10 個常見格局圖鑑",cat:"frame",tot:FRAME.length},
   {r:"daxian",em:"⏳",n:"大限流年",d:"本命、大限、流年的觀念課（不排盤）",cat:"daxian",tot:DAXIAN.length},
   {r:"shensha",em:"🎖️",n:"神煞十二神",d:"命盤角落那些會轉動的字（青龍、長生…）附例子",cat:"shensha",tot:SHENSHA.length},
+  {r:"miao",em:"🔆",n:"廟旺利陷亮度",d:"查每顆星在 12 宮的亮度（燈泡有亮有暗）",tool:true},
  ];
  return `<div class="eyebrow">學習中心</div><h2 class="title">星曜研習</h2>
  <p class="lead">建議依序：宮位（舞台）→ 主星（演員）→ 四化（劇情）→ 輔星（配角）→ 雙星（合演）→ 框架格局（劇本）→ 大限流年（時間軸）。點卡片閱讀，讀完標記「已學會」可累積經驗值。</p>
- <div class="hub">${rows.map(x=>`
-   <div class="card hubcard tap" onclick="go('${x.r}')">
+ <div class="hub">${rows.map(x=>{
+   if(x.tool)return `<div class="card hubcard tap" onclick="go('${x.r}')">
+     <div class="em">${x.em}</div>
+     <div class="info"><h3>${x.n}</h3><p>${x.d}</p></div>
+     <div style="text-align:right"><div class="chip gold" style="margin-bottom:6px">工具</div><div class="arrow" style="color:var(--muted2);font-size:20px">›</div></div>
+   </div>`;
+   return `<div class="card hubcard tap" onclick="go('${x.r}')">
      <div class="em">${x.em}</div>
      <div class="info"><h3>${x.n}</h3><p>${x.d}</p>
        <div class="bar thin"><i style="width:${Math.round(S.learned[x.cat].length/x.tot*100)}%"></i></div>
      </div>
      <div style="text-align:right"><div class="chip gold" style="margin-bottom:6px">${S.learned[x.cat].length}/${x.tot}</div><div class="arrow" style="color:var(--muted2);font-size:20px">›</div></div>
-   </div>`).join("")}</div>`;
+   </div>`;}).join("")}</div>`;
 }
 
 /* ======================= 十二宮（命盤格） ======================= */
@@ -1790,6 +1837,26 @@ function openShensha(id){const s=SHENSHA.find(x=>x.id===id);const dn=S.learned.s
 /* 從 story 結尾取「一句話記住他」 */
 function oneLine(s){const m=(s.story||"").split("一句話記住他：");return m[1]?m[1].replace(/。\s*$/,""):"";}
 
+/* ======================= 廟旺利陷亮度系統（v3 功能一） ======================= */
+function viewMiao(){
+ return `<div class="eyebrow">進階 · 廟旺利陷</div><h2 class="title">廟旺利陷亮度</h2>
+ <p class="lead">同一顆星放在不同宮位（地支），像燈泡有亮有暗——在對的位置最亮（<b style="color:var(--gold)">廟</b>）、本事發揮到極致；在不對的位置最暗（<b style="color:var(--red)">陷</b>）、力量打折、缺點浮現。這就是「廟旺利陷」，是「同一顆星、不同人差很多」的關鍵之一。</p>
+ <div class="grouphdr">👆 點一顆主星，看它在 12 宮的亮度</div>
+ <div class="miaopick">${STARS.map(s=>`<button class="miaobtn" data-s="${s.id}" onclick="showMiao('${s.id}')">${esc(s.name)}</button>`).join("")}</div>
+ <div id="miaoResult" style="margin-top:14px"><p style="font-size:12px;color:var(--muted2);text-align:center;padding:12px">☝️ 點上面任一顆主星，看它的亮度地圖</p></div>
+ <div class="grouphdr">七個亮度等級（亮 → 暗）</div>
+ <div class="cardlist">${BRIGHT_LEVELS.map(l=>`<div class="card" style="padding:11px 14px;border-left:4px solid var(--${l.c})"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 2px;color:var(--${l.c})">${l.n}</h4><div style="font-size:12.5px;color:var(--muted)">${esc(l.d)}</div></div>`).join("")}</div>
+ <div class="note">💡 判盤時：星曜<b style="color:var(--gold)">廟旺</b>→優點強、好事更好；星曜<b style="color:var(--red)">落陷</b>→力量弱、缺點易現，要靠後天努力或吉星幫襯。亮度只是「力道大小」，不是絕對好壞。</div>`;
+}
+function showMiao(id){
+ SFX.tap();
+ document.querySelectorAll('.miaobtn').forEach(b=>b.classList.toggle('on',b.dataset.s===id));
+ const s=STARS.find(x=>x.id===id);const arr=BRIGHT[id];
+ const cells=BRANCHES.map((b,i)=>{const lv=arr[i];const c=LVCOLOR[lv];return `<div class="miaocell" style="border-color:var(--${c})"><div class="mb">${b}</div><div class="ml" style="color:var(--${c})">${lv}</div></div>`;}).join("");
+ const best=BRANCHES.filter((b,i)=>arr[i]==='廟');const worst=BRANCHES.filter((b,i)=>arr[i]==='陷');
+ document.getElementById('miaoResult').innerHTML=`<div class="card" style="padding:14px"><div style="font-family:'Noto Serif TC',serif;font-weight:900;font-size:18px;color:var(--gold);margin-bottom:10px">${esc(s.name)}　亮度地圖</div><div class="miaogrid">${cells}</div><p style="font-size:12.5px;color:var(--muted);margin:13px 0 0;line-height:1.8">最亮（廟）：<b style="color:var(--gold)">${best.length?best.join("、")+" 宮":"—"}</b><br>最暗（陷）：<b style="color:var(--red)">${worst.length?worst.join("、")+" 宮":"—"}</b></p></div>`;
+}
+
 /* ======================= 十天干四化查表器 ======================= */
 function ganhuaTool(){
  const stems=Object.keys(GANHUA);
@@ -2083,7 +2150,7 @@ function viewMe(){
 
  <div class="grouphdr">未來藍圖 · v3</div>
  <p style="font-size:12px;color:var(--muted);margin:0 0 10px">規劃中的進階功能，讓系統更完整（本版先列計劃）：</p>
- <div class="cardlist">${V3PLAN.map(x=>`<div class="card" style="padding:13px 15px"><h4 style="font-family:'Noto Serif TC',serif;font-size:15px;margin:0 0 4px"><span style="margin-right:6px">${x.em}</span>${esc(x.t)} <span class="chip" style="font-size:9px;padding:1px 6px;color:var(--muted2)">規劃中</span></h4><div style="font-size:12px;color:var(--muted);line-height:1.6">${esc(x.d)}</div></div>`).join("")}</div>
+ <div class="cardlist">${V3PLAN.map(x=>`<div class="card" style="padding:13px 15px${x.done?';border-color:var(--green)':''}"><h4 style="font-family:'Noto Serif TC',serif;font-size:15px;margin:0 0 4px"><span style="margin-right:6px">${x.em}</span>${esc(x.t)} <span class="chip" style="font-size:9px;padding:1px 6px;color:${x.done?'var(--green)':'var(--muted2)'}${x.done?';border-color:var(--green)':''}">${x.done?'已完成':'規劃中'}</span></h4><div style="font-size:12px;color:var(--muted);line-height:1.6">${esc(x.d)}</div></div>`).join("")}</div>
  <a href="https://www.fatemaster.ai/zh/workspace/ziwei-doushu" target="_blank" rel="noopener" style="text-decoration:none;display:block;margin-top:12px"><div class="btn btn-ghost">🔮 前往自動排盤（fatemaster）→</div></a>
 
  <div class="grouphdr">設定</div>
