@@ -347,6 +347,7 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 
 /* ---- v2 新增元件 ---- */
 .newdot{display:inline-block;font-size:8.5px;font-weight:900;letter-spacing:.08em;color:#241a06;background:linear-gradient(135deg,var(--gold),var(--gold-d));padding:1px 5px;border-radius:6px;vertical-align:middle;margin-left:5px}
+.ver{display:inline-block;flex:0 0 auto;white-space:nowrap;font-family:"Noto Sans TC",sans-serif;font-weight:700;font-size:10.5px;color:var(--gold-d);background:var(--gold-glow);border:1px solid var(--gold-d);padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:middle;letter-spacing:.03em}
 .spectrum{margin:6px 0 20px}
 .spectrum-bar{height:12px;border-radius:999px;background:linear-gradient(90deg,var(--cyan),var(--gold) 50%,var(--red));box-shadow:0 0 0 1px var(--line) inset}
 .spectrum-labels{display:flex;justify-content:space-between;margin-top:7px;font-family:"Noto Serif TC",serif;font-size:12.5px;font-weight:700;color:var(--muted);text-align:center}
@@ -669,7 +670,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
 
 <div class="wrap">
   <header class="topbar">
-    <div class="brand">紫微斗數<span class="brand-sub">星曜研習</span></div>
+    <div class="brand">紫微斗數<span class="ver" id="verTag"></span><span class="brand-sub">星曜研習</span></div>
     <button class="lvpill" id="lvpill" onclick="go('me')"><b>Lv.1</b> · 0 XP</button>
   </header>
   <main id="view" class="view"></main>
@@ -690,6 +691,9 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    紫微斗數 · 星曜研習  —  單檔學習系統  (Vanilla JS / localStorage 本機模式)
    資料層：全部知識內容 + 題庫
    ========================================================================== */
+
+/* ★ 版本序號（每次改版都要 bump） */
+const APP_VERSION = "v2.3";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1029,6 +1033,30 @@ const DUO = [
   detail:"福星（天同）＋蔭星（天梁）相會，性情溫和、與世無爭、逢凶化吉，一生多貴人相助。適合公教、顧問、助人的行業，過得自在有福。缺點是企圖心偏弱、容易安逸。", mn:"溫和有福，貴人相隨"},
  {id:"taiyang_taiyin", name:"太陽太陰", stars:["太陽","太陰"], type:"化學", core:"日月同宮，文武雙全但情緒多變",
   detail:"太陽（外放、博愛）與太陰（內斂、細膩）同宮，等於一個人同時擁有陽剛與陰柔兩種能量，文武雙全、能屈能伸。但日月的矛盾也讓情緒較起伏、內心常在外放與內收之間擺盪。", mn:"日月同體，剛柔情緒兩極"},
+ {id:"ziwei_tianxiang", name:"紫微天相", stars:["紫微","天相"], type:"物理", core:"帝王＋印星，穩重的協調型領導",
+  detail:"帝王星配上掌印的天相，是個既有威儀、又懂協調服務的領導者。做事四平八穩、重視體面與規矩，很適合當需要威望又要面面俱到的管理者。缺點是有時太在意面子、決斷稍慢。", mn:"有威望又會做人"},
+ {id:"wuqu_tanlang", name:"武曲貪狼", stars:["武曲","貪狼"], type:"化學", core:"財星＋桃花，中晚年爆發的橫財格",
+  detail:"財星武曲配上慾望星貪狼，衝勁與野心兼具，是有名的「晚發」組合——年輕時打底、中晚年才大發（若再遇火星、鈴星成「火貪」「鈴貪」，更是一夕暴發）。精力旺、企圖心強，要留意別太貪快。", mn:"先蹲後跳，中晚年爆發"},
+ {id:"wuqu_tianxiang", name:"武曲天相", stars:["武曲","天相"], type:"物理", core:"財星＋印星，務實又懂協調的實幹家",
+  detail:"務實的武曲配上協調的天相，既能扛數字、拚結果，又懂得做人、講規矩，是可靠的實幹型幹部。適合財務、工程、管理等要責任感又要協調的位置。缺點是有時放不開、較硬。", mn:"能拚又能協調的老實幹將"},
+ {id:"lianzhen_qisha", name:"廉貞七殺", stars:["廉貞","七殺"], type:"化學", core:"囚星＋將星，積極拚搏、路上顛簸",
+  detail:"複雜多變的廉貞配上衝鋒的七殺，是股一往無前的狠勁——積極、能拚、敢扛，但人生路上比較顛簸辛勞，要靠意志力闖過。適合開創、業務、需要膽識與行動力的領域。", mn:"拚勁十足，但路要自己闖"},
+ {id:"lianzhen_pojun", name:"廉貞破軍", stars:["廉貞","破軍"], type:"化學", core:"囚星＋耗星，敢衝敢變、大破大立",
+  detail:"廉貞的複雜加上破軍的破壞創新，是個敢砍掉重練、勇於改革的組合。行動力強、不受拘束、變動大，適合開創與破局重建，但人生起伏大、先破後立較辛苦，成功後要學會守成。", mn:"敢掀桌重來的改革狂"},
+ {id:"tianji_taiyin", name:"天機太陰", stars:["天機","太陰"], type:"物理", core:"智慧＋內斂，聰明細膩、善謀劃",
+  detail:"動腦的天機配上細膩的太陰，心思特別縝密——聰明、敏感、善於規劃與觀察，很有企劃與研究的天分。缺點是想很多、情緒起伏，容易鑽牛角尖、猶豫不決。", mn:"心思細如髮，就是想太多"},
+ {id:"tianji_jumen", name:"天機巨門", stars:["天機","巨門"], type:"化學", core:"智慧＋口才，機智善辯、靠腦袋和嘴",
+  detail:"天機的機智配上巨門的口才，反應快、能言善道、分析力強，很適合靠腦袋和嘴巴吃飯（顧問、律師、老師、業務）。缺點是多疑、愛計較、容易嘴上招惹是非。", mn:"最會動腦又會講的組合"},
+ {id:"tianji_tianliang", name:"天機天梁", stars:["天機","天梁"], type:"物理", core:"智慧＋蔭星，善策劃又有原則的軍師",
+  detail:"天機的謀略配上天梁的原則與庇蔭，是既會出點子、又講原則、還能逢凶化吉的「軍師型」人物。愛動腦、愛分析、也愛照顧人與說教，適合企劃、顧問、教育、宗教命理。", mn:"有原則的點子軍師"},
+ {id:"taiyang_jumen", name:"太陽巨門", stars:["太陽","巨門"], type:"化學", core:"光明＋口才，靠專業發聲揚名",
+  detail:"太陽的博愛發光配上巨門的口才，很適合靠「說」與「專業」揚名——教學、演說、傳播、國際或跨文化領域特別吃香（古稱與異族有緣）。要留意口舌是非、別鋒芒太露。", mn:"靠一張嘴發光發熱"},
+ {id:"taiyang_tianliang", name:"太陽天梁", stars:["太陽","天梁"], type:"物理", core:"光明＋蔭星，正直照顧人的貴人格",
+  detail:"太陽的正直光明配上天梁的原則庇蔭，是個熱心、正派、愛照顧人的貴人型人物，很適合公職、教育、法律、監督。若再會文昌、祿存成「陽梁昌祿」格，更利讀書考試功名。", mn:"正直熱心的大貴人"},
+ {id:"tiantong_taiyin", name:"天同太陰", stars:["天同","太陰"], type:"物理", core:"福星＋財星，溫柔享福、細膩多情",
+  detail:"福星天同配上財星太陰，性情溫和、細膩、重感情，懂得享受也善於儲蓄理財，是溫柔顧家的組合。感情豐富但也較多愁善感、需要安全感，容易想太多。", mn:"溫柔顧家又會存錢"},
+ {id:"tiantong_jumen", name:"天同巨門", stars:["天同","巨門"], type:"化學", core:"福星＋口舌，口福好但易多是非勞碌",
+  detail:"福星天同配上口舌星巨門，愛吃愛享受、口才也不錯，但兩星相會容易「口舌是非、勞心勞力」，福氣打了折。要多修口德、少計較，把心放寬就順了。", mn:"有口福，也要顧口德"},
 ];
 
 /* ---------- 新模組 B：三大框架 ＋ 常見格局 ---------- */
@@ -1066,6 +1094,14 @@ const DAXIAN = [
  {id:"dx3", title:"疊宮的概念", em:"🔲", body:"大限的命宮會疊在本命某一宮上。例如這十年大限命宮疊在福德宮，代表這十年的主軸和「心靈、享受、價值觀」特別有關。"},
  {id:"dx4", title:"四化是引動開關", em:"⚡", body:"本命四化是先天定象（像基因），大限與流年的四化則是後天引動（像事件的開關）。基因決定傾向，開關決定何時發生。"},
  {id:"dx5", title:"為什麼不用自己排", em:"🔮", body:"v2 不教排盤。用現成排盤軟體幾秒就能得到命盤，把力氣花在「讀懂它」，才是真正的重點。"},
+ {id:"dx6", title:"三張盤疊起來看", em:"🥞", body:"算運勢會把三張盤疊著看：本命盤是你的「底子」（像一台車的性能）、大限盤是這十年的「路段」（高速公路還是山路）、流年盤是今年的「天氣」（晴天還是颱風）。好車走爛路、或好路遇颱風，感受都不同——三個一起看才準。"},
+ {id:"dx7", title:"大限、流年、小限差在哪", em:"🔀", body:"大限＝每十年的「大跑道」；流年＝今年「外面的天氣、環境給你的際遇」；小限＝今年「你自己的心態和決定」。同樣一年，流年看老天給你什麼、小限看你自己怎麼想怎麼做——內外合起來，才是完整的一年。"},
+ {id:"dx8", title:"幾歲開始走第一個大限", em:"🔑", body:"每個人交第一個大限的歲數不一樣，由「五行局」決定：水二局 2 歲、木三局 3 歲、金四局 4 歲、土五局 5 歲、火六局 6 歲起運。就像電動遊戲「幾歲解鎖第一關」，之後每十年換一關。"},
+ {id:"dx9", title:"大限往哪個方向走", em:"🧭", body:"大限在命盤上一格一格走，方向看性別與陰陽年：「陽男、陰女」順時針走；「陰男、陽女」逆時針走。先知道有順走、逆走這回事就好，實際方向交給排盤軟體，你只要會「讀」走到哪一宮。"},
+ {id:"dx10", title:"今年的「流年命宮」在哪", em:"📍", body:"每一年都有一個「流年命宮」——就是今年生肖地支所在的那一宮。比如馬年，命盤上「午」那一格就是今年的流年命宮，從它看這一年的主軸。（軟體會直接幫你標出來）"},
+ {id:"dx11", title:"還能細看到流月、流日", em:"🔬", body:"如果流年是「整年的天氣預報」，那流月就是「這個月」、流日就是「今天」的預報，一層比一層細。入門先看懂大限和流年這兩層就很夠用，流月流日等進階再說。"},
+ {id:"dx12", title:"少年得志 vs 大器晚成", em:"⏰", body:"為什麼有人年輕就發、有人中年後才旺？因為每個人「好走的大限」排在人生哪一段不一樣。好大限排在前面就少年得志、排在後面就大器晚成——沒有誰比較好，走到對的十年、把握住就對了。"},
+ {id:"dx13", title:"一年怎麼綜合看：三步驟", em:"📋", body:"① 先看本命底子（你天生擅長什麼）→ ② 再看走到哪個大限（這十年的舞台是什麼）→ ③ 最後看流年天氣（今年老天給的機會或考驗）。三步疊起來，就知道「今年適合衝、還是守」。"},
 ];
 
 /* ---------- 新模組 D：神煞十二神（命盤角落那些會轉動的字） ---------- */
@@ -1639,15 +1675,22 @@ function openAux(id){const a=AUX.find(x=>x.id===id);const dn=S.learned.aux.inclu
 
 /* ======================= 雙星組合（新模組 A） ======================= */
 function viewDuo(){
- return `<div class="eyebrow">進階 · 雙星組合</div><h2 class="title">雙星組合入門</h2>
- <p class="lead">命宮有兩顆主星時，像一對「連體嬰」——各有個性，有時和樂、有時吵架。<b style="color:var(--gold)">物理變化</b>是兩星特質並存（1+1=2）；<b style="color:var(--purple)">化學變化</b>是合體長出新特質（1+1≠2）。先收錄 12 組常見組合。</p>
- <div class="cardlist">
- ${DUO.map(d=>{const dn=S.learned.duo.includes(d.id);const tc=d.type==="化學"?"purple":"gold";
-   return `<div class="card lc${dn?' done':''} tap" onclick="openDuo('${d.id}')">
+ const order=["紫微","天機","太陽","武曲","天同","廉貞"];
+ let html=`<div class="eyebrow">進階 · 雙星組合</div><h2 class="title">雙星組合（24 組全）</h2>
+ <p class="lead">一個宮坐兩顆主星時，像一對「連體嬰」。<b style="color:var(--gold)">物理變化</b>＝兩星特質並存（1+1=2）；<b style="color:var(--purple)">化學變化</b>＝合體長出新特質（1+1≠2）。紫微斗數的雙星同宮<b>總共 24 組</b>，這裡全收錄。</p>
+ <div class="note" style="border-color:var(--purple-d)"><b style="color:var(--purple)">👶 你可能會問的兩件事：</b><br>①「雙星只在命宮嗎？」<b>不是！</b>任何宮都可能坐兩顆主星——在夫妻宮就看感情、在財帛宮就看理財，把意思套到那個宮的領域就對了。<br>②「有沒有三星、四星同宮？」<b>沒有</b>——規則上一個宮最多兩顆主星。但有「隔空相會的三星組合」，像 <b>殺破狼、機月同梁</b>，靠三方四正會照互相影響，收在『框架與格局』那一門。</div>`;
+ order.forEach(lead=>{
+  const items=DUO.filter(d=>d.stars[0]===lead);
+  if(!items.length)return;
+  html+=`<div class="grouphdr">${esc(lead)}系 · ${items.length} 組</div><div class="cardlist">`;
+  items.forEach(d=>{const dn=S.learned.duo.includes(d.id);const tc=d.type==="化學"?"purple":"gold";
+   html+=`<div class="card lc${dn?' done':''} tap" onclick="openDuo('${d.id}')">
      <div class="gly" style="color:var(--${tc})">${esc(d.name.slice(0,2))}</div>
      <div class="body"><h4>${esc(d.name)} <span class="chip ${tc}" style="font-size:10px;padding:1px 7px">${d.type}</span></h4><div class="sub">${esc(d.core)}</div></div>
-     <div class="mk">${dn?"✦":"○"}</div></div>`;}).join("")}
- </div>`;
+     <div class="mk">${dn?"✦":"○"}</div></div>`;});
+  html+=`</div>`;
+ });
+ return html;
 }
 function openDuo(id){const d=DUO.find(x=>x.id===id);const dn=S.learned.duo.includes(id);const tc=d.type==="化學"?"purple":"gold";
  openSheet(`
@@ -2046,7 +2089,8 @@ function viewMe(){
  <div class="grouphdr">設定</div>
  <div class="setrow"><div class="l"><b>音效</b><span>答題與升級的合成音效</span></div><div class="toggle ${S.sound?'on':''}" onclick="toggleSound(this)"></div></div>
  <div class="setrow" onclick="resetAll()" style="cursor:pointer"><div class="l"><b style="color:var(--red)">清除學習紀錄</b><span>重設所有進度、經驗值與錯題（此裝置）</span></div><div class="arrow" style="color:var(--muted2);font-size:20px">›</div></div>
- <div class="note" style="margin-top:14px">學習紀錄儲存在此瀏覽器（本機）。換裝置或清除瀏覽資料會消失。日後若要跨裝置同步，可再接雲端（Firebase / 後端）。</div>`;
+ <div class="note" style="margin-top:14px">學習紀錄儲存在此瀏覽器（本機）。換裝置或清除瀏覽資料會消失。</div>
+ <div style="text-align:center;color:var(--muted2);font-size:11.5px;margin-top:18px;letter-spacing:.05em">紫微斗數 · 星曜研習　<b style="color:var(--gold-d)">${APP_VERSION}</b></div>`;
 }
 function computeBadges(){
  const full=c=>S.learned[c].length>= ({palace:PALACES.length,star:STARS.length,sihua:SIHUA.length,aux:AUX.length,duo:DUO.length,frame:FRAME.length,daxian:DAXIAN.length,shensha:SHENSHA.length}[c]);
@@ -2055,7 +2099,7 @@ function computeBadges(){
   {n:"星曜通曉",d:"學會全部十四主星",em:"⭐",got:full("star")},
   {n:"四化貫通",d:"學會全部四化",em:"🔮",got:full("sihua")},
   {n:"眾星羅列",d:"學會全部輔星煞曜",em:"✧",got:full("aux")},
-  {n:"雙星入門",d:"學會全部 12 組雙星",em:"♊",got:full("duo")},
+  {n:"雙星入門",d:"學會全部 24 組雙星",em:"♊",got:full("duo")},
   {n:"識得格局",d:"學會三大框架",em:"🗺️",got:full("frame")},
   {n:"懂看大限",d:"學會大限流年 5 卡",em:"⏳",got:full("daxian")},
   {n:"通曉神煞",d:"學會神煞十二神四套",em:"🎖️",got:full("shensha")},
@@ -2078,6 +2122,7 @@ function ceremony(newLv){const L=LEVELS.find(x=>x.lv===newLv);if(!L)return;SFX.l
 }
 
 /* ======================= 啟動 ======================= */
+(function(){var v=document.getElementById("verTag");if(v)v.textContent=APP_VERSION;})();
 render();
 </script>
 </body>
