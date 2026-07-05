@@ -378,32 +378,33 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .segbtn:active{transform:scale(.96)}
 /* 排盤命盤 */
 .cs-wrap{position:relative;width:100%}
-.cs-grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:3px;aspect-ratio:1/1;width:100%}
-.cs-cell{position:relative;border:1px solid var(--line);border-radius:8px;background:linear-gradient(160deg,var(--panel2),var(--panel));padding:3px 4px;cursor:pointer;display:flex;flex-direction:column;gap:1px;min-width:0;overflow:hidden;transition:border-color .15s,background .15s}
+.cs-grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,minmax(96px,auto));gap:4px;width:100%;max-width:640px;margin:0 auto}
+.cs-cell{position:relative;border:1px solid var(--line);border-radius:9px;background:linear-gradient(160deg,var(--panel2),var(--panel));padding:6px 7px;cursor:pointer;display:flex;flex-direction:column;gap:3px;min-width:0;overflow:hidden;transition:border-color .15s,background .15s}
 .cs-cell:active{transform:scale(.98)}
 .cs-cell.hl-self{border-color:var(--gold);background:rgba(231,197,125,.15)}
 .cs-cell.hl-opp{border-color:var(--red);background:rgba(224,106,80,.13)}
 .cs-cell.hl-tri{border-color:var(--cyan);background:rgba(104,183,214,.11)}
-.cs-top{display:flex;justify-content:space-between;align-items:baseline;gap:2px;line-height:1.05}
-.cs-pname{font-family:"Noto Serif TC",serif;font-weight:700;font-size:10px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cs-rl{font-size:7px;font-weight:700;padding:0 2px;border-radius:3px;color:#0E0C1A}
+.cs-top{display:flex;justify-content:space-between;align-items:baseline;gap:3px;line-height:1.1}
+.cs-pname{font-family:"Noto Serif TC",serif;font-weight:700;font-size:13px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-rl{font-size:9px;font-weight:700;padding:0 3px;border-radius:4px;color:#0E0C1A;margin-left:2px}
 .cs-rl-self{background:var(--gold)}.cs-rl-opp{background:var(--red);color:#fff}.cs-rl-tri{background:var(--cyan);color:#06263a}
-.cs-gz{font-size:8px;color:var(--muted2);white-space:nowrap}
-.cs-majs{display:flex;flex-wrap:wrap;gap:0 3px;line-height:1.15}
-.cs-star{font-family:"Noto Serif TC",serif;font-weight:700;font-size:11px;color:var(--text);white-space:nowrap}
-.cs-star sub{font-size:7px;color:var(--muted);margin-left:0;vertical-align:baseline}
-.cs-star em,.cs-min em{font-style:normal;font-size:7px;font-weight:700;padding:0 1px;border-radius:2px;margin-left:0;color:#fff;vertical-align:top}
+.cs-gz{font-size:11px;color:var(--muted2);white-space:nowrap}
+.cs-majs{display:flex;flex-wrap:wrap;gap:1px 5px;line-height:1.25}
+.cs-star{font-family:"Noto Serif TC",serif;font-weight:700;font-size:16px;color:var(--text);white-space:nowrap}
+.cs-star sub{font-size:9.5px;color:var(--gold-d);margin-left:0;vertical-align:baseline}
+.cs-star em,.cs-min em{font-style:normal;font-size:9.5px;font-weight:700;padding:0 3px;border-radius:4px;margin-left:1px;color:#fff;vertical-align:middle}
 .m-green{background:var(--green)}.m-purple{background:var(--purple)}.m-cyan{background:var(--cyan)}.m-red{background:var(--red)}.m-gold{background:var(--gold-d)}
-.cs-mins{display:flex;flex-wrap:wrap;gap:0 2px;line-height:1.1}
-.cs-min{font-size:8px;color:var(--muted);white-space:nowrap}
-.cs-foot{margin-top:auto;display:flex;justify-content:space-between;gap:2px;line-height:1}
-.cs-god{font-size:6.5px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cs-dec{font-size:6.5px;color:var(--muted2);white-space:nowrap;flex:none}
-.cs-empty{color:var(--muted2);font-size:9px}
-.cs-center{grid-column:2/4;grid-row:2/4;border:1px solid var(--line2);border-radius:10px;background:radial-gradient(circle at 50% 35%,rgba(156,124,240,.14),var(--bg2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px;text-align:center;z-index:2}
-.cs-cbig{font-family:"Noto Serif TC",serif;font-weight:900;font-size:16px;color:var(--gold)}
-.cs-cinfo{font-size:9px;color:var(--muted);line-height:1.35}
-.cs-cdate{font-size:8px;color:var(--muted2)}
+.cs-mins{display:flex;flex-wrap:wrap;gap:1px 6px;line-height:1.3}
+.cs-min{font-size:11px;color:var(--muted);white-space:nowrap}
+.cs-min sub{font-size:8px;color:var(--muted2)}
+.cs-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;gap:3px;line-height:1;padding-top:2px}
+.cs-god{font-size:9px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-dec{font-size:9px;color:var(--gold-d);white-space:nowrap;flex:none}
+.cs-empty{color:var(--muted2);font-size:12px}
+.cs-center{grid-column:2/4;grid-row:2/4;border:1px solid var(--line2);border-radius:12px;background:radial-gradient(circle at 50% 35%,rgba(156,124,240,.14),var(--bg2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px;text-align:center;z-index:2}
+.cs-cbig{font-family:"Noto Serif TC",serif;font-weight:900;font-size:22px;color:var(--gold)}
+.cs-cinfo{font-size:12px;color:var(--muted);line-height:1.5}
+.cs-cdate{font-size:10.5px;color:var(--muted2)}
 .cs-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
 .miaopick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .miaobtn{padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:15px;font-weight:700;cursor:pointer;transition:.14s}
@@ -741,7 +742,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v3.3";
+const APP_VERSION = "v3.4";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1960,7 +1961,7 @@ function renderChart(a){
      <div class="cs-top"><span class="cs-pname">${esc(p.name)}${p.isBodyPalace?"·身":""}${rl}</span><span class="cs-gz">${esc(p.heavenlyStem)}${esc(p.earthlyBranch)}</span></div>
      <div class="cs-majs">${maj}</div>
      <div class="cs-mins">${mins}</div>
-     <div class="cs-foot"><span class="cs-god">${esc(p.changsheng12)}·${esc(p.boshi12)}</span><span class="cs-dec">${dec}</span></div>
+     <div class="cs-foot"><span class="cs-god">${esc(p.changsheng12)}</span><span class="cs-dec">${dec?"大限 "+dec:""}</span></div>
    </div>`;
  });
  const gd=loadChartInput().g||"";
