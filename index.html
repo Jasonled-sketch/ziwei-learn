@@ -385,12 +385,15 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .cs-cell.hl-opp{border-color:var(--red);background:rgba(224,106,80,.13)}
 .cs-cell.hl-tri{border-color:var(--cyan);background:rgba(104,183,214,.11)}
 .cs-top{display:flex;justify-content:space-between;align-items:baseline;gap:3px;line-height:1.1}
-.cs-pname{font-family:"Noto Serif TC",serif;font-weight:700;font-size:13px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cs-rl{font-size:9px;font-weight:700;padding:0 3px;border-radius:4px;color:#0E0C1A;margin-left:2px}
+.cs-pname{font-family:"Noto Serif TC",serif;font-weight:700;font-size:13px;color:#CBBEF5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-rl,.cs-tag{font-size:8.5px;font-weight:700;padding:0 3px;border-radius:4px;margin-left:3px;vertical-align:middle}
+.cs-rl{color:#0E0C1A}
 .cs-rl-self{background:var(--gold)}.cs-rl-opp{background:var(--red);color:#fff}.cs-rl-tri{background:var(--cyan);color:#06263a}
+.cs-tag-shen{background:var(--purple);color:#fff}
+.cs-tag-lai{background:var(--rose);color:#2a0d1a}
 .cs-gz{font-size:11px;color:var(--muted2);white-space:nowrap}
 .cs-majs{display:flex;flex-wrap:wrap;gap:1px 5px;line-height:1.25}
-.cs-star{font-family:"Noto Serif TC",serif;font-weight:700;font-size:16px;color:var(--text);white-space:nowrap}
+.cs-star{font-family:"Noto Serif TC",serif;font-weight:700;font-size:15px;color:var(--text);white-space:nowrap}
 .cs-star sub{font-size:9.5px;color:var(--gold-d);margin-left:0;vertical-align:baseline}
 .cs-star em,.cs-min em{font-style:normal;font-size:9.5px;font-weight:700;padding:0 3px;border-radius:4px;margin-left:1px;color:#fff;vertical-align:middle}
 .m-green{background:var(--green)}.m-purple{background:var(--purple)}.m-cyan{background:var(--cyan)}.m-red{background:var(--red)}.m-gold{background:var(--gold-d)}
@@ -400,7 +403,7 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .cs-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;gap:3px;line-height:1;padding-top:2px}
 .cs-god{font-size:9px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cs-dec{font-size:9px;color:var(--gold-d);white-space:nowrap;flex:none}
-.cs-empty{color:var(--muted2);font-size:12px}
+.cs-empty{color:var(--muted2);font-size:10px}
 .cs-center{grid-column:2/4;grid-row:2/4;border:1px solid var(--line2);border-radius:12px;background:radial-gradient(circle at 50% 35%,rgba(156,124,240,.14),var(--bg2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px;text-align:center;z-index:2}
 .cs-cbig{font-family:"Noto Serif TC",serif;font-weight:900;font-size:22px;color:var(--gold)}
 .cs-cinfo{font-size:12px;color:var(--muted);line-height:1.5}
@@ -745,7 +748,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v3.5";
+const APP_VERSION = "v3.6";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1956,12 +1959,12 @@ function renderChart(a){
  a.palaces.forEach((p,idx)=>{
    const g=GPOS[p.earthlyBranch];if(!g)return;
    let role="";if(sel!=null){if(p.earthlyBranch===selB)role="self";else if(p.earthlyBranch===oppB)role="opp";else if(triB.indexOf(p.earthlyBranch)>=0)role="tri";}
-   const rl=role?` <b class="cs-rl cs-rl-${role}">${role==="self"?"本宮":role==="opp"?"對宮":"三合"}</b>`:"";
-   const maj=p.majorStars.map(s=>csStar(s,"cs-star")).join("")||'<span class="cs-empty">借對宮</span>';
+   const tags=`${p.isBodyPalace?'<b class="cs-tag cs-tag-shen">身</b>':''}${p.isOriginalPalace?'<b class="cs-tag cs-tag-lai">來因</b>':''}${role?`<b class="cs-rl cs-rl-${role}">${role==="self"?"本宮":role==="opp"?"對宮":"三合"}</b>`:''}`;
+   const maj=p.majorStars.map(s=>csStar(s,"cs-star")).join("")||'<span class="cs-empty">（借對宮）</span>';
    const mins=[...p.minorStars,...p.adjectiveStars].map(s=>csStar(s,"cs-min")).join("");
    const dec=(p.decadal&&p.decadal.range)?p.decadal.range[0]+"-"+p.decadal.range[1]:"";
    cells+=`<div class="cs-cell${role?" hl-"+role:""}" style="grid-column:${g[0]};grid-row:${g[1]}" onclick="chartSanfang(${idx})">
-     <div class="cs-top"><span class="cs-pname">${esc(p.name)}${p.isBodyPalace?"·身":""}${rl}</span><span class="cs-gz">${esc(p.heavenlyStem)}${esc(p.earthlyBranch)}</span></div>
+     <div class="cs-top"><span class="cs-pname">${esc(p.name)}${tags}</span><span class="cs-gz">${esc(p.heavenlyStem)}${esc(p.earthlyBranch)}</span></div>
      <div class="cs-majs">${maj}</div>
      <div class="cs-mins">${mins}</div>
      <div class="cs-foot"><span class="cs-god">${esc(p.changsheng12)}</span><span class="cs-dec">${dec?"大限 "+dec:""}</span></div>
@@ -1988,11 +1991,14 @@ function renderChart(a){
 function sanfangSvg(sel,a){
  if(sel==null)return "";
  const selB=a.palaces[sel].earthlyBranch,oppB=OPP[selB],tri=sanheOther(selB);
- const c=b=>{const g=GPOS[b];return [((g[0]-0.5)/4*100).toFixed(1),((g[1]-0.5)/4*100).toFixed(1)];};
+ /* 端點只拉到格子「朝中心的內緣」(中框邊)，不穿過星曜文字 */
+ const c=b=>{const g=GPOS[b];let x=(g[0]-0.5)/4*100,y=(g[1]-0.5)/4*100;
+   x+=Math.max(-12.5,Math.min(12.5,50-x));y+=Math.max(-12.5,Math.min(12.5,50-y));
+   return [x.toFixed(1),y.toFixed(1)];};
  const P=c(selB),T1=c(tri[0]),T2=c(tri[1]),O=c(oppB);
  return `<svg class="cs-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-   <polygon points="${P[0]},${P[1]} ${T1[0]},${T1[1]} ${T2[0]},${T2[1]}" fill="rgba(104,183,214,.05)" stroke="#68B7D6" stroke-width="0.5" stroke-dasharray="1.6 1.2"/>
-   <line x1="${P[0]}" y1="${P[1]}" x2="${O[0]}" y2="${O[1]}" stroke="#E06A50" stroke-width="0.6" stroke-dasharray="1.6 1.2"/>
+   <polygon points="${P[0]},${P[1]} ${T1[0]},${T1[1]} ${T2[0]},${T2[1]}" fill="rgba(104,183,214,.04)" stroke="#68B7D6" stroke-width="0.45" stroke-dasharray="1.4 1.1" opacity="0.85"/>
+   <line x1="${P[0]}" y1="${P[1]}" x2="${O[0]}" y2="${O[1]}" stroke="#E06A50" stroke-width="0.5" stroke-dasharray="1.4 1.1" opacity="0.85"/>
  </svg>`;
 }
 function chartSanfang(idx){SFX.tap();CHART_SEL=(CHART_SEL===idx?null:idx);const el=document.getElementById("chartOut");if(el)el.innerHTML=renderChart(CHART);}
@@ -2047,7 +2053,7 @@ function svgSanfang(){
  const BR={ming:"寅",xiong:"丑",fu:"子",zi:"亥",cai:"戌",ji:"酉",qian:"申",jiao:"未",guan:"午",tian:"巳",fude:"辰",mu:"卯"};
  const idxOf=id=>PALACES.findIndex(p=>p.id===id);
  const nm=id=>PALACES.find(p=>p.id===id).name;
- const ctr=id=>[pos[id][0]*80+40,pos[id][1]*80+40];
+ const ctr=id=>{let x=pos[id][0]*80+40,y=pos[id][1]*80+40;x+=Math.max(-40,Math.min(40,160-x));y+=Math.max(-40,Math.min(40,160-y));return [x,y];};
  const sel=SANFANG_SEL;let selSet={},hint='點任一宮，看它的三方四正（本宮＋對宮＋兩個三合宮）。對宮就在正對面。',lines='';
  if(sel){const i=idxOf(sel);const opp=PALACES[(i+6)%12].id,t1=PALACES[(i+4)%12].id,t2=PALACES[(i+8)%12].id;
   selSet={[sel]:'self',[opp]:'opp',[t1]:'tri',[t2]:'tri'};
