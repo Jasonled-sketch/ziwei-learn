@@ -417,6 +417,15 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .fhself{color:var(--gold);font-size:12px}
 .fhdesc{font-size:12.5px;color:var(--muted);line-height:1.65;margin:4px 0 0 54px}
 .fhdesc b{color:var(--text)}
+.sppick{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.spbtn{padding:9px 0;border-radius:10px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:14px;font-weight:700;cursor:pointer;transition:.14s}
+.spbtn:active{transform:scale(.95)}
+.spbtn.on{background:linear-gradient(135deg,var(--purple-d),var(--purple));border-color:var(--purple);color:#fff;box-shadow:0 4px 12px var(--purple-glow)}
+.sprows{display:grid;gap:0}
+.sprow{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);align-items:baseline}
+.sprow:first-child{border-top:0}
+.spgong{flex:none;width:46px;font-family:"Noto Serif TC",serif;font-weight:700;font-size:14.5px;color:var(--gold)}
+.sptext{flex:1;font-size:13px;color:var(--text);line-height:1.65}
 .miaopick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .miaobtn{padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:var(--panel);color:var(--text);font-family:"Noto Serif TC",serif;font-size:15px;font-weight:700;cursor:pointer;transition:.14s}
 .miaobtn:active{transform:scale(.95)}
@@ -455,6 +464,7 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
   .stat b{font-size:19px}
   .minorgrid{grid-template-columns:1fr}
   .miaogrid{grid-template-columns:repeat(4,1fr)}
+  .sppick{grid-template-columns:repeat(4,1fr)}
 }
 </style>
 
@@ -756,7 +766,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v3.9";
+const APP_VERSION = "v4.0";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1269,12 +1279,30 @@ const BRIGHT_LEVELS=[
  {n:"陷",c:"red",d:"最暗，力量大打折、缺點容易浮現"},
 ];
 
+/* ---------- 144 星宮組合圖鑑：14 主星 × 12 宮（陣列依 PALACES 順序 命兄夫子財疾遷友官田福父） ---------- */
+const STARPALACE = {
+ ziwei:["領導格局、有威嚴愛面子，天生想坐主位，得輔佐才成大器","手足中的老大或佼佼者，重面子、來往層次高","配偶條件好、有主見，你重對方的地位與尊嚴","子女優秀有主見、期望高，重教養與成就","因地位格局得財，愛用好的、不擅算小錢","注意脾胃頭部；壓力多來自扛責任、放不下身段","出外受敬重、有貴人，適合往外闖舞台","朋友部屬層次高、能得力，但要有格局才鎮得住","事業有領導格，宜主管與代表性職位，重成就","重居家格調、能置產，家中你主導","重精神品味與享受，愛面子、對生活要求高","長輩有威嚴、期望高，與權威的關係是課題"],
+ tianji:["聰明多謀、反應快、愛動腦，但想太多易勞心","手足互動多變、講理，可能聚少離多","配偶聰明機靈、心思細，感情多思多變","子女聰明伶俐、點子多，教養宜多溝通","靠智慧企劃動腦生財，財來財去宜規劃","注意神經、睡眠、肝膽；煩惱多源於想太多","出外機運靈活、善應變，適合動態外務","朋友多動腦型、緣分變動，交友宜精不宜濫","事業宜企劃顧問幕僚，靠腦不靠蠻力、多變動","住所常變動愛搬遷，家中重溝通","心思多、興趣廣，易操煩，宜學放下","與長輩緣分多思多變，長輩多聰明型"],
+ taiyang:["熱情光明、愛付出重名聲，格局大但易勞碌","你熱心照顧手足，與男性手足緣重","配偶開朗大方、事業心強（女命尤看丈夫）","子女活潑外向、有正義感，重視栽培","因名得利、光明正大之財，不擅計較","注意心血管、眼睛、頭部；操勞易上火","出外貴人多、受歡迎，適合公眾對外發展","朋友多、樂於助人，男性貴人多","事業宜公職公眾、需露臉發光的領域，重名","家中你像太陽照顧全家，重門面","心胸開闊、樂於分享，但易操心他人","與父親/男性長輩緣深，重長輩情義"],
+ wuqu:["務實剛毅、重紀律結果，行動派、不擅表達情感","手足重義氣講實際，來往乾脆","配偶剛強務實、重承諾，感情較晚或需磨合","子女獨立務實、較剛，教養宜柔化","正財之星、善賺善守，理財能力強","注意呼吸道、鼻牙、金屬外傷；壓力硬扛","出外靠實力打拚得財，宜財經技術外務","朋友重實際講義氣，交友圈務實","事業宜財經工程技術財務，重效率結果","善置產守財，家是資產也是責任","重物質安全感，較不擅享受、宜學放鬆","與長輩關係務實較剛，長輩多硬脾氣"],
+ tiantong:["溫和樂天、人緣好、懂享受，但企圖心較弱","手足和氣感情好，相處愉快","配偶溫柔體貼、好相處，感情平順甜","子女乖巧可愛、有福氣，教養輕鬆","財來得平順、白手後享福，不強求","注意肥胖、泌尿、情緒；宜運動別懶散","出外人緣好、逢凶化吉，貴人相助","朋友多、相處融洽，喜與人為善","事業宜服務休閒創意等不需硬拚的領域","家庭溫馨、重生活品質，居家享受","精神自在知足、興趣多，福厚","與長輩感情融洽、受疼愛"],
+ lianzhen:["個性複雜多面、有企圖心，能剛能柔、感情豐富","手足關係濃烈或有波折，來往看緣分","配偶有魅力個性強，感情濃烈易起伏","子女個性強有主見，親子情濃也易衝突","靠交際專業換資源得財，財來財去","注意心火、血液、婦科；情緒起伏影響健康","出外交際手腕強、機運多，也易生是非","朋友交際廣、關係複雜，貴人小人都在人際","事業宜業務公關政治、需交際的專業，能拚","居家講究重氛圍，家運有起伏","情感豐富、慾望強，精神世界複雜","與長輩關係濃烈或有波折，看化氣"],
+ tianfu:["穩重保守、善管理有度量，能守成但缺開創","手足和睦互助、可靠，來往穩定","配偶穩重顧家、有經濟能力，感情安定","子女穩重乖巧、好教養，親子關係穩","財庫豐厚、善儲蓄守財，理財穩健","注意腸胃消化；體質偏穩、少大病","出外穩健受信任，宜穩定發展","朋友可靠、圈子穩定，重信用","事業宜管理財務行政等穩定型主管職","善置產守家，田宅豐厚、家運穩","生活穩定知足、重安全感，福氣厚","與長輩關係穩定和睦、得庇蔭"],
+ taiyin:["內斂細膩、善儲蓄、有藝術感，多愁但洞察力強","與女性手足緣重，感情細膩、私下互助","配偶溫柔顧家內斂（男命尤看妻子），感情細水","子女貼心細膩乖巧，親子情深","田宅之財、善儲蓄置產，暗中聚財","注意婦科、內分泌、睡眠；情緒影響體質","出外宜低調經營、夜間或幕後，財在遠方","朋友重情、圈子精緻，女性緣多","事業宜財務房地產藝術幕後企劃","最利田宅、能置產守家，家是重心","內心細膩重情愛美，宜排解多愁","與母親/女性長輩緣深，受細心照顧"],
+ tanlang:["多才多藝、交際強、慾望多，魅力足但易分心","手足交際廣各有本事，來往熱鬧","配偶有魅力、多才多情，感情豐富需經營","子女多才活潑人緣好，教養重引導","偏財與人脈財、敢賺敢花，交際生財","注意肝膽、內分泌、縱慾傷身；宜節制","出外交際旺機會多、桃花也多，宜外務","朋友滿天下、交際廣，人脈即錢脈","事業宜業務娛樂餐飲命理等靠人脈才藝","居家愛熱鬧重情調，家中人來人往","慾望與興趣多愛享受，課題是節制","與長輩緣分靠交際、關係多元"],
+ jumen:["口才辯才好、分析深、追根究柢，但多疑易口舌","手足間話多、易有口角，宜多包容","配偶口才好有想法，感情易因言語起波","子女好問好辯聰明，教養宜傾聽","靠口才專業生財、白手起家，宜靠嘴吃飯","注意口腔、食道、腸胃；病從口入宜注意","出外靠口才專業揚名，也易招是非口舌","朋友重深談、易生誤會，交友宜真誠","事業宜法律教育業務、靠口才專業","居家易有口角、講究隱私，家中話多","內心多思多疑愛鑽研，宜開闊心胸","與長輩易有言語隔閡，溝通是課題"],
+ tianxiang:["忠厚可靠、重公平、善協調，缺主見易受影響","手足和睦、你常居中協調，關係公道","配偶體面顧家好相處，感情平和互相扶持","子女乖巧有禮重規矩，親子和諧","財務平穩、善為人管財，不貪不缺","注意皮膚、泌尿、水腫；體質偏中和","出外有人緣受信任，宜輔佐協調角色","朋友和善、你是和事佬，人際圓融","事業宜輔佐幕僚公關協調服務代理","居家整齊體面重品質，家運平順","重生活品味與人和，內心平和","與長輩關係和睦、受提攜，重禮數"],
+ tianliang:["有原則能服眾、逢凶化吉，愛照顧人也愛管","手足中你像長輩照顧人，受尊重","配偶成熟穩重或年紀差距，感情有照顧味","子女懂事有原則、較早熟，親子重身教","不重錢財、常逢貴人化解，宜正財","注意胃、乳、關節；逢病能化險，體質韌","出外逢凶化吉、貴人扶，宜監督顧問","朋友多良師益友、你也是別人的貴人","事業宜醫療教育公職宗教命理監督","居家安穩、常得長輩助，家有蔭","精神清高重原則愛助人，福壽","與長輩緣深得庇蔭，你也孝順長輩"],
+ qisha:["果決獨立、能扛責開創力強，剛烈不易妥協","手足各自獨立、來往乾脆，聚少離多","配偶個性強獨立，感情需主動經營、有距離","子女獨立倔強有衝勁，教養宜給空間","大進大出、靠拚搏得財，財勢起伏大","注意外傷、呼吸道、意外；宜防血光","出外開創力強、獨當一面，宜往外闖","朋友各有主張、來往直接，交友重義","事業宜創業軍警業務等獨當一面領域","居家較少顧、重事業，家運隨事業起伏","內心剛強獨立、閒不下來，宜學放鬆","與長輩緣較淡或聚少離多、各自獨立"],
+ pojun:["大破大立、敢衝敢變開創力強，人生起伏大","手足關係變動大、各奔前程，來往有起落","配偶敢愛敢恨個性強，感情多變起伏後方穩","子女個性獨特敢衝，親子關係較跳","大起大落、先破後立，財來財去宜守成","注意外傷、生殖泌尿、耗損；宜防意外","出外變動大、敢闖敢拚，宜開創型外務","朋友來去起伏、汰換快，交友重真不重多","事業宜開創、破局重建、需衝勁的領域","居家常變動愛翻新，家運先破後立","內心求新求變、不安於現狀，宜穩守","與長輩緣分變動、聚散無常"],
+};
+
 /* ---------- v3 未來藍圖（規劃中，本版先列計劃） ---------- */
 const V3PLAN = [
  {em:"✅",t:"自動排盤",d:"已完成！首頁「🪐 自動排盤」輸入生日，就排出你的命盤（主星·廟旺·四化·大限·神煞）。", done:true},
  {em:"✅",t:"廟旺利陷亮度系統",d:"已完成！「學習」頁 →「🔆 廟旺利陷亮度」查每顆星在 12 宮的亮度。", done:true},
  {em:"✅",t:"飛星四化 · 自化",d:"已完成！「學習」頁 →「🌀 飛星四化」看概念；排盤點任一宮就顯示它宮干飛出的四化落點＋自化。", done:true},
- {em:"🔢",t:"144 種星宮組合全收錄",d:"從 24 組雙星，擴充到完整的星宮組合圖鑑，一顆星在每個宮位的差異全解。"},
+ {em:"✅",t:"星宮組合圖鑑",d:"已完成！「學習」頁 →「🔢 星宮組合圖鑑」，14 主星 × 12 宮的白話解讀全收錄。", done:true},
 ];
 
 /* ---------- 等級 ---------- */
@@ -1505,6 +1533,7 @@ function render(){touchStreak();const v=view();
  else if(CUR==="miao")v.innerHTML=viewMiao();
  else if(CUR==="chart")v.innerHTML=viewChart();
  else if(CUR==="feixing")v.innerHTML=viewFeixing();
+ else if(CUR==="starpalace")v.innerHTML=viewStarPalace();
  else if(CUR==="quiz")v.innerHTML=viewQuizHub();
  else if(CUR==="wrong")v.innerHTML=viewWrong();
  else if(CUR==="me")v.innerHTML=viewMe();
@@ -1548,7 +1577,8 @@ function viewHome(){
    <div class="tile" onclick="go('daxian')"><div class="em">⏳</div><div><h3>大限流年<span class="newdot">NEW</span></h3><p>先天、大限、流年觀念</p></div><div class="bar thin mini"><i style="width:${pct('daxian')}%"></i></div></div>
    <div class="tile" onclick="go('shensha')"><div class="em">🎖️</div><div><h3>神煞十二神<span class="newdot">NEW</span></h3><p>青龍長生那類·附例子</p></div><div class="bar thin mini"><i style="width:${pct('shensha')}%"></i></div></div>
    <div class="tile" onclick="go('miao')"><div class="em">🔆</div><div><h3>廟旺利陷</h3><p>星曜在12宮的亮度</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">工具</div></div>
-   <div class="tile" onclick="go('feixing')"><div class="em">🌀</div><div><h3>飛星四化<span class="newdot">NEW</span></h3><p>宮位互相牽動·自化</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">進階</div></div>
+   <div class="tile" onclick="go('feixing')"><div class="em">🌀</div><div><h3>飛星四化</h3><p>宮位互相牽動·自化</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">進階</div></div>
+   <div class="tile" onclick="go('starpalace')"><div class="em">🔢</div><div><h3>星宮組合圖鑑<span class="newdot">NEW</span></h3><p>14主星×12宮全解</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">進階</div></div>
    <div class="tile big" onclick="go('quiz')"><div class="em">✍️</div><div><h3>開始測驗</h3><p>120 題題庫 · 章節 · 隨機 · 錯題重練${wrongN?` · 待複習 ${wrongN} 題`:""}</p></div><div class="arrow">›</div></div>
  </div>`;
 }
@@ -1568,6 +1598,7 @@ function viewLearn(){
   {r:"miao",em:"🔆",n:"廟旺利陷亮度",d:"查每顆星在 12 宮的亮度（燈泡有亮有暗）",tool:true},
   {r:"chart",em:"🪐",n:"自動排盤",d:"輸入生日排出你的命盤，主星廟旺四化大限神煞全都有",tool:true},
   {r:"feixing",em:"🌀",n:"飛星四化·自化",d:"北派進階：宮位之間怎麼互相牽動（排盤點宮可看）",tool:true},
+  {r:"starpalace",em:"🔢",n:"星宮組合圖鑑",d:"14 主星 × 12 宮：一顆星在不同宮位的白話解讀",tool:true},
  ];
  return `<div class="eyebrow">學習中心</div><h2 class="title">星曜研習</h2>
  <p class="lead">建議依序：宮位（舞台）→ 主星（演員）→ 四化（劇情）→ 輔星（配角）→ 雙星（合演）→ 框架格局（劇本）→ 大限流年（時間軸）。點卡片閱讀，讀完標記「已學會」可累積經驗值。</p>
@@ -2062,6 +2093,21 @@ function viewFeixing(){
  <div class="note"><b>① 先看</b>四化來自哪個宮的<b>宮干</b> → <b>② 這天干</b>讓哪四顆星化祿權科忌 → <b>③ 這四顆星</b>各落在哪個宮 → <b>④ 把「來源宮 → 落點宮」</b>用上面的意義串起來，再放回三方四正、大限流年一起看。<br><br><b style="color:var(--gold)">走一遍範例：</b>假設「夫妻宮化忌入財帛宮」——夫妻(感情)對財帛(錢)放不下、會消耗＝<b>感情容易為錢起衝突、或另一半是花錢的地方</b>。這就是飛星在講的「一個宮牽動另一個宮」。</div>
 
  <div class="note" style="border-color:var(--gold-d)"><b style="color:var(--gold)">馬上練習！</b><br>去「🪐 排盤」<b>點任一宮</b>，命盤下面會列出這宮飛出的四化落點，而且<b>每一條都附白話解讀</b>，照著念、對照上面四步驟，你就會看飛星了。多點幾個宮練手感！</div>`;
+}
+
+/* ======================= 144 星宮組合圖鑑（v3 功能四） ======================= */
+let STARPALACE_SEL="ziwei";
+function viewStarPalace(){
+ return `<div class="eyebrow">進階 · 星宮組合</div><h2 class="title">星宮組合圖鑑</h2>
+ <p class="lead">同一顆主星放在不同宮位（人生領域），意義就不同——這就是「<b>星曜是演員、宮位是舞台</b>」。這裡收錄 14 主星 × 12 宮的白話解讀。先點一顆主星：</p>
+ <div class="sppick">${STARS.map(s=>`<button class="spbtn${s.id===STARPALACE_SEL?" on":""}" data-s="${s.id}" onclick="pickSP('${s.id}')">${esc(s.name)}</button>`).join("")}</div>
+ <div id="spResult">${renderSP(STARPALACE_SEL)}</div>
+ <div class="note">💡 小撇步：先想這顆星的「個性」（演員），再套進宮位的「領域」（舞台），就能自己推——不用死背。搭配「十四主星」「十二宮」單元一起看最快。</div>`;
+}
+function pickSP(id){SFX.tap();STARPALACE_SEL=id;document.querySelectorAll(".spbtn").forEach(b=>b.classList.toggle("on",b.dataset.s===id));const el=document.getElementById("spResult");if(el)el.innerHTML=renderSP(id);}
+function renderSP(id){
+ const s=STARS.find(x=>x.id===id);const arr=STARPALACE[id];if(!arr)return"";
+ return `<div class="card" style="padding:15px;margin-top:8px"><div style="font-family:'Noto Serif TC',serif;font-weight:900;font-size:20px;color:var(--gold);margin-bottom:6px">${esc(s.name)} <span style="font-size:12.5px;color:var(--purple);font-weight:400">${esc(s.core.split("｜")[0])}</span></div><div class="sprows">${PALACES.map((p,i)=>`<div class="sprow"><span class="spgong">${esc(p.name)}</span><span class="sptext">${esc(arr[i])}</span></div>`).join("")}</div></div>`;
 }
 
 /* ======================= 十天干四化查表器 ======================= */
