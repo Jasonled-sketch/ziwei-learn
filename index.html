@@ -527,6 +527,94 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 .dxtry{font-size:11px;color:var(--muted2)}
 .dxreq{margin-top:10px;font-size:12px;color:var(--muted);border:1px dashed var(--line2);border-radius:11px;padding:9px 11px;line-height:1.7}
 .dxrow.owned .dxhead .spgong{color:var(--gold)}
+/* ===== v5.3 批5：.mcard 3D 翻卡記憶卡（02§三） ===== */
+.mcard{width:min(78vw,320px);aspect-ratio:3/4;margin:0 auto;perspective:1000px;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none}
+.mcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,.1,.2,1.2)}
+.mcard.flip .mcard-inner{transform:rotateY(180deg)}
+.mcard-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);background:linear-gradient(160deg,var(--panel2),var(--panel));border:1.5px solid var(--line2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px;overflow:hidden}
+.mcard-back{transform:rotateY(180deg)}
+.mc-emoji{font-size:52px;line-height:1;margin-top:-10%}
+.mc-totem{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);opacity:.45;pointer-events:none}
+.mc-img{width:46%;border-radius:12px;border:1px solid var(--line2);box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.mc-name{font-family:"Noto Serif TC",serif;font-weight:900;font-size:32px;color:var(--gold);letter-spacing:6px;text-indent:6px;text-align:center;line-height:1.3}
+.mc-chip{font-size:12px;padding:3px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--muted);background:rgba(14,12,26,.35)}
+.mc-mnemonic{font-family:"Noto Serif TC",serif;font-weight:700;font-size:22px;color:var(--gold);line-height:1.8;text-align:center}
+.mc-figure{font-size:16px;color:var(--gold-d)}
+.mc-sub{font-size:12px;color:var(--muted);text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mc-oneliner{font-size:13px;color:var(--muted);text-align:center;line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mc-desc{font-size:13px;color:var(--muted);line-height:1.8;overflow-y:auto;min-height:0;flex:0 1 auto;text-align:justify}
+.mc-flip-hint{position:absolute;bottom:9px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted2);letter-spacing:.15em}
+/* 五行色框（卡框=五行、圖騰=性格色雙重記憶；purple=宮位與非主星卡一律紫框） */
+.mcard[data-wx=wood] .mcard-face{border-color:var(--wx-wood);box-shadow:0 0 14px var(--wx-wood-glow)}
+.mcard[data-wx=wood] .mc-name{color:var(--wx-wood)}
+.mcard[data-wx=wood] .mc-figure{color:var(--wx-wood-b)}
+.mcard[data-wx=fire] .mcard-face{border-color:var(--wx-fire);box-shadow:0 0 14px var(--wx-fire-glow)}
+.mcard[data-wx=fire] .mc-name{color:var(--wx-fire)}
+.mcard[data-wx=fire] .mc-figure{color:var(--wx-fire-b)}
+.mcard[data-wx=earth] .mcard-face{border-color:var(--wx-earth);box-shadow:0 0 14px var(--wx-earth-glow)}
+.mcard[data-wx=earth] .mc-name{color:var(--wx-earth)}
+.mcard[data-wx=earth] .mc-figure{color:var(--wx-earth-b)}
+.mcard[data-wx=metal] .mcard-face{border-color:var(--wx-metal);box-shadow:0 0 14px var(--wx-metal-glow)}
+.mcard[data-wx=metal] .mc-name{color:var(--wx-metal)}
+.mcard[data-wx=metal] .mc-figure{color:var(--wx-metal-b)}
+.mcard[data-wx=water] .mcard-face{border-color:var(--wx-water);box-shadow:0 0 14px var(--wx-water-glow)}
+.mcard[data-wx=water] .mc-name{color:var(--wx-water)}
+.mcard[data-wx=water] .mc-figure{color:var(--wx-water-b)}
+.mcard[data-wx=purple] .mcard-face{border-color:var(--purple);box-shadow:0 0 14px var(--purple-glow)}
+.mcard[data-wx=purple] .mc-name{color:var(--purple)}
+.mcard[data-wx=purple] .mc-figure{color:var(--purple)}
+/* 大卡稀有度光效（光暈×1.5） */
+.mcard[data-rarity=rare] .mcard-face{box-shadow:0 0 15px var(--purple-glow),0 0 30px rgba(104,183,214,.20)}
+.mcard[data-rarity=legend] .mcard-face{border-color:var(--gold);animation:legendPulseL 2.4s ease-in-out infinite}
+.mcard[data-rarity=legend] .mcard-face::before{content:"";position:absolute;top:-60%;left:-80%;width:55%;height:220%;background:linear-gradient(105deg,transparent,rgba(255,243,214,.28),transparent);transform:translateX(0) rotate(18deg);animation:shimmer 3.6s linear infinite;pointer-events:none}
+@keyframes legendPulseL{0%,100%{box-shadow:0 0 12px var(--gold-glow)}50%{box-shadow:0 0 27px var(--gold-glow),0 0 51px rgba(231,197,125,.18)}}
+/* ===== v5.3 批5：圖鑑收集頁視覺（02§四） ===== */
+.dex-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 2px 18px}
+@media (min-width:600px){.dex-grid{grid-template-columns:repeat(6,1fr)}}
+.dex-cell{aspect-ratio:3/4;border-radius:var(--r-sm);background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;overflow:hidden;position:relative;cursor:pointer}
+.dex-cell .dc-emoji{font-size:26px;line-height:1}
+.dex-cell .dc-name{color:var(--muted)}
+.dex-cell.locked{opacity:.38}
+.dex-cell.locked .dc-emoji{filter:grayscale(1) brightness(.55)}
+.dex-cell.locked::after{content:"?";position:absolute;inset:0;display:grid;place-items:center;font-size:22px;color:var(--muted2);background:rgba(14,12,26,.55)}
+.dex-hdr{position:sticky;top:0;z-index:2;background:var(--bg2);padding:8px 4px;display:flex;align-items:center;gap:8px;font-family:'Noto Serif TC',serif;font-weight:700;border-radius:8px;margin-bottom:6px}
+.dex-bar{flex:1;height:4px;border-radius:99px;background:var(--panel2)}
+.dex-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--gold))}
+/* 已收服格：五行色框＋稀有度三級光效（normal 無光／rare 紫青漸層框／legend 金框呼吸＋掃光） */
+.dex-cell[data-wx=wood]{border-color:var(--wx-wood)}
+.dex-cell[data-wx=fire]{border-color:var(--wx-fire)}
+.dex-cell[data-wx=earth]{border-color:var(--wx-earth)}
+.dex-cell[data-wx=metal]{border-color:var(--wx-metal)}
+.dex-cell[data-wx=water]{border-color:var(--wx-water)}
+.dex-cell[data-rarity=rare]{border:1.5px solid transparent;background:linear-gradient(var(--panel),var(--panel)) padding-box,linear-gradient(135deg,var(--purple),var(--cyan)) border-box;box-shadow:0 0 10px var(--purple-glow)}
+.dex-cell[data-rarity=legend]{border:1.5px solid transparent;background:linear-gradient(var(--panel),var(--panel)) padding-box,linear-gradient(135deg,var(--gold),#FFF3D6,var(--gold-d)) border-box;animation:legendPulse 2.4s ease-in-out infinite}
+@keyframes legendPulse{0%,100%{box-shadow:0 0 8px var(--gold-glow)}50%{box-shadow:0 0 18px var(--gold-glow),0 0 34px rgba(231,197,125,.18)}}
+.dex-cell[data-rarity=legend]::before{content:"";position:absolute;top:-60%;left:-80%;width:55%;height:220%;background:linear-gradient(105deg,transparent,rgba(255,243,214,.28),transparent);transform:translateX(0) rotate(18deg);animation:shimmer 3.6s linear infinite;pointer-events:none}
+@keyframes shimmer{0%{transform:translateX(0) rotate(18deg)}45%,100%{transform:translateX(400%) rotate(18deg)}}
+.dex-cell.just-got{animation:cellPop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes cellPop{0%{transform:scale(.55);opacity:.2}100%{transform:scale(1);opacity:1}}
+/* ===== v5.3 批5：gacha 開卡動畫（02§4.3；z150 介於 modal z100 與 lvup z200） ===== */
+.gacha{position:fixed;inset:0;z-index:150;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(6,5,14,.9);backdrop-filter:blur(6px);cursor:pointer;overflow:hidden;perspective:900px;animation:fade .25s}
+.gacha .glight{position:absolute;left:50%;top:50%;width:160vmax;height:160vmax;transform:translate(-50%,-50%);background:repeating-conic-gradient(rgba(231,197,125,.10) 0 8deg,transparent 8deg 30deg);animation:gspin 14s linear infinite;pointer-events:none}
+.gacha.r-rare .glight{background:repeating-conic-gradient(rgba(156,124,240,.13) 0 8deg,rgba(104,183,214,.06) 8deg 14deg,transparent 14deg 30deg)}
+.gacha.r-legend .glight{background:repeating-conic-gradient(rgba(231,197,125,.16) 0 8deg,rgba(255,243,214,.06) 8deg 14deg,transparent 14deg 30deg)}
+.gacha.r-legend::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,rgba(255,243,214,.6),transparent 55%);animation:gflash .4s ease-out forwards;pointer-events:none}
+@keyframes gspin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes gflash{0%{opacity:1}100%{opacity:0}}
+.gacha .gcard{pointer-events:none;animation:gachaIn .9s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes gachaIn{0%{transform:scale(.12) rotateY(0deg);opacity:0}55%{opacity:1}100%{transform:scale(1) rotateY(720deg)}}
+.gacha .glabel{font-family:"Noto Serif TC",serif;font-weight:900;font-size:28px;color:var(--gold);letter-spacing:.22em;text-indent:.22em;text-shadow:0 0 26px var(--gold-glow);animation:gpop .5s cubic-bezier(.22,1.4,.4,1) .6s both}
+.gacha.r-rare .glabel{color:var(--purple);text-shadow:0 0 26px var(--purple-glow)}
+@keyframes gpop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.gacha .ghint{font-size:11.5px;color:var(--muted);letter-spacing:.25em;animation:gpop .4s ease .9s both}
+/* 批5 降級：reduced-motion 全部顯示終態 */
+@media (prefers-reduced-motion:reduce){
+  .mcard-inner{transition:none}
+  .mcard[data-rarity=legend] .mcard-face,.mcard[data-rarity=legend] .mcard-face::before,
+  .dex-cell[data-rarity=legend],.dex-cell[data-rarity=legend]::before,.dex-cell.just-got,
+  .gacha,.gacha .glight,.gacha .gcard,.gacha .glabel,.gacha .ghint,.gacha.r-legend::after{animation:none}
+  .gacha.r-legend::after{opacity:0}
+}
 @media (max-width:420px){
   .brand{font-size:17px} .brand-sub{display:none}
   .hero h1{font-size:26px} .hero .seal{font-size:96px}
@@ -829,6 +917,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
 </div></nav>
 <div id="modal"></div>
 <div id="lvup"></div>
+<div id="gacha" hidden></div>
 <div id="toast" class="toast"></div>
 
 <script>
@@ -838,7 +927,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v5.2";
+const APP_VERSION = "v5.3";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -2533,7 +2622,21 @@ function renderSP(id){
    <div class="dxhead" onclick="dexToggle('${id}',${i})"><span class="spgong">${PALACE_EMOJI[i]} ${esc(p.name)}</span>${tierChip}${st}<span class="dxarr">${open?"▾":"▸"}</span></div>
    ${body}</div>`;
  }).join("");
- return `<div class="card" style="padding:15px;margin-top:8px"><div style="font-family:'Noto Serif TC',serif;font-weight:900;font-size:20px;color:var(--gold);margin-bottom:6px">${STAR_EMOJI[id]||""} ${esc(s.name)} <span style="font-size:12.5px;color:var(--purple);font-weight:400">${esc(s.core.split("｜")[0])}</span><span class="chip gold" style="float:right">收服 ${gotN}/12</span></div><div class="sprows">${rows}</div></div>`;
+ /* v5.3 批5：組頭 emoji＋進度條（dex-hdr/dex-bar）＋視覺格點（未收服灰剪影?遮罩／已收服五行框＋稀有度光效） */
+ const cells=PALACES.map((p,i)=>{
+  const key=dexKey(id,i),got=S.dex.got[key];
+  const rar=got===3?"legend":got===2?"rare":"normal";
+  const cls="dex-cell"+(got?"":" locked")+(JUST_GOT===key?" just-got":"");
+  const attrs=got?` data-rarity="${rar}" data-wx="${STAR_WX[id]||""}" onclick="dexBigCard('${id}',${i})"`:` onclick="dexToggle('${id}',${i})"`;
+  return `<div class="${cls}"${attrs} role="button" aria-label="${esc(s.name)}·${esc(p.name)}${got?"已收服，點看大卡":"未收服"}"><div class="dc-emoji">${PALACE_EMOJI[i]||""}</div><div class="dc-name">${esc(p.name)}</div></div>`;
+ }).join("");
+ const out=`<div class="card" style="padding:15px;margin-top:8px">
+  <div class="dex-hdr"><span style="font-size:22px;line-height:1">${STAR_EMOJI[id]||""}</span><span style="font-size:19px;color:var(--gold)">${esc(s.name)}</span><span style="font-size:11.5px;color:var(--purple);font-weight:400;font-family:'Noto Sans TC',sans-serif">${esc(s.core.split("｜")[0])}</span><div class="dex-bar"><i style="width:${Math.round(gotN/12*100)}%"></i></div><span style="font-size:11px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;flex:none">收服 ${gotN}/12</span></div>
+  <p style="font-size:11px;color:var(--muted2);margin:0 0 6px">✦ 亮格點一下看大卡；灰格點一下展開下方條目去收服</p>
+  <div class="dex-grid">${cells}</div>
+  <div class="sprows">${rows}</div></div>`;
+ JUST_GOT=null;
+ return out;
 }
 
 /* ======================= 十天干四化查表器 ======================= */
@@ -3161,11 +3264,12 @@ function openSignSheet(){
    <div class="actions"><button class="btn btn-g" onclick="drawSign()">🎐 開籤 · +2 XP</button></div>`);
   return;
  }
+ /* v5.3 批5：籤面主體改 .mcard 翻卡（籤語保留卡上方；資料與解籤流程不變） */
  const face=`
-  <div class="signface">
+  <div style="text-align:center;margin:2px 0 6px">
    <p class="signpoem">${esc(signText())}</p>
-   <div class="signstar">${esc(c.name)}</div>
-   <div class="signmn">「${esc(c.mn)}」</div>
+   ${signMcard(c)}
+   <p style="font-size:11px;color:var(--muted2);margin:8px 0 0;letter-spacing:.05em">點卡片翻面 · 口訣記心底</p>
   </div>`;
  let act="";
  if(S.sign.answered){
@@ -3180,7 +3284,11 @@ function openSignSheet(){
 function drawSign(){
  if(S.sign.opened){openSignSheet();return;}
  S.sign.opened=true;save();SFX.learn();addXP(2);toast("開籤 ✦ +2 XP");
- SIGNQ=null;SIGNR=null;openSignSheet();render();
+ SIGNQ=null;SIGNR=null;render();
+ /* v5.3 批5：開籤演出（gacha 輕量版），關閉後照舊進籤面 sheet */
+ const c=signCardOf();
+ if(c){gachaShow(signMcard(c),"normal","今日星籤 ✦",function(){openSignSheet();});}
+ else{openSignSheet();}
 }
 function signAsk(){
  if(S.sign.answered){openSignSheet();return;}
@@ -3318,7 +3426,10 @@ function dexCollect(starId,i){
  questEvent("dex_collect",{starId:starId,pIdx:i,tier:tier});
  SFX.learn();addXP(DEX_XP[tier]);
  const s=STARS.find(x=>x.id===starId);
- toast(`收服 ✦ ${s.name}·${PALACES[i].name}（${tier===3?"傳說":tier===2?"稀有":"普通"}）+${DEX_XP[tier]} XP`);
+ const msg=`收服 ✦ ${s.name}·${PALACES[i].name}（${tier===3?"傳說":tier===2?"稀有":"普通"}）+${DEX_XP[tier]} XP`;
+ /* v5.3 批5：收服演出（XP/事件/里程碑照舊同步發，僅 toast 延到動畫關閉後） */
+ JUST_GOT=key;
+ gachaShow(dexMcardHTML(starId,i),tier===3?"legend":tier===2?"rare":"normal","收服成功！",function(){toast(msg);});
  checkDexMilestones();
 }
 function checkDexMilestones(){
@@ -3340,6 +3451,60 @@ function checkStreakMilestones(){
    addXP(m[1]);toast(`連續學習 ${m[0]} 天 ✦ +${m[1]} XP`);
   }
  });
+}
+
+/* ======================= ⑤ v5.3 批5：視覺記憶 UI（純呈現層，不動收服/星籤邏輯） ======================= */
+/* 3D 翻卡：點擊翻面＋aria-pressed 同步（02§三） */
+function mcardFlip(el){el.classList.toggle("flip");el.setAttribute("aria-pressed",el.classList.contains("flip")?"true":"false");SFX.tap();}
+/* 通用翻卡產生器 o={wx,rarity,emoji,totem,img,name,chip,mn,fig,sub,oneliner,desc(信任HTML，呼叫端先 esc)} */
+function mcardHTML(o){
+ const front=`<div class="mcard-face mcard-front">${o.totem?`<div class="mc-totem">${o.totem}</div>`:""}<div class="mc-emoji">${o.emoji||""}</div>${o.img?`<img class="mc-img" src="${o.img}" alt="" onerror="this.style.display='none'">`:""}<div class="mc-name">${esc(o.name)}</div>${o.chip?`<div class="mc-chip">${esc(o.chip)}</div>`:""}<div class="mc-flip-hint">點擊翻卡</div></div>`;
+ const back=`<div class="mcard-face mcard-back">${o.mn?`<div class="mc-mnemonic">「${esc(o.mn)}」</div>`:""}${o.fig?`<div class="mc-figure">⚑ ${esc(o.fig)}</div>`:""}${o.sub?`<div class="mc-sub">${esc(o.sub)}</div>`:""}${o.desc?`<div class="mc-desc">${o.desc}</div>`:""}${o.oneliner?`<div class="mc-oneliner">${esc(o.oneliner)}</div>`:""}<div class="mc-flip-hint">點擊翻回</div></div>`;
+ return `<div class="mcard"${o.wx?` data-wx="${o.wx}"`:""}${o.rarity?` data-rarity="${o.rarity}"`:""} role="button" tabindex="0" aria-pressed="false" aria-label="${esc(o.name)} 記憶卡，點擊翻面" onclick="mcardFlip(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();mcardFlip(this)}"><div class="mcard-inner">${front}${back}</div></div>`;
+}
+/* 星籤籤面卡：主星＝五行框＋圖騰＋人物；非主星＝紫框＋分類 emoji＋口訣 */
+const SIGN_CAT_EMOJI={sihua:"🔄",aux:"🌟",duo:"🤝",frame:"🧩",daxian:"⏳",shensha:"🐎"};
+function signMcard(c){
+ if(c.cat==="star"){
+  const s=STARS.find(x=>x.id===c.id);
+  return mcardHTML({wx:STAR_WX[s.id],emoji:STAR_EMOJI[s.id]||"",totem:svgTotem(s,96),name:s.name,chip:s.wx.split("‧")[0]+" · "+s.core.split("｜")[0],mn:s.mn,fig:s.fig,oneliner:oneLine(s)});
+ }
+ const pIdx=c.cat==="palace"?PALACES.findIndex(p=>p.id===c.id):-1;
+ const emoji=pIdx>=0?PALACE_EMOJI[pIdx]:(SIGN_CAT_EMOJI[c.cat]||"✨");
+ return mcardHTML({wx:"purple",emoji:emoji,totem:svgTotem({id:"sg_"+c.cat+"_"+c.id,name:c.name},96),name:c.name,chip:(SIGN_TOPIC[c.cat]||"學習")+"卡",mn:c.mn});
+}
+/* 星宮圖鑑大卡：正面 星emoji+宮emoji+星·宮；背面 STARPALACE 全文＋💡hook */
+function dexMcardHTML(starId,i){
+ const s=STARS.find(x=>x.id===starId),p=PALACES[i];
+ const tier=S.dex.got[dexKey(starId,i)]||dexTier(starId,i);
+ const rar=tier===3?"legend":tier===2?"rare":"normal";
+ const hk=STARPAL_HOOK.find(h=>h.star===s.name&&h.pal===p.name);
+ const desc=`${esc(STARPALACE[starId][i])}${hk?`<span style="display:block;margin-top:6px;color:var(--gold-d)">💡 ${esc(hk.hook)}</span>`:""}`;
+ return mcardHTML({wx:STAR_WX[starId],rarity:rar,emoji:(STAR_EMOJI[starId]||"")+(PALACE_EMOJI[i]||""),totem:svgTotem(s,96),name:s.name+"·"+p.name,chip:(tier===3?"👑 傳說":tier===2?"💎 稀有":"⭐ 普通")+"格",desc:desc});
+}
+/* 點已收服格 → sheet 內放大卡 */
+function dexBigCard(starId,i){
+ const tier=S.dex.got[dexKey(starId,i)];if(!tier)return;
+ SFX.tap();
+ const s=STARS.find(x=>x.id===starId),p=PALACES[i];
+ openSheet(`<div class="head"><div class="glyphL">${STAR_EMOJI[starId]||""}</div><div><h2 style="font-size:20px">${esc(s.name)}·${esc(p.name)}</h2><div class="row"><span class="chip gold">${tier===3?"👑 傳說":tier===2?"💎 稀有":"⭐ 普通"}</span><span class="chip purple">已收服 ✦</span></div></div></div>
+  <div style="padding:10px 0 4px">${dexMcardHTML(starId,i)}</div>
+  <p style="text-align:center;font-size:11.5px;color:var(--muted2);margin:10px 0 0">點卡片翻面 · 看星宮解讀與記憶鉤子</p>`);
+}
+/* gacha 開卡全幕動畫：點任意處關閉；關閉後執行 cb（收服 toast 延後到此發） */
+let GACHA_CB=null,JUST_GOT=null;
+function gachaShow(cardHTML,rarity,label,cb){
+ const el=$("#gacha");if(!el){if(cb)cb();return;}
+ GACHA_CB=cb||null;
+ el.className="gacha r-"+(rarity||"normal");
+ el.innerHTML=`<div class="glight"></div><div class="gcard">${cardHTML}</div><div class="glabel">${esc(label)}</div><div class="ghint">點任意處繼續</div>`;
+ el.hidden=false;
+ el.onclick=gachaClose;
+}
+function gachaClose(){
+ const el=$("#gacha");if(!el)return;
+ el.hidden=true;el.innerHTML="";el.className="";el.onclick=null;
+ const cb=GACHA_CB;GACHA_CB=null;if(cb)cb();
 }
 
 /* ======================= 啟動 ======================= */
