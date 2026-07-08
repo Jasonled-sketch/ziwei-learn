@@ -2946,7 +2946,7 @@ function computeBadges(){
   {n:"眾星羅列",d:"學會全部輔星煞曜",em:"✧",got:full("aux")},
   {n:"雙星入門",d:"學會全部 24 組雙星",em:"♊",got:full("duo")},
   {n:"識得格局",d:"學會三大框架",em:"🗺️",got:full("frame")},
-  {n:"懂看大限",d:"學會大限流年 5 卡",em:"⏳",got:full("daxian")},
+  {n:"懂看大限",d:"學會大限流年全部卡片",em:"⏳",got:full("daxian")}, /* 仲裁8：實際 13 卡，改通用描述 */
   {n:"通曉神煞",d:"學會神煞十二神四套",em:"🎖️",got:full("shensha")},
   {n:"百題磨練",d:"累積答題滿 100 題",em:"✍️",got:S.quiz.answered>=100},
   {n:"滿分達人",d:"單次測驗拿到滿分",em:"💯",got:S.bestScore>=100}, /* v5.1：原「星盤大師」改名保留，條件不變（老用戶成就不消失） */
@@ -3019,15 +3019,15 @@ function dqGen(dateStr){
   return {id:t.id,param:param,prog:0,goal:t.goal,done:false};
  });
 }
-function ensureDaily(){if(S.daily.date!==dayStr()){S.daily={date:dayStr(),quests:dqGen(dayStr()),bonus:false};save();}}
+function ensureDaily(){const today=dayStr();if(S.daily.date!==today){S.daily={date:today,quests:dqGen(today),bonus:false};save();}} /* 仲裁7：dayStr 取一次，防跨午夜競態 */
 function dqLabel(q){switch(q.id){
  case "t_correct5":return "答對 5 題";
- case "t_topic3":return `在「${q.param}」主題答對 3 題`;
+ case "t_topic3":return `在「${esc(q.param)}」主題答對 3 題`; /* 仲裁6：param 經 esc */
  case "t_finish1":return "完成一場 10 題測驗";
  case "t_combo3":return "單場連對 3 題";
  case "t_wrong1":return "複習答對 1 題錯題";
  case "t_learn2":return "學會 2 張新卡";
- case "t_learncat1":return `在「${CAT_NAME[q.param]||q.param}」學會 1 張卡`;
+ case "t_learncat1":return `在「${esc(CAT_NAME[q.param]||q.param)}」學會 1 張卡`; /* 仲裁6 */
  case "t_sign":return "完成今日星籤";
  case "t_chapter":return "通過 1 個關卡";
  case "t_chart1":return "排盤點看 1 宮飛化";
@@ -3037,7 +3037,8 @@ function dqLabel(q){switch(q.id){
  default:return q.id;}}
 /* 任務消費者：⚠️ quiz_correct 重複題也會發（firstOfDay=false）——答題類計數必查 firstOfDay */
 function dqConsumer(type,p){
- if(!S.daily||S.daily.date!==dayStr())return; /* 跨日事件不入帳（待 render 重抽） */
+ ensureDaily(); /* 仲裁1：跨日後第一個事件（未經 render）也先丟棄舊任務、重抽新一天再計入 */
+ if(!S.daily||S.daily.date!==dayStr())return; /* 保險 */
  let changed=false;
  (S.daily.quests||[]).forEach(q=>{
   if(q.done)return;
@@ -3046,8 +3047,8 @@ function dqConsumer(type,p){
    case "t_correct5":if(type==="quiz_correct"&&p.firstOfDay)inc=1;break;
    case "t_topic3":if(type==="quiz_correct"&&p.firstOfDay&&p.topic===q.param)inc=1;break;
    case "t_finish1":if(type==="quiz_finish"&&p.total>=10)inc=1;break;
-   case "t_combo3":if(type==="quiz_correct"&&(p.combo||0)>=3)inc=1;break; /* combo 用 payload.combo（批3裁決） */
-   case "t_wrong1":if(type==="quiz_correct"&&p.firstOfDay&&S.wrong[p.qid])inc=1;break;
+   case "t_combo3":if(type==="quiz_correct"&&p.firstOfDay&&(p.combo||0)>=3)inc=1;break; /* combo 用 payload.combo；仲裁3：加查 firstOfDay */
+   case "t_wrong1":if(type==="reviewDone"&&(p.correct||0)>=1)inc=1;break; /* 仲裁2：改聽 reviewDone（複習場答對≥1），不誤計一般測驗中已 resolved 的舊錯題 */
    case "t_learn2":if(type==="learn_card")inc=1;break;
    case "t_learncat1":if(type==="learn_card"&&p.cat===q.param)inc=1;break;
    case "t_sign":if(type==="sign_answer")inc=1;break;
@@ -3068,7 +3069,7 @@ function dqConsumer(type,p){
  });
  if(changed){
   if(S.daily.quests.length===3&&S.daily.quests.every(x=>x.done)&&!S.daily.bonus){
-   S.daily.bonus=true;save();SFX.level();addXP(10);toast("三籤全解 ✦ 今日任務全清 +10 XP");
+   S.daily.bonus=true;save();SFX.level();addXP(10);toast("今日任務全清 ✦ +10 XP"); /* 仲裁9：避免與星籤混淆 */
   }else save();
  }
 }
@@ -3076,7 +3077,7 @@ QUEST_CONSUMERS.push(dqConsumer);
 /* 首頁卡＋bottom sheet */
 function dailyHomeTile(){
  const qs=(S.daily&&S.daily.quests)||[];const done=qs.filter(q=>q.done).length;
- return `<div class="tile big" onclick="openDailySheet()" style="border-color:var(--purple-d)"><div class="em">📜</div><div><h3>今日任務 <span class="chip ${done===3?'green':'purple'}" style="margin-left:6px;vertical-align:middle">${done}/3</span></h3><p>${done===3?"三籤全解 ✦ 全數完成，明日再會":"練功·學習·探索各一，全清再 +10 XP"}</p></div><div class="arrow">›</div></div>`;
+ return `<div class="tile big" onclick="openDailySheet()" style="border-color:var(--purple-d)"><div class="em">📜</div><div><h3>今日任務 <span class="chip ${done===3?'green':'purple'}" style="margin-left:6px;vertical-align:middle">${done}/3</span></h3><p>${done===3?"今日任務全清 ✦ 明日再會":"練功·學習·探索各一，全清再 +10 XP"}</p></div><div class="arrow">›</div></div>`;
 }
 function openDailySheet(){
  SFX.tap();
@@ -3092,12 +3093,12 @@ function openDailySheet(){
  openSheet(`
   <div class="head"><div class="glyphL pp">📜</div><div><h2 style="font-size:20px">今日任務</h2><div class="row"><span class="chip purple">${dayStr()}</span><span class="chip ${allDone?'green':''}">${qs.filter(q=>q.done).length} / 3</span></div></div></div>
   <div class="card" style="padding:4px 15px 8px">${rows||`<p class="qsheet-p" style="padding:10px 0">任務生成中，回首頁再開一次。</p>`}</div>
-  <div class="note" style="margin-top:12px">${allDone?"三籤全解 ✦ 加碼 +10 XP 已入帳，明日任務換新":"每天三格任務（練功／學習／探索各一）。完成自動發獎；三格全清加碼 +10 XP；跨日未完成會換一批新任務。"}</div>`);
+  <div class="note" style="margin-top:12px">${allDone?"今日任務全清 ✦ 加碼 +10 XP 已入帳，明日任務換新":"每天三格任務（練功／學習／探索各一）。完成自動發獎；三格全清加碼 +10 XP；跨日未完成會換一批新任務。"}</div>`);
 }
 
 /* ======================= ② 每日一星籤（04§4） ======================= */
 const SIGN_TEXTS=["夜觀天象，一星獨明——今日{星}當值。","紫垣垂光，落在{星}。","星移斗轉，今日與{星}有緣。","晨起開盤，{星}臨門。","一籤在手，星在{星}。","天機微動，{星}入籤。","今日星軌，指向{星}。","斗數有云：識星先識性——今日識{星}。","群星隱退，獨留{星}照路。","籤筒輕響，{星}應聲而出。"];
-const SIGN_TOPIC={palace:"宮位",star:"主星",sihua:"四化",duo:"雙星",frame:"框架",daxian:"大限",aux:"綜合",shensha:"綜合"};
+const SIGN_TOPIC={palace:"宮位",star:"主星",sihua:"四化",duo:"雙星",frame:"框架",daxian:"大限",aux:"輔星",shensha:"神煞"}; /* 仲裁4：aux/shensha 對映批1新題庫 */
 /* 全學習卡池（8 模組）；口訣取該卡 mn／key／mem／rhyme／core 一句 */
 function signCardPool(){
  const out=[];
@@ -3286,23 +3287,26 @@ function dexAsk(starId,i){
  DEXQ={key:key,starId:starId,i:i,qid:q.id,opts:shuffle(q.o),wrong:null};
  SFX.tap();dexRefresh();
 }
+/* 仲裁5：答錯即「該次作答結束」——選項全鎖（無 onclick），要再挑戰按「再試一次」換題重問 */
 function dexQHTML(){
  const q=QUESTIONS.find(x=>x.id===DEXQ.qid);
  const left=3-dexTriesUsed(DEXQ.key);
+ const ended=!!DEXQ.ended;
  return `<div class="qcard" style="margin-top:10px"><div class="qtype">收服快問 · ${q.t==="scenario"?"情境題":"單選題"}（今日剩 ${left} 次）</div><p class="qtext">${esc(q.q)}</p>
-  <div class="opts">${DEXQ.opts.map((o,i)=>`<div class="opt${DEXQ.wrong===o?' wrong locked':''}" onclick="dexAnswer(${i})"><div class="box">✓</div><div>${esc(o)}</div></div>`).join("")}</div>
-  ${DEXQ.wrong?`<div class="dxreq">✗ 星光未應，再想想。</div>`:""}</div>`;
+  <div class="opts">${DEXQ.opts.map((o,i)=>`<div class="opt${ended?' locked':''}${DEXQ.wrong===o?' wrong':''}"${ended?"":` onclick="dexAnswer(${i})"`}><div class="box">✓</div><div>${esc(o)}</div></div>`).join("")}</div>
+  ${ended?(left>0
+   ?`<div class="dxreq">✗ 星光未應，此次作答結束。</div><div class="dxact"><button class="btn btn-g" onclick="dexAsk('${DEXQ.starId}',${DEXQ.i})">⚔ 再試一次（換題 · 今日剩 ${left} 次）</button></div>`
+   :`<div class="dxreq">✗ 星光未應，今日此格挑戰已達 3 次上限，明日再來 ✦</div>`):""}</div>`;
 }
 function dexAnswer(i){
- if(!DEXQ)return;
+ if(!DEXQ||DEXQ.ended)return; /* 該次已結束不可再點 */
  const q=QUESTIONS.find(x=>x.id===DEXQ.qid);const v=DEXQ.opts[i];
  touchDexTries();S.dex.tries.n[DEXQ.key]=(S.dex.tries.n[DEXQ.key]||0)+1;save();
  if(v===q.a){
   const sid=DEXQ.starId,idx=DEXQ.i;DEXQ=null;SFX.ok();
   dexCollect(sid,idx);
  }else{
-  DEXQ.wrong=v;SFX.no();
-  if(dexTriesUsed(DEXQ.key)>=3)DEXQ=null; /* 次數用盡收題 */
+  DEXQ.wrong=v;DEXQ.ended=true;SFX.no();
  }
  dexRefresh();
 }
