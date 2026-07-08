@@ -1708,12 +1708,16 @@ function stageChapter(id){return id.split("_")[0];}
 function stageType(id){return id.split("_")[1];}
 function stageXP(id){if(id==="c8_boss")return 300;return STAGE_META[stageType(id)].xp;}
 function stageCleared(id){const s=S.quest.stages[id];return !!(s&&s.cleared);}
-function stageUnlocked(id){const i=STAGE_SEQ.indexOf(id);return i===0?true:(i>0&&stageCleared(STAGE_SEQ[i-1]));}
+/* 已通關（含 auto 映射）一律視為已解鎖（可進入／重打）；否則看前一關（斷章映射的老用戶不鎖回） */
+function stageUnlocked(id){if(stageCleared(id))return true;const i=STAGE_SEQ.indexOf(id);return i===0?true:(i>0&&stageCleared(STAGE_SEQ[i-1]));}
+/* Boss 生命值＝題數－門檻＋1（與分數門檻數學等價：8≥7→2❤、10≥8→3❤、20≥17→4❤） */
+function bossHearts(C){return C.bossN-C.bossNeed+1;}
 function chapterGateMet(C){return C.cats.length>0&&C.cats.every(cat=>S.learned[cat].length>=LEARN_GATE[cat]);}
 function chapterDone(cid){return CHAPTER_STAGES[cid].every(st=>stageCleared(cid+"_"+st));}
 
 /* ---- 關卡通關結算（唯一入口）：首次過關發 XP＋事件；已通關重打只更新 best ---- */
 function clearStage(id,score){
+ if(!stageUnlocked(id)){toast("關卡尚未解鎖");return null;} /* 防跳關（console 直呼也擋） */
  const prev=S.quest.stages[id];const first=!(prev&&prev.cleared);
  const cid=stageChapter(id),st=stageType(id);
  const wasDone=chapterDone(cid);
@@ -1770,7 +1774,7 @@ const SFX={
 const $=s=>document.querySelector(s);
 const view=()=>$("#view");
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 let toastT=null;
 function toast(msg){const el=$("#toast");el.textContent=msg;el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),1900);}
 
@@ -1844,7 +1848,7 @@ function viewHome(){
    <div class="tile" onclick="go('miao')"><div class="em">🔆</div><div><h3>廟旺利陷</h3><p>星曜在12宮的亮度</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">工具</div></div>
    <div class="tile" onclick="go('feixing')"><div class="em">🌀</div><div><h3>飛星四化</h3><p>宮位互相牽動·自化</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">進階</div></div>
    <div class="tile" onclick="go('starpalace')"><div class="em">🔢</div><div><h3>星宮組合圖鑑<span class="newdot">NEW</span></h3><p>14主星×12宮全解</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">進階</div></div>
-   <div class="tile big" onclick="go('quiz')"><div class="em">✍️</div><div><h3>開始測驗</h3><p>120 題題庫 · 章節 · 隨機 · 錯題重練${wrongN?` · 待複習 ${wrongN} 題`:""}</p></div><div class="arrow">›</div></div>
+   <div class="tile big" onclick="go('quiz')"><div class="em">✍️</div><div><h3>開始測驗</h3><p>${QUESTIONS.length} 題題庫 · 章節 · 隨機 · 錯題重練${wrongN?` · 待複習 ${wrongN} 題`:""}</p></div><div class="arrow">›</div></div>
  </div>`;
 }
 function pct(cat){const map={palace:PALACES.length,star:STARS.length,sihua:SIHUA.length,aux:AUX.length,duo:DUO.length,frame:FRAME.length,daxian:DAXIAN.length,shensha:SHENSHA.length};return Math.round(S.learned[cat].length/map[cat]*100);}
@@ -1908,7 +1912,13 @@ function viewQuestMap(){
   </div>`;
  });
  return out+`</div>
- <div class="note"><b>怎麼玩：</b>研習關＝到學習模組把卡片標「已學會」，達標領過關；試煉關＝基礎 5 題答對 4 題；Boss 戰＝三顆心 ❤❤❤，答錯扣一顆，心碎耗盡立即失敗（可重打、重新抽題）。兩種模式進度共通，隨時可切回自由探索。</div>`;
+ <div class="grouphdr">🧰 工具箱</div>
+ <div class="hub">${[["chart","🪐","自動排盤","輸入生日排出你的命盤（主星·廟旺·四化·大限·神煞）"],["miao","🔆","廟旺利陷亮度","查每顆星在 12 宮的亮度"],["feixing","🌀","飛星四化·自化","宮位之間怎麼互相牽動"],["starpalace","🔢","星宮組合圖鑑","14 主星 × 12 宮白話解讀"]].map(([r,em,n,d])=>`<div class="card hubcard tap" onclick="go('${r}')">
+   <div class="em">${em}</div>
+   <div class="info"><h3>${n}</h3><p>${d}</p></div>
+   <div style="text-align:right"><div class="chip gold" style="margin-bottom:6px">工具</div><div class="arrow" style="color:var(--muted2);font-size:20px">›</div></div>
+ </div>`).join("")}</div>
+ <div class="note"><b>怎麼玩：</b>研習關＝到學習模組把卡片標「已學會」，達標領過關；試煉關＝基礎 5 題答對 4 題；Boss 戰＝生命值 ❤（題數－門檻＋1 顆，容錯用完立即失敗，可重打、重新抽題）。兩種模式進度共通，隨時可切回自由探索。</div>`;
 }
 function stageTitle(id){const st=stageType(id);if(id==="c8_boss")return "👑 最終試煉 Boss";if(id==="c8_review")return "🗡️ 錯題清算";const m=STAGE_META[st];return m.em+" "+(st==="learn"?"研習關":st==="trial"?"試煉關":"Boss 戰");}
 function stageBtn(id){
@@ -1944,8 +1954,9 @@ function openStage(id){
        :(cleared?`<div class="doneflag">✦ 已通過</div>`:`<button class="btn btn-g" onclick="claimStage('${id}')">✦ 無宿敵 · 直接晉級 +50 XP</button>`);
  }else{
   const xp=stageXP(id);
-  const spec=(stageChapter(id)==="c7")?"大限 6 題＋神煞 2 題共 8 題":(id==="c8_boss"?"全主題混合 20 題（先進階後基礎）":`「${C.topic}」${C.bossN} 題`);
-  body=`<p class="qsheet-p">${spec}，答對 <b>${C.bossNeed}</b> 題過關。你有 <b style="color:var(--red)">❤❤❤</b> 三顆心，答錯扣一顆，心碎耗盡立即失敗——可重打，每次重新抽題。</p>
+  const hm=bossHearts(C);
+  const spec=(stageChapter(id)==="c7")?"大限 6 題＋神煞 2 題共 8 題":(id==="c8_boss"?"全主題混合 20 題（先進階後基礎補滿）":`「${C.topic}」${C.bossN} 題`);
+  body=`<p class="qsheet-p">${spec}，答對 <b>${C.bossNeed}</b> 題過關。你有 <b style="color:var(--red)">${"❤".repeat(hm)}</b> ${hm} 顆心（容錯 ${hm-1} 題），答錯扣一顆，心碎耗盡立即失敗——可重打，每次重新抽題。</p>
   ${cleared&&s.best?`<div class="field"><div class="k">最佳成績</div><div class="v">${s.best} 分</div></div>`:""}`;
   act=`<button class="btn btn-p" onclick="startStage('${id}')">${id==="c8_boss"?"👑 挑戰最終Boss":"👹 挑戰 Boss"}${cleared?"（重打刷分）":` · 過關 +${xp} XP`}</button>`;
  }
@@ -1953,8 +1964,11 @@ function openStage(id){
   <div class="head"><div class="glyphL pp">${C.em}</div><div><h2 style="font-size:20px">${stageTitle(id)}</h2><div class="row"><span class="chip purple">${C.name}</span>${cleared?`<span class="chip green">已通關</span>`:""}</div></div></div>
   ${body}<div class="actions">${act}</div>`);
 }
-function claimStage(id){closeModal();const r=clearStage(id,100);if(r.first)toast(`過關 ✦ +${r.xp+r.chBonus} XP`);render();}
+function claimStage(id){
+ if(!stageUnlocked(id)){toast("關卡尚未解鎖");return;} /* 防跳關 */
+ closeModal();const r=clearStage(id,100);if(r&&r.first)toast(`過關 ✦ +${r.xp+r.chBonus} XP`);render();}
 function startStage(id){
+ if(!stageUnlocked(id)){toast("關卡尚未解鎖");return;} /* 防跳關（console 直呼也擋） */
  closeModal();
  const cid=stageChapter(id),st=stageType(id);const C=CHAPTERS.find(x=>x.id===cid);
  if(st==="trial"){startQuiz(pickTrial(C.topic),"trial",{stage:id,need:4});}
@@ -1964,7 +1978,7 @@ function startStage(id){
   const list=shuffle(QUESTIONS.filter(q=>ids.includes(q.id)));
   startQuiz(list,"review",{stage:id,need:list.length});
  }
- else if(st==="boss"){startQuiz(pickBoss(cid),"boss",{stage:id,need:C.bossNeed,hearts:3});}
+ else if(st==="boss"){const hm=bossHearts(C);startQuiz(pickBoss(cid),"boss",{stage:id,need:C.bossNeed,hearts:hm,heartsMax:hm});}
 }
 
 /* ======================= 十二宮（命盤格） ======================= */
@@ -2614,6 +2628,7 @@ function viewQuizHub(){
  const wrongN=Object.values(S.wrong).filter(w=>!w.resolved).length;
  return `<div class="eyebrow">練習 · 測驗</div><h2 class="title">測驗</h2>
  <p class="lead">透過測驗檢驗學習成果。答對 +5 XP；答錯會自動收進錯題本，之後可重練。</p>
+ ${S.quest.mode==="quest"?`<div class="note" style="margin:0 0 14px">🗺️ 這裡是自由練習場；關卡進度請從章節地圖挑戰</div>`:""}
  <div class="qhub-mode">
    <div class="card modecard tap" onclick="chapterPick()"><div class="em">📚</div><div class="info"><h3>章節測驗</h3><p>選一個主題集中練習</p></div><div class="arrow">›</div></div>
    <div class="card modecard tap" onclick="startQuiz(pickRandom(10))"><div class="em">🎲</div><div class="info"><h3>隨機測驗</h3><p>各主題混合 10 題</p></div><div class="arrow">›</div></div>
@@ -2633,7 +2648,7 @@ function pickRandom(n){return shuffle(QUESTIONS).slice(0,n);}
 function pickTrial(tp){const base=shuffle(QUESTIONS.filter(q=>q.topic===tp&&q.d==="基礎"));const adv=shuffle(QUESTIONS.filter(q=>q.topic===tp&&q.d!=="基礎"));return base.concat(adv).slice(0,5);}
 function pickBoss(cid){
  if(cid==="c7")return shuffle(pickTopic("大限",6).concat(pickTopic("神煞",2)));            /* 大限6＋神煞2 共8 */
- if(cid==="c8"){const adv=shuffle(QUESTIONS.filter(q=>q.d==="進階"));const base=shuffle(QUESTIONS.filter(q=>q.d!=="進階"));return adv.concat(base).slice(0,20);} /* 全topic混20：先進階後基礎補滿 */
+ if(cid==="c8"){const adv=shuffle(QUESTIONS.filter(q=>q.d==="進階"));const base=shuffle(QUESTIONS.filter(q=>q.d!=="進階"));return shuffle(adv.concat(base).slice(0,20));} /* 選題池先進階後基礎補滿；選定後洗牌出題 */
  const C=CHAPTERS.find(x=>x.id===cid);return pickTopic(C.topic,C.bossN);
 }
 /* ---- v5.1 批3：今日複習（1/3/7 到期錯題） ---- */
@@ -2643,10 +2658,10 @@ function startReviewQuiz(){const ids=dueWrongIds();const list=shuffle(QUESTIONS.
 let Q={list:[],i:0,correct:0,answered:false,mode:"normal"};
 /* v5.1 批3：opts 可帶 {stage,need,hearts}（關卡制）；combo 單場歸零 */
 function startQuiz(list,mode,opts){if(!list||!list.length){toast("題庫不足");return;}
- Q={list,i:0,correct:0,answered:false,mode:mode||"normal",combo:0,hearts:0,stage:null,need:0,graduated:0,xpGain:0};
+ Q={list,i:0,correct:0,answered:false,mode:mode||"normal",combo:0,hearts:0,heartsMax:0,stage:null,need:0,graduated:0,xpGain:0};
  if(opts)Object.assign(Q,opts);
  SFX.tap();renderQ();}
-function heartsHTML(popIdx){return `<span class="hearts" id="qhearts">${[0,1,2].map(i=>`<span class="hh${i<Q.hearts?'':' lost'}${i===popIdx?' pop':''}">${i<Q.hearts?"❤️":"🖤"}</span>`).join("")}</span>`;}
+function heartsHTML(popIdx){const n=Q.heartsMax||Q.hearts;return `<span class="hearts" id="qhearts">${Array.from({length:n},(_,i)=>`<span class="hh${i<Q.hearts?'':' lost'}${i===popIdx?' pop':''}">${i<Q.hearts?"❤️":"🖤"}</span>`).join("")}</span>`;}
 function startWrongQuiz(){const ids=Object.keys(S.wrong).filter(id=>!S.wrong[id].resolved);const list=shuffle(QUESTIONS.filter(q=>ids.includes(q.id)));if(!list.length){toast("目前沒有錯題 ✦");return;}startQuiz(list,"wrong");}
 
 function renderQ(){
@@ -2725,7 +2740,7 @@ function submitQ(){
  if(cc){cc.className=Q.combo>=2?"chip gold":"";cc.innerHTML=Q.combo>=2?"🔥 連對 "+Q.combo:"";}
  if(Q.mode==="boss"){const hh=$("#qhearts");if(hh)hh.outerHTML=heartsHTML(ok?-1:Q.hearts);}
 
- $("#explbox").innerHTML=`<div class="expl ${ok?'ok':'no'}"><div class="r">${ok?"✓ 答對了":"✗ 答錯了"}${ok&&Q.combo>=3?` · 🔥連擊 +${bonus}`:""}</div>
+ $("#explbox").innerHTML=`<div class="expl ${ok?'ok':'no'}"><div class="r">${ok?"✓ 答對了":"✗ 答錯了"}${ok&&firstOfDay&&Q.combo>=3?` · 🔥連擊 +${bonus}`:""}</div>
    ${ok?"":`<div style="margin-bottom:6px">正確答案：<span class="ans">${esc(correctText)}</span></div>`}
    <div>${esc(q.e)}</div></div>`;
  const dead=(Q.mode==="boss"&&Q.hearts<=0);
@@ -2790,7 +2805,7 @@ function finishStage(){
  const gainTotal=(Q.xpGain||0)+(res&&res.first?res.xp+res.chBonus:0);
  view().innerHTML=`<div class="result">
    <div style="font-size:52px">${em}</div>
-   ${Q.mode==="boss"?`<div style="font-size:22px;margin:4px 0">${"❤️".repeat(Q.hearts)}${"🖤".repeat(3-Q.hearts)}</div>`:""}
+   ${Q.mode==="boss"?`<div style="font-size:22px;margin:4px 0">${"❤️".repeat(Q.hearts)}${"🖤".repeat(Math.max(0,(Q.heartsMax||Q.hearts)-Q.hearts))}</div>`:""}
    <div class="score">${Q.correct}<small>/${total}</small></div>
    <div class="rankname" style="font-size:20px;margin-bottom:4px">${stageTitle(id)} · ${pass?"通關":"失敗"}</div>
    <div class="rmsg">${msg}</div>
