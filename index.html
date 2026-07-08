@@ -20,6 +20,15 @@
   --r:16px; --r-sm:11px;
   --sh:0 10px 30px rgba(0,0,0,.45);
   --maxw:820px;
+  /* v5.0 五行色（卡框用；圖騰 STAR_COLOR 不動） */
+  --wx-wood:#68C79C; --wx-wood-b:#8FDDB8;
+  --wx-fire:#E06A50; --wx-fire-b:#F2937D;
+  --wx-earth:#E7C57D; --wx-earth-b:#F2D9A4;
+  --wx-metal:#C9CFE0; --wx-metal-b:#E3E7F2;
+  --wx-water:#68B7D6; --wx-water-b:#92CDE6;
+  --wx-wood-glow:rgba(104,199,156,.35); --wx-fire-glow:rgba(224,106,80,.35);
+  --wx-earth-glow:rgba(231,197,125,.35); --wx-metal-glow:rgba(201,207,224,.30);
+  --wx-water-glow:rgba(104,183,214,.35);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -766,7 +775,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v4.0";
+const APP_VERSION = "v5.0";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1038,45 +1047,45 @@ const AUX = [
 /* ---------- 雜曜（乙丙級小星）速查，不列入學習進度 ---------- */
 const MINOR = [
  /* 科文貴曜 */
- {g:"科文貴曜", name:"三台", key:"與八座成對，如官階儀仗，主地位、貴顯、增輔佐力"},
- {g:"科文貴曜", name:"八座", key:"與三台成對，主崇高地位與助力"},
- {g:"科文貴曜", name:"台輔", key:"與封誥成對，文貴之星，主名銜、榮譽、受肯定"},
- {g:"科文貴曜", name:"封誥", key:"與台輔成對，主受封、榮譽、文書之貴"},
- {g:"科文貴曜", name:"龍池", key:"與鳳閣成對，才藝科甲之星，主聰慧、精緻"},
- {g:"科文貴曜", name:"鳳閣", key:"與龍池成對，主才藝、品味、儀態出眾"},
- {g:"科文貴曜", name:"天官", key:"與天福成對，主貴氣、爵祿、有官格"},
- {g:"科文貴曜", name:"天福", key:"與天官成對，主福蔭、貴人、享福"},
- {g:"科文貴曜", name:"天貴", key:"科名貴顯，利考試、受賞識提拔"},
- {g:"科文貴曜", name:"恩光", key:"與天貴成對，主科名、受賞識、獲提拔恩寵"},
- {g:"科文貴曜", name:"天才", key:"主聰明、才智、反應靈敏"},
- {g:"科文貴曜", name:"天壽", key:"主壽元、穩重、老成持重"},
- {g:"科文貴曜", name:"天巫", key:"主升遷、繼承、與宗教玄學有緣"},
- {g:"科文貴曜", name:"天廚", key:"食祿之星，有口福、衣食不缺"},
+ {g:"科文貴曜", name:"三台", key:"與八座成對，如官階儀仗，主地位、貴顯、增輔佐力", mn:"三台搭舞台，官階步步高"},
+ {g:"科文貴曜", name:"八座", key:"與三台成對，主崇高地位與助力", mn:"八座八人大轎，抬你上高位"},
+ {g:"科文貴曜", name:"台輔", key:"與封誥成對，文貴之星，主名銜、榮譽、受肯定", mn:"台輔遞獎狀，頭銜掛滿牆"},
+ {g:"科文貴曜", name:"封誥", key:"與台輔成對，主受封、榮譽、文書之貴", mn:"封誥聖旨到，受封有名號"},
+ {g:"科文貴曜", name:"龍池", key:"與鳳閣成對，才藝科甲之星，主聰慧、精緻", mn:"龍池才藏肚裡，內秀精緻"},
+ {g:"科文貴曜", name:"鳳閣", key:"與龍池成對，主才藝、品味、儀態出眾", mn:"鳳閣美在檯面，品味出眾"},
+ {g:"科文貴曜", name:"天官", key:"與天福成對，主貴氣、爵祿、有官格", mn:"天官送官帽，爵祿跟著到"},
+ {g:"科文貴曜", name:"天福", key:"與天官成對，主福蔭、貴人、享福", mn:"天福躺著有福，貴人蔭庇"},
+ {g:"科文貴曜", name:"天貴", key:"科名貴顯，利考試、受賞識提拔", mn:"天貴受賞識，科名貴人提"},
+ {g:"科文貴曜", name:"恩光", key:"與天貴成對，主科名、受賞識、獲提拔恩寵", mn:"恩光聚光燈，獎落你身上"},
+ {g:"科文貴曜", name:"天才", key:"主聰明、才智、反應靈敏", mn:"天才腦袋快，一點就通"},
+ {g:"科文貴曜", name:"天壽", key:"主壽元、穩重、老成持重", mn:"天壽老靈魂，穩重又長壽"},
+ {g:"科文貴曜", name:"天巫", key:"主升遷、繼承、與宗教玄學有緣", mn:"天巫接天線，升遷繼承緣"},
+ {g:"科文貴曜", name:"天廚", key:"食祿之星，有口福、衣食不缺", mn:"天廚自帶廚房，一生好口福"},
  /* 解厄福蔭 */
- {g:"解厄福蔭", name:"解神", key:"化解之星，主逢凶解厄、大事化小、小事化無"},
- {g:"解厄福蔭", name:"年解", key:"解厄小星，力量較解神輕，亦能緩解災厄"},
- {g:"解厄福蔭", name:"天德", key:"福德吉神，主心存善念、逢凶化吉"},
- {g:"解厄福蔭", name:"月德", key:"福德吉神，主陰德庇佑、遇難有救"},
- {g:"解厄福蔭", name:"龍德", key:"制化解厄之吉神，逢難能解、消災解難"},
+ {g:"解厄福蔭", name:"解神", key:"化解之星，主逢凶解厄、大事化小、小事化無", mn:"解神開鎖匠，大事化小事"},
+ {g:"解厄福蔭", name:"年解", key:"解厄小星，力量較解神輕，亦能緩解災厄", mn:"年解小護士，解厄力較輕"},
+ {g:"解厄福蔭", name:"天德", key:"福德吉神，主心存善念、逢凶化吉", mn:"天德存好心，老天會罩你"},
+ {g:"解厄福蔭", name:"月德", key:"福德吉神，主陰德庇佑、遇難有救", mn:"月德積陰德，暗中有人救"},
+ {g:"解厄福蔭", name:"龍德", key:"制化解厄之吉神，逢難能解、消災解難", mn:"龍德龍王罩，逢難自然消"},
  /* 空亡虛耗 */
- {g:"空亡虛耗", name:"天空", key:"主空亡、想法天馬行空易落空（注意：與主煞「地空」是不同星）"},
- {g:"空亡虛耗", name:"截空", key:"截路空亡，主中途受阻、事情打折扣"},
- {g:"空亡虛耗", name:"旬空", key:"旬中空亡，主落空、有等於無，宜看破放下"},
- {g:"空亡虛耗", name:"破碎", key:"主零碎、破耗、不圓滿、易有小損"},
- {g:"空亡虛耗", name:"天傷", key:"虛耗之氣，主破財耗損（常與天使相對）"},
- {g:"空亡虛耗", name:"天使", key:"災病之氣，主疾厄、變故（常與天傷相對）"},
- {g:"空亡虛耗", name:"天哭", key:"與天虛成對，主憂傷、悲泣、心情低落"},
- {g:"空亡虛耗", name:"天虛", key:"與天哭成對，主空虛、虛耗、不踏實"},
+ {g:"空亡虛耗", name:"天空", key:"主空亡、想法天馬行空易落空（注意：與主煞「地空」是不同星）", mn:"天空想很大，落地常落空"},
+ {g:"空亡虛耗", name:"截空", key:"截路空亡，主中途受阻、事情打折扣", mn:"截空半路攔截，好事打折"},
+ {g:"空亡虛耗", name:"旬空", key:"旬中空亡，主落空、有等於無，宜看破放下", mn:"旬空一場空，有等於沒有"},
+ {g:"空亡虛耗", name:"破碎", key:"主零碎、破耗、不圓滿、易有小損", mn:"破碎打破碗，小損零碎來"},
+ {g:"空亡虛耗", name:"天傷", key:"虛耗之氣，主破財耗損（常與天使相對）", mn:"天傷傷荷包，提防破財"},
+ {g:"空亡虛耗", name:"天使", key:"災病之氣，主疾厄、變故（常與天傷相對）", mn:"天使不是天使，帶病來訪"},
+ {g:"空亡虛耗", name:"天哭", key:"與天虛成對，主憂傷、悲泣、心情低落", mn:"天哭愛掉淚，心情常陰天"},
+ {g:"空亡虛耗", name:"天虛", key:"與天哭成對，主空虛、虛耗、不踏實", mn:"天虛心裡空，虛耗不踏實"},
  /* 孤剋刑煞 */
- {g:"孤剋刑煞", name:"孤辰", key:"與寡宿成對，孤剋之星，主孤獨少助（尤忌男命）"},
- {g:"孤剋刑煞", name:"寡宿", key:"與孤辰成對，孤剋之星，主孤寡（尤忌女命）"},
- {g:"孤剋刑煞", name:"華蓋", key:"主孤高、聰明、有玄學藝術緣，但較孤獨清高"},
- {g:"孤剋刑煞", name:"陰煞", key:"主小人、暗害、疑神疑鬼、犯陰私"},
- {g:"孤剋刑煞", name:"蜚廉", key:"主孤剋、是非、易招小人口舌"},
- {g:"孤剋刑煞", name:"天月", key:"主疾病、病災、體質較弱"},
- {g:"孤剋刑煞", name:"劫煞", key:"將前三煞之一，主破耗、被劫、突發損失"},
- {g:"孤剋刑煞", name:"災煞", key:"將前三煞之一，主災厄、意外、血光"},
- {g:"孤剋刑煞", name:"天煞", key:"將前三煞之一，主剋制、阻礙"},
+ {g:"孤剋刑煞", name:"孤辰", key:"與寡宿成對，孤剋之星，主孤獨少助（尤忌男命）", mn:"孤辰孤單一人，男命尤忌"},
+ {g:"孤剋刑煞", name:"寡宿", key:"與孤辰成對，孤剋之星，主孤寡（尤忌女命）", mn:"寡宿獨守空房，女命尤忌"},
+ {g:"孤剋刑煞", name:"華蓋", key:"主孤高、聰明、有玄學藝術緣，但較孤獨清高", mn:"華蓋孤高一把傘，通玄學"},
+ {g:"孤剋刑煞", name:"陰煞", key:"主小人、暗害、疑神疑鬼、犯陰私", mn:"陰煞背後暗箭，小人來陰的"},
+ {g:"孤剋刑煞", name:"蜚廉", key:"主孤剋、是非、易招小人口舌", mn:"蜚廉蜚短流長，口舌是非"},
+ {g:"孤剋刑煞", name:"天月", key:"主疾病、病災、體質較弱", mn:"天月體質弱，小病常報到"},
+ {g:"孤剋刑煞", name:"劫煞", key:"將前三煞之一，主破耗、被劫、突發損失", mn:"劫煞遇打劫，突然破財"},
+ {g:"孤剋刑煞", name:"災煞", key:"將前三煞之一，主災厄、意外、血光", mn:"災煞防意外，血光要小心"},
+ {g:"孤剋刑煞", name:"天煞", key:"將前三煞之一，主剋制、阻礙", mn:"天煞路障牌，處處被卡關"},
 ];
 
 /* ---------- 新模組 A：雙星組合（24 組全） ----------
@@ -1181,6 +1190,7 @@ const DAXIAN = [
 const SHENSHA = [
  {id:"changsheng", name:"長生十二神", sub:"能量的一生", em:"🌱",
   intro:"最好懂的一套！用「一個人的一生」來記——出生、長大、當官、巔峰、衰老、生病、死亡、入土，再受孕、養育。套在宮位上，就是看那個領域的能量正處在人生哪個階段：帝旺最強、死絕最弱。",
+  rhyme:"長生沐浴冠帶立，臨官帝旺最得意；衰病死墓氣力低，絕處懷胎養生機。",
   use:"套在宮位上，看該領域「能量強弱」正走到人生哪一階段。",
   items:[
    {n:"長生",m:"剛出生的嬰兒，朝氣蓬勃、生機無限",ex:"像新創公司剛成立，一切從零、充滿希望"},
@@ -1198,6 +1208,7 @@ const SHENSHA = [
   ]},
  {id:"boshi", name:"博士十二神", sub:"跟著祿存跑的助力群", em:"📚",
   intro:"跟著「祿存」這顆星起排的一組神煞，描述一個宮位「幫手好不好、有沒有小人」的性質。有吉有凶——青龍、喜神是好的，飛廉、病符、官府是要小心的。",
+  rhyme:"博士力士青龍先，小耗將軍奏書連；飛廉喜神病符牽，大耗伏兵官府全。",
   use:"跟著祿存起排，看該宮「助力或阻力」的性質。",
   items:[
    {n:"博士",m:"聰明才智、有專業",ex:"像身邊那位學識淵博的顧問"},
@@ -1215,6 +1226,7 @@ const SHENSHA = [
   ]},
  {id:"suiqian", name:"歲前十二神", sub:"太歲那一年的氣氛", em:"🗓️",
   intro:"跟著「流年太歲」（今年的地支）起排的一組神煞，看這一年整體的吉凶氣氛。俗稱「安太歲、犯太歲、白虎、喪門」那些——過年拜拜常聽到的就是這套。",
+  rhyme:"太歲晦氣喪門開，貫索官符小耗來；歲破龍德白虎吼，天德弔客病符收。",
   use:"以流年太歲起排，看「今年」的吉凶氣氛。",
   items:[
    {n:"太歲",m:"當年值年之神，沖犯要安太歲",ex:"像今年輪到你當值日生，動土婚喪要留意"},
@@ -1232,6 +1244,7 @@ const SHENSHA = [
   ]},
  {id:"jiangqian", name:"將前十二神", sub:"將星那一年的行動力", em:"🎖️",
   intro:"跟著「流年將星」起排的一組神煞，看這一年的行動力與際遇。裡面的劫煞、災煞、天煞合稱「三煞」，是要特別小心的三顆。",
+  rhyme:"將星攀鞍歲驛奔，息神華蓋劫煞跟；災煞天煞指背後，咸池月煞收亡神。",
   use:"以流年將星起排，看「今年」的行動與際遇。",
   items:[
    {n:"將星",m:"領導、權威、掌兵符",ex:"像被推上帶頭位置、當領隊"},
@@ -1269,14 +1282,15 @@ const BRIGHT={
  pojun:["廟","旺","得","陷","旺","平","廟","旺","得","陷","旺","平"],
 };
 const LVCOLOR={"廟":"gold","旺":"green","得":"cyan","利":"purple","平":"muted2","不":"rose","陷":"red"};
+const BRIGHT_MN="廟旺得利平不陷，七級電量往下減；廟是滿格開大絕，陷剩沒電要充電。";
 const BRIGHT_LEVELS=[
- {n:"廟",c:"gold",d:"最亮！火力全開，優點發揮到極致"},
- {n:"旺",c:"green",d:"狀態很好，表現亮眼有力"},
- {n:"得",c:"cyan",d:"得地有力，穩穩發揮"},
- {n:"利",c:"purple",d:"小有助力，還算順手"},
- {n:"平",c:"muted2",d:"不上不下，普普通通"},
- {n:"不",c:"rose",d:"不得地，有點使不上力"},
- {n:"陷",c:"red",d:"最暗，力量大打折、缺點容易浮現"},
+ {n:"廟",c:"gold",d:"最亮！火力全開，優點發揮到極致",bat:100,batd:"滿電全開，火力最強"},
+ {n:"旺",c:"green",d:"狀態很好，表現亮眼有力",bat:85,batd:"高電有力，表現亮眼"},
+ {n:"得",c:"cyan",d:"得地有力，穩穩發揮",bat:70,batd:"中上夠用，發揮得了"},
+ {n:"利",c:"purple",d:"小有助力，還算順手",bat:60,batd:"小賺尚可，略有助力"},
+ {n:"平",c:"muted2",d:"不上不下，普普通通",bat:50,batd:"普通及格，不好不壞"},
+ {n:"不",c:"rose",d:"不得地，有點使不上力",bat:30,batd:"低電失色，優點打折"},
+ {n:"陷",c:"red",d:"最暗，力量大打折、缺點容易浮現",bat:10,batd:"沒電失靈，缺點放大"},
 ];
 
 /* ---------- 144 星宮組合圖鑑：14 主星 × 12 宮（陣列依 PALACES 順序 命兄夫子財疾遷友官田福父） ---------- */
@@ -1296,6 +1310,59 @@ const STARPALACE = {
  qisha:["果決獨立、能扛責開創力強，剛烈不易妥協","手足各自獨立、來往乾脆，聚少離多","配偶個性強獨立，感情需主動經營、有距離","子女獨立倔強有衝勁，教養宜給空間","大進大出、靠拚搏得財，財勢起伏大","注意外傷、呼吸道、意外；宜防血光","出外開創力強、獨當一面，宜往外闖","朋友各有主張、來往直接，交友重義","事業宜創業軍警業務等獨當一面領域","居家較少顧、重事業，家運隨事業起伏","內心剛強獨立、閒不下來，宜學放鬆","與長輩緣較淡或聚少離多、各自獨立"],
  pojun:["大破大立、敢衝敢變開創力強，人生起伏大","手足關係變動大、各奔前程，來往有起落","配偶敢愛敢恨個性強，感情多變起伏後方穩","子女個性獨特敢衝，親子關係較跳","大起大落、先破後立，財來財去宜守成","注意外傷、生殖泌尿、耗損；宜防意外","出外變動大、敢闖敢拚，宜開創型外務","朋友來去起伏、汰換快，交友重真不重多","事業宜開創、破局重建、需衝勁的領域","居家常變動愛翻新，家運先破後立","內心求新求變、不安於現狀，宜穩守","與長輩緣分變動、聚散無常"],
 };
+
+/* ---------- v5 星宮組合生活比喻鉤子（40 條，星宮圖鑑條目文末以 💡 附註；批5 翻卡背面也用） ---------- */
+const STARPAL_HOOK=[
+ /* 命宮 ×14 */
+ {star:"紫微",pal:"命宮",hook:"天生老闆命，走進超商也想指揮店員排貨架"},
+ {star:"天機",pal:"命宮",hook:"腦中開了24小時便利店，點子不打烊，人也睡不好"},
+ {star:"太陽",pal:"命宮",hook:"自帶探照燈，照亮全場也曬傷自己"},
+ {star:"武曲",pal:"命宮",hook:"講話像下訂單，句句要結果，不聊天氣"},
+ {star:"天同",pal:"命宮",hook:"人生開休閒模式，泡茶第一名，衝刺再說"},
+ {star:"廉貞",pal:"命宮",hook:"西裝底下藏刺青，正經與叛逆是同一個人"},
+ {star:"天府",pal:"命宮",hook:"家裡永遠有存糧，天塌下來先盤點庫存"},
+ {star:"太陰",pal:"命宮",hook:"月光型暖男暖女，心事寫日記不寫在臉上"},
+ {star:"貪狼",pal:"命宮",hook:"人生是吃到飽餐廳，什麼都想夾一點"},
+ {star:"巨門",pal:"命宮",hook:"嘴是雙面刃，能講課賺錢也能一句戳心"},
+ {star:"天相",pal:"命宮",hook:"團體裡的和事佬，幫大家喬事，自己的事難決定"},
+ {star:"天梁",pal:"命宮",hook:"老靈魂里長伯，路見不平先開講"},
+ {star:"七殺",pal:"命宮",hook:"人生只有前進檔，看到目標直接踩油門"},
+ {star:"破軍",pal:"命宮",hook:"裝潢好的房子也敢打掉重練，砍掉重來是日常"},
+ /* 夫妻宮 ×10 */
+ {star:"紫微",pal:"夫妻宮",hook:"另一半自帶王座，家裡遙控器歸他管"},
+ {star:"武曲",pal:"夫妻宮",hook:"配偶像財務長，愛你用轉帳表達，不太說甜話"},
+ {star:"天同",pal:"夫妻宮",hook:"伴侶是暖被窩，相處舒服，衝勁要你來補"},
+ {star:"太陰",pal:"夫妻宮",hook:"另一半溫柔月光型，體貼細膩，心事要你猜"},
+ {star:"貪狼",pal:"夫妻宮",hook:"伴侶魅力像展示櫃，你欣賞，別人也在看"},
+ {star:"廉貞",pal:"夫妻宮",hook:"愛得濃烈像追劇，甜虐交替，佔有慾是配菜"},
+ {star:"巨門",pal:"夫妻宮",hook:"感情品質看溝通，一張嘴能談心也能吵架"},
+ {star:"天梁",pal:"夫妻宮",hook:"另一半像大樹或長輩，會照顧人也愛管你"},
+ {star:"七殺",pal:"夫妻宮",hook:"配偶個性像將軍，愛之深管之切，晚婚較穩"},
+ {star:"破軍",pal:"夫妻宮",hook:"感情敢愛敢恨，劇情起伏大，宜慢熟晚定"},
+ /* 財帛宮 ×8 */
+ {star:"武曲",pal:"財帛宮",hook:"錢包裝了保險櫃，進得來出不去"},
+ {star:"天府",pal:"財帛宮",hook:"天生倉庫管理員，錢一進來先分類上架"},
+ {star:"太陰",pal:"財帛宮",hook:"薪水像月亮慢慢圓，細水長流存出一桶金"},
+ {star:"貪狼",pal:"財帛宮",hook:"財路像夜市，攤位多機會多，小心什麼都想賺"},
+ {star:"破軍",pal:"財帛宮",hook:"錢包裝旋轉門，大進大出，賺得快花得快"},
+ {star:"巨門",pal:"財帛宮",hook:"靠嘴吃飯，講課銷售直播，開口就是財路"},
+ {star:"天機",pal:"財帛宮",hook:"錢靠腦袋轉出來，點子變現金，宜動不宜守"},
+ {star:"天同",pal:"財帛宮",hook:"錢夠用就好，賺錢不拚命，福氣財慢慢來"},
+ /* 官祿宮 ×8 */
+ {star:"紫微",pal:"官祿宮",hook:"職場自帶主管椅，不當頭渾身不對勁"},
+ {star:"七殺",pal:"官祿宮",hook:"事業像打仗，親上前線衝業績，適合開疆闢土"},
+ {star:"天梁",pal:"官祿宮",hook:"公司裡的老師傅，出事大家先找他，宜專業公職"},
+ {star:"太陽",pal:"官祿宮",hook:"工作要有舞台，名聲比薪水更能餵飽他"},
+ {star:"武曲",pal:"官祿宮",hook:"執行力機器，交辦必達，適合財務與實業"},
+ {star:"破軍",pal:"官祿宮",hook:"換跑道像換衣服，敢砍掉重練，開創型事業"},
+ {star:"天相",pal:"官祿宮",hook:"最強二把手，輔佐老闆穩住大局，幕僚長路線"},
+ {star:"廉貞",pal:"官祿宮",hook:"職場變色龍，制度內玩得轉，公關手腕一流"},
+];
+
+/* ---------- v5 記憶符號表與五行對照（批5 UI 用；圖騰 STAR_COLOR 不動） ---------- */
+const STAR_EMOJI={ziwei:"👑",tianji:"⚙️",taiyang:"☀️",wuqu:"🪙",tiantong:"🧸",lianzhen:"🎭",tianfu:"🏦",taiyin:"🌙",tanlang:"🦊",jumen:"🗣️",tianxiang:"⚖️",tianliang:"🌳",qisha:"⚔️",pojun:"💥"};
+const PALACE_EMOJI=["🧭","🤝","💍","👶","💰","🩺","✈️","👥","💼","🏠","🧘","👪"]; /* 依 PALACES 順序 */
+const STAR_WX={ziwei:"earth",tianji:"wood",taiyang:"fire",wuqu:"metal",tiantong:"water",lianzhen:"fire",tianfu:"earth",taiyin:"water",tanlang:"wood",jumen:"water",tianxiang:"water",tianliang:"earth",qisha:"metal",pojun:"water"};
 
 /* ---------- v3 未來藍圖（規劃中，本版先列計劃） ---------- */
 const V3PLAN = [
@@ -1461,6 +1528,35 @@ const QUESTIONS = [
  {id:"x62",t:"single",topic:"大限",d:"基礎",q:"「流年」比較像下列何者？",o:["今年的天氣","先天基因","十年跑道","固定不變的命"],a:"今年的天氣",e:"流年是當年的引動，像今年的天氣。"},
  {id:"x63",t:"scenario",topic:"大限",d:"進階",q:"某人這十年大限命宮疊在「福德宮」，代表這十年主軸偏向？",o:["心靈、享受與價值觀","一定發大財","只看健康","與心境無關"],a:"心靈、享受與價值觀",e:"疊宮看大限命宮落在本命哪一宮，福德宮主心靈享受價值觀。"},
  {id:"x64",t:"single",topic:"大限",d:"基礎",q:"關於排盤，v2 的建議是？",o:["用現成軟體排盤，把力氣花在讀懂","一定要手工排盤","不需要命盤","只看生肖"],a:"用現成軟體排盤，把力氣花在讀懂",e:"v2 不教排盤，善用排盤軟體、專注於判讀。"},
+
+ /* ============ v5 新增題庫：輔星 ×12（f）／大限 ×6（y）／神煞 ×6（n） ============ */
+ /* -- 輔星 12 題（基礎 6＋進階 6） -- */
+ {id:"f01",t:"single",topic:"輔星",d:"基礎",q:"「左輔、右弼」在紫微斗數中屬於哪一類星曜？",o:["助力星（貴人輔助）","煞星","桃花星","驛馬星"],a:"助力星（貴人輔助）",e:"左輔右弼是穩重與隨和的左右手，主貴人與實質幫助，逢主星更添力量。"},
+ {id:"f02",t:"single",topic:"輔星",d:"基礎",q:"重條理、利考試功名、走「正統學問」路線的才華星是？",o:["文昌","文曲","天魁","祿存"],a:"文昌",e:"文昌主正統文才、利科考；文曲偏口才才藝，走異路功名。"},
+ {id:"f03",t:"single",topic:"輔星",d:"基礎",q:"「天魁、天鉞」合稱哪一類星？",o:["貴人星","煞星","財星","桃花星"],a:"貴人星",e:"天魁為陽貴（長輩明助）、天鉞為陰貴（平輩暗助），皆主貴人提攜。"},
+ {id:"f04",t:"single",topic:"輔星",d:"基礎",q:"主「財祿穩定、保守聚財」，逢化祿更佳的星是？",o:["祿存","擎羊","地劫","天馬"],a:"祿存",e:"祿存為財星，保守聚財、性偏孤，與化祿同會更吉。"},
+ {id:"f05",t:"single",topic:"輔星",d:"基礎",q:"「紅鸞、天喜」這對桃花星主要代表？",o:["婚姻喜慶與正緣","破財損耗","官司是非","疾病災厄"],a:"婚姻喜慶與正緣",e:"紅鸞偏正緣婚姻、天喜偏喜事添丁，兩星相對而照。"},
+ {id:"f06",t:"single",topic:"輔星",d:"基礎",q:"下列哪一顆屬於「煞星」？",o:["擎羊","左輔","文昌","天魁"],a:"擎羊",e:"擎羊為煞星，主衝動刀傷、剛烈帶傷；左輔、文昌、天魁皆為吉曜。"},
+ {id:"f07",t:"single",topic:"輔星",d:"進階",q:"主「拖延、糾纏、暗中拖磨」的煞星是？",o:["陀羅","擎羊","火星","地空"],a:"陀羅",e:"擎羊明衝帶傷、主動急進；陀羅反覆糾纏、暗中拖磨，事情難乾脆。"},
+ {id:"f08",t:"single",topic:"輔星",d:"進階",q:"同屬火性煞星，「悶燒型、暗中衝突耗損」的是？",o:["鈴星","火星","擎羊","天煞"],a:"鈴星",e:"火星是明火，爆發急躁、事發突然；鈴星是陰火，悶燒暗損、暗中蓄勢。"},
+ {id:"f09",t:"single",topic:"輔星",d:"進階",q:"地空與地劫都主破耗，其中主「突發損失、來得措手不及」的是？",o:["地劫","地空","旬空","截空"],a:"地劫",e:"地空偏空想看破、不切實際而耗財；地劫偏突發劫財、措手不及的損失。"},
+ {id:"f10",t:"multi",topic:"輔星",d:"進階",q:"下列哪些屬於「六吉星」？（可複選）",o:["左輔","文昌","天魁","擎羊"],a:["左輔","文昌","天魁"],e:"六吉星＝左輔右弼、文昌文曲、天魁天鉞；擎羊屬六煞星。"},
+ {id:"f11",t:"scenario",topic:"輔星",d:"進階",q:"小陳工作上常獲長輩、上司「公開出面提攜」，這種明助貴人較對應哪顆星？",o:["天魁","天鉞","祿存","天馬"],a:"天魁",e:"天魁為陽貴，多為長輩上司的公開明助；天鉞為陰貴，多為平輩暗中相助。"},
+ {id:"f12",t:"single",topic:"輔星",d:"進階",q:"天馬遇祿存或化祿，動中得財的大吉組合稱為？",o:["祿馬交馳","火貪格","陽梁昌祿","君臣慶會"],a:"祿馬交馳",e:"天馬主移動奔波，逢祿存或化祿為「祿馬交馳」，主動中生財、大吉。"},
+ /* -- 大限 6 題 -- */
+ {id:"y01",t:"single",topic:"大限",d:"基礎",q:"算運勢時要把哪三張盤「疊起來看」才準？",o:["本命盤、大限盤、流年盤","本命盤、生肖盤、姓名盤","大限盤、流月盤、流日盤","只看本命盤就夠"],a:"本命盤、大限盤、流年盤",e:"本命是底子（車的性能）、大限是路段（這十年的路）、流年是天氣（今年際遇），三盤疊看。"},
+ {id:"y02",t:"single",topic:"大限",d:"基礎",q:"每個人幾歲「起運」（交第一個大限）由什麼決定？",o:["五行局","生肖","出生月份","名字筆畫"],a:"五行局",e:"水二局2歲、木三局3歲、金四局4歲、土五局5歲、火六局6歲起運，之後每十年換一個大限。"},
+ {id:"y03",t:"single",topic:"大限",d:"進階",q:"「陽男、陰女」的大限行進方向是？",o:["順時針","逆時針","固定不動","隨流年改變"],a:"順時針",e:"陽男陰女順行、陰男陽女逆行；實際方向交給排盤軟體，重點是會讀走到哪一宮。"},
+ {id:"y04",t:"single",topic:"大限",d:"進階",q:"「流年命宮」在命盤上怎麼找？",o:["今年生肖地支所在的那一宮","永遠在本命命宮","大限命宮的對宮","任選一宮皆可"],a:"今年生肖地支所在的那一宮",e:"例如馬年就看命盤上「午」那一格，它就是今年的流年命宮，從它看這一年的主軸。"},
+ {id:"y05",t:"single",topic:"大限",d:"進階",q:"「流年」與「小限」的分工，下列何者正確？",o:["流年看外在環境際遇、小限看自己心態決定","兩者完全相同","小限看十年運、流年看一生","流年只管感情"],a:"流年看外在環境際遇、小限看自己心態決定",e:"流年＝老天給的天氣與際遇；小限＝你自己的心態與決定。內外合看才是完整的一年。"},
+ {id:"y06",t:"scenario",topic:"大限",d:"進階",q:"小美這十年的大限命宮疊在本命「財帛宮」，代表這十年的人生主軸偏向？",o:["金錢收入與理財","健康養生","子女教養","搬家遠行"],a:"金錢收入與理財",e:"疊宮＝大限命宮疊在本命哪一宮，該宮的領域就是這十年的主軸；疊財帛即與金錢理財特別有關。"},
+ /* -- 神煞 6 題 -- */
+ {id:"n01",t:"single",topic:"神煞",d:"基礎",q:"長生十二神以人的一生為序，「長生」之後接哪一位？",o:["沐浴","冠帶","帝旺","墓"],a:"沐浴",e:"順序：長生→沐浴→冠帶→臨官→帝旺→衰→病→死→墓→絕→胎→養，像一生的劇情。"},
+ {id:"n02",t:"single",topic:"神煞",d:"基礎",q:"長生十二神中，能量最強、如人生巔峰的是？",o:["帝旺","長生","絕","衰"],a:"帝旺",e:"帝旺是巔峰、能量最強；死、絕則是最弱的階段。"},
+ {id:"n03",t:"single",topic:"神煞",d:"基礎",q:"博士十二神中，主「喜慶、財氣、好運貴人」的吉神是？",o:["青龍","飛廉","病符","官府"],a:"青龍",e:"青龍屬吉，帶財帶喜；飛廉（小人是非）、病符（病災）、官府（官司）屬凶。"},
+ {id:"n04",t:"single",topic:"神煞",d:"進階",q:"歲前十二神中，主「像被繩子綁住的糾纏、官司牽連」的是？",o:["貫索","龍德","天德","攀鞍"],a:"貫索",e:"貫索主糾纏、被綁住脫不了身、官司牽連；龍德天德則是逢凶化吉的吉神。"},
+ {id:"n05",t:"single",topic:"神煞",d:"進階",q:"歲前十二神中，主「血光、意外、開刀」要小心受傷車關的是？",o:["白虎","弔客","晦氣","奏書"],a:"白虎",e:"白虎主血光意外開刀；弔客主探病弔喪、晦氣主不順，性質不同。"},
+ {id:"n06",t:"multi",topic:"神煞",d:"進階",q:"將前十二神裡合稱「三煞」的是哪三位？（可複選）",o:["劫煞","災煞","天煞","月煞"],a:["劫煞","災煞","天煞"],e:"三煞＝劫煞（破耗被劫）、災煞（災厄血光）、天煞（剋制阻礙），三顆連排好認。"},
 ];
 
 /* ==========================================================================
@@ -1468,11 +1564,26 @@ const QUESTIONS = [
    ========================================================================== */
 const KEY="ziwei_learn_v2";
 const OLDKEY="ziwei_learn_v1";
-const DEFAULT={xp:0,learned:{palace:[],star:[],sihua:[],aux:[],duo:[],frame:[],daxian:[],shensha:[]},quiz:{answered:0,correct:0},wrong:{},streak:{count:0,last:""},bestScore:0,cleared:false,sound:true};
+const DEFAULT={xp:0,learned:{palace:[],star:[],sihua:[],aux:[],duo:[],frame:[],daxian:[],shensha:[]},quiz:{answered:0,correct:0},wrong:{},streak:{count:0,last:""},bestScore:0,cleared:false,sound:true,
+ /* v5.0 批2 新欄位（老資料由 merge 深補齊，原值零動作） */
+ quest:{mode:"quest",migrated:false,stages:{}},
+ daily:{date:"",quests:[]},
+ qday:{date:"",ids:[]},
+ sign:{date:"",cat:"",id:"",qid:"",opened:false,answered:false,okTotal:0},
+ dex:{got:{},reads:{},tries:{date:"",n:{}}},
+ counters:{questDone:0,comboBest:0},
+ milestones:{streak:[],dex:[]}};
 let S=load();
 
-/* 合併：以 DEFAULT 為底補齊所有新欄位（learned 新增 duo/frame/daxian 桶） */
-function merge(r){return Object.assign({},DEFAULT,r,{learned:Object.assign({},DEFAULT.learned,r.learned),quiz:Object.assign({},DEFAULT.quiz,r.quiz)});}
+/* 合併：以 DEFAULT 深拷貝為底補齊所有新欄位（巢狀物件逐層補，舊值優先、不覆蓋） */
+function merge(r){
+ r=r||{};
+ const D=JSON.parse(JSON.stringify(DEFAULT)); /* 深拷貝，避免共用參照污染 DEFAULT */
+ const o=Object.assign({},D,r);
+ ["learned","quiz","streak","quest","daily","qday","sign","dex","counters","milestones"].forEach(k=>{o[k]=Object.assign({},D[k],r[k]);});
+ o.dex.tries=Object.assign({},D.dex.tries,r.dex&&r.dex.tries);
+ return o;
+}
 function load(){
  // 1) 先讀 v2
  try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.learned)return merge(r);}catch(e){}
@@ -1483,8 +1594,55 @@ function load(){
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
-const todayStr=()=>new Date().toISOString().slice(0,10);
-function touchStreak(){const t=todayStr();if(S.streak.last===t)return;const y=new Date(Date.now()-864e5).toISOString().slice(0,10);S.streak.count=(S.streak.last===y)?S.streak.count+1:1;S.streak.last=t;save();}
+/* v5.0：todayStr 改「本地日期」（修 UTC 快 8 小時換日雷）；dayStr 為全站別名 */
+const todayStr=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+const dayStr=todayStr;
+const utcDayStr=off=>new Date(Date.now()-(off||0)).toISOString().slice(0,10);
+const localDayStr=off=>{const d=new Date(Date.now()-(off||0));return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+/* 切換日守則：last 等於「UTC今天」或「本地今天」任一 → 視為今天（不斷 streak、不重複 +1）；
+   昨天判定同樣接受 UTC/本地兩制，讓舊資料（UTC 制日期）無痛過渡 */
+function touchStreak(){
+ const t=todayStr();
+ if(S.streak.last===t||S.streak.last===utcDayStr(0))return;
+ const wasYesterday=(S.streak.last===localDayStr(864e5)||S.streak.last===utcDayStr(864e5));
+ S.streak.count=wasYesterday?S.streak.count+1:1;
+ S.streak.last=t;save();
+}
+
+/* ---- v5.0 事件匯流排：questEvent 為全站唯一發射點 ----
+   內部先跑消費者（批3/4 掛載進 QUEST_CONSUMERS），末尾 dispatch ziwei:* CustomEvent */
+const QUEST_CONSUMERS=[];
+function questEvent(type,payload){
+ payload=payload||{};
+ QUEST_CONSUMERS.forEach(fn=>{try{fn(type,payload);}catch(e){}});
+ try{window.dispatchEvent(new CustomEvent("ziwei:"+type,{detail:payload}));}catch(e){}
+}
+
+/* ---- v5.0 老用戶闖關進度映射（首載一次，migrated 防重；批3 章節地圖上線後直接沿用） ----
+   該章卡片達 GATE → 該章全部關卡 stages 標 cleared+auto；c8＝全學完且最佳分 ≥85 */
+const LEARN_GATE={palace:12,star:14,sihua:4,aux:15,duo:20,frame:11,daxian:11,shensha:4};
+const CHAPTER_STAGES={c1:["learn","trial","boss"],c2:["learn","trial","boss"],c3:["learn","trial","boss"],c4:["learn","boss"],c5:["learn","trial","boss"],c6:["learn","trial","boss"],c7:["learn","boss"],c8:["review","boss"]};
+function migrateQuest(){
+ if(S.quest.migrated)return;
+ const L=S.learned;
+ const pass={
+  c1:L.palace.length>=LEARN_GATE.palace,
+  c2:L.star.length>=LEARN_GATE.star,
+  c3:L.sihua.length>=LEARN_GATE.sihua,
+  c4:L.aux.length>=LEARN_GATE.aux,
+  c5:L.duo.length>=LEARN_GATE.duo,
+  c6:L.frame.length>=LEARN_GATE.frame,
+  c7:L.daxian.length>=LEARN_GATE.daxian&&L.shensha.length>=LEARN_GATE.shensha,
+  c8:!!S.cleared&&S.bestScore>=85
+ };
+ const at=todayStr();
+ Object.keys(pass).forEach(c=>{
+  if(!pass[c])return;
+  CHAPTER_STAGES[c].forEach(st=>{S.quest.stages[c+"_"+st]={cleared:true,best:0,at:at,auto:true};});
+ });
+ S.quest.migrated=true;save();
+}
+migrateQuest();
 
 /* ---- 等級計算 ---- */
 function levelInfo(xp){let cur=LEVELS[0];for(const L of LEVELS)if(xp>=L.xp)cur=L;const idx=LEVELS.indexOf(cur);const next=LEVELS[idx+1]||null;const base=cur.xp;const need=next?next.xp:cur.xp;const prog=next?Math.min(1,(xp-base)/(need-base)):1;return{lv:cur.lv,title:cur.title,next,base,need,prog,max:!next};}
@@ -1793,7 +1951,7 @@ function renderMinor(){
  <p class="lead" style="margin-bottom:6px">命盤上除了主星與上面的輔星煞曜，還有許多「雜曜（小星）」。以下為參考速查，<b>不列入學習進度</b>。</p>`;
  groups.forEach(([g,c,intro])=>{
   h+=`<div class="grouphdr" style="color:var(--${c})">${g}</div><p style="font-size:12px;color:var(--muted);margin:0 0 8px">${esc(intro)}</p><div class="minorgrid">`;
-  MINOR.filter(m=>m.g===g).forEach(m=>{h+=`<div class="minorcard" style="border-left:3px solid var(--${c})"><b>${esc(m.name)}</b><span>${esc(m.key)}</span></div>`;});
+  MINOR.filter(m=>m.g===g).forEach(m=>{h+=`<div class="minorcard" style="border-left:3px solid var(--${c})"><b>${esc(m.name)}</b>${m.mn?`<span style="display:block;font-family:'Noto Serif TC',serif;color:var(--gold-d);margin-bottom:2px">「${esc(m.mn)}」</span>`:""}<span>${esc(m.key)}</span></div>`;});
   h+=`</div>`;
  });
  h+=`<div class="note" style="margin-top:18px"><b>命盤角落那些字是什麼？</b><br>「博士十二神（博士·力士·青龍…）」「長生十二神（長生·沐浴·冠帶…）」「歲前／將前十二神」等，是隨大限流年<b>轉動的神煞系統</b>，用來輔助判斷流年吉凶；角落的 3~12、13~22 是<b>大限</b>（十年運）、流年數字是虛歲對照。這些屬進階排盤內容，本站先聚焦在主星與雜曜。<br>另外盤上偶見的「副德、副旬」等「副X」，是對照用的副星，影響力較輕，參考即可。</div>`;
@@ -1921,6 +2079,7 @@ function openShensha(id){const s=SHENSHA.find(x=>x.id===id);const dn=S.learned.s
  openSheet(`
   <div class="head"><div class="glyphL">${s.em}</div><div><h2>${esc(s.name)}</h2><div class="row"><span class="chip purple">${esc(s.sub)}</span></div></div></div>
   <div class="core-box"><div class="k">這套在講什麼</div><div class="v" style="font-size:14px;font-weight:400;color:var(--text);line-height:1.75">${esc(s.intro)}</div></div>
+  ${s.rhyme?`<div class="mnem"><div class="k">口訣</div><div class="v" style="line-height:1.9">${esc(s.rhyme)}</div></div>`:""}
   <div class="field"><div class="k">用法</div><div class="v">${esc(s.use)}</div></div>
   <div class="grouphdr" style="margin:16px 2px 6px">十二位一覽（附例子）</div>
   ${s.items.map(it=>`<div class="ssrow"><div class="ssname">${esc(it.n)}</div><div class="ssbody"><div class="ssm">${esc(it.m)}</div><div class="ssex">例：${esc(it.ex)}</div></div></div>`).join("")}
@@ -1934,11 +2093,12 @@ function oneLine(s){const m=(s.story||"").split("一句話記住他：");return 
 function viewMiao(){
  return `<div class="eyebrow">進階 · 廟旺利陷</div><h2 class="title">廟旺利陷亮度</h2>
  <p class="lead">同一顆星放在不同宮位（地支），像燈泡有亮有暗——在對的位置最亮（<b style="color:var(--gold)">廟</b>）、本事發揮到極致；在不對的位置最暗（<b style="color:var(--red)">陷</b>）、力量打折、缺點浮現。這就是「廟旺利陷」，是「同一顆星、不同人差很多」的關鍵之一。</p>
+ <div class="mnem" style="margin:0 0 14px"><div class="k">口訣</div><div class="v" style="line-height:1.9">${esc(BRIGHT_MN)}</div></div>
  <div class="grouphdr">👆 點一顆主星，看它在 12 宮的亮度</div>
  <div class="miaopick">${STARS.map(s=>`<button class="miaobtn" data-s="${s.id}" onclick="showMiao('${s.id}')">${esc(s.name)}</button>`).join("")}</div>
  <div id="miaoResult" style="margin-top:14px"><p style="font-size:12px;color:var(--muted2);text-align:center;padding:12px">☝️ 點上面任一顆主星，看它的亮度地圖</p></div>
  <div class="grouphdr">七個亮度等級（亮 → 暗）</div>
- <div class="cardlist">${BRIGHT_LEVELS.map(l=>`<div class="card" style="padding:11px 14px;border-left:4px solid var(--${l.c})"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 2px;color:var(--${l.c})">${l.n}</h4><div style="font-size:12.5px;color:var(--muted)">${esc(l.d)}</div></div>`).join("")}</div>
+ <div class="cardlist">${BRIGHT_LEVELS.map(l=>`<div class="card" style="padding:11px 14px;border-left:4px solid var(--${l.c})"><h4 style="font-family:'Noto Serif TC',serif;font-size:16px;margin:0 0 2px;color:var(--${l.c})">${l.n} <span style="font-size:12px;font-family:'Noto Sans TC',sans-serif;font-weight:700">🔋${l.bat}%</span> <span style="font-size:11.5px;font-family:'Noto Sans TC',sans-serif;font-weight:400;color:var(--muted2)">${esc(l.batd)}</span></h4><div style="font-size:12.5px;color:var(--muted)">${esc(l.d)}</div></div>`).join("")}</div>
  <div class="note">💡 判盤時：星曜<b style="color:var(--gold)">廟旺</b>→優點強、好事更好；星曜<b style="color:var(--red)">落陷</b>→力量弱、缺點易現，要靠後天努力或吉星幫襯。亮度只是「力道大小」，不是絕對好壞。</div>`;
 }
 function showMiao(id){
@@ -2055,7 +2215,7 @@ function sanfangSvg(sel,a){
    <line x1="${P[0]}" y1="${P[1]}" x2="${O[0]}" y2="${O[1]}" stroke="#E06A50" stroke-width="0.5" stroke-dasharray="1.4 1.1" opacity="0.85"/>
  </svg>`;
 }
-function chartSanfang(idx){SFX.tap();CHART_SEL=(CHART_SEL===idx?null:idx);const el=document.getElementById("chartOut");if(el)el.innerHTML=renderChart(CHART);}
+function chartSanfang(idx){SFX.tap();CHART_SEL=(CHART_SEL===idx?null:idx);if(CHART_SEL!==null)questEvent("chart_palace",{palaceIdx:CHART_SEL});const el=document.getElementById("chartOut");if(el)el.innerHTML=renderChart(CHART);}
 /* 宮干飛星四化：該宮宮干→四化四星→落在哪個宮（含自化偵測） */
 function feihuaOf(a,idx){
  const p=a.palaces[idx];const gh=GANHUA[p.heavenlyStem];if(!gh)return null;
@@ -2107,7 +2267,8 @@ function viewStarPalace(){
 function pickSP(id){SFX.tap();STARPALACE_SEL=id;document.querySelectorAll(".spbtn").forEach(b=>b.classList.toggle("on",b.dataset.s===id));const el=document.getElementById("spResult");if(el)el.innerHTML=renderSP(id);}
 function renderSP(id){
  const s=STARS.find(x=>x.id===id);const arr=STARPALACE[id];if(!arr)return"";
- return `<div class="card" style="padding:15px;margin-top:8px"><div style="font-family:'Noto Serif TC',serif;font-weight:900;font-size:20px;color:var(--gold);margin-bottom:6px">${esc(s.name)} <span style="font-size:12.5px;color:var(--purple);font-weight:400">${esc(s.core.split("｜")[0])}</span></div><div class="sprows">${PALACES.map((p,i)=>`<div class="sprow"><span class="spgong">${esc(p.name)}</span><span class="sptext">${esc(arr[i])}</span></div>`).join("")}</div></div>`;
+ const hookOf=pn=>{const hk=STARPAL_HOOK.find(h=>h.star===s.name&&h.pal===pn);return hk?`<span style="display:block;margin-top:3px;font-size:12px;color:var(--gold-d)">💡 ${esc(hk.hook)}</span>`:"";};
+ return `<div class="card" style="padding:15px;margin-top:8px"><div style="font-family:'Noto Serif TC',serif;font-weight:900;font-size:20px;color:var(--gold);margin-bottom:6px">${esc(s.name)} <span style="font-size:12.5px;color:var(--purple);font-weight:400">${esc(s.core.split("｜")[0])}</span></div><div class="sprows">${PALACES.map((p,i)=>`<div class="sprow"><span class="spgong">${esc(p.name)}</span><span class="sptext">${esc(arr[i])}${hookOf(p.name)}</span></div>`).join("")}</div></div>`;
 }
 
 /* ======================= 十天干四化查表器 ======================= */
@@ -2121,7 +2282,7 @@ function ganhuaTool(){
  </div>`;
 }
 function showGanhua(g){
- SFX.tap();
+ SFX.tap();questEvent("ganhua_query",{gan:g});
  document.querySelectorAll('.ganbtn').forEach(b=>b.classList.toggle('on',b.dataset.g===g));
  const h=GANHUA[g];const rows=[["祿","lu","green"],["權","quan","purple"],["科","ke","cyan"],["忌","ji","red"]];
  document.getElementById('ganResult').innerHTML=`<div class="ganrows">${rows.map(([label,k,c])=>`<div class="ganrow"><span class="chip ${c}" style="min-width:54px;justify-content:center">化${label}</span><b style="font-family:'Noto Serif TC',serif;font-size:19px;color:var(--${c})">${esc(h[k])}</b></div>`).join("")}</div><p style="font-size:11.5px;color:var(--muted2);margin:12px 0 0;line-height:1.7"><b style="color:var(--gold-d)">${g}</b> 年生人：${esc(h.lu)}化祿、${esc(h.quan)}化權、${esc(h.ke)}化科、${esc(h.ji)}化忌。</p>`;
@@ -2252,7 +2413,7 @@ function learnBtn(cat,id,dn){
  if(dn)return `<div class="actions"><div class="doneflag">✦ 已學會此星曜</div><button class="btn btn-ghost" onclick="unlearn('${cat}','${id}')">取消標記</button></div>`;
  return `<div class="actions"><button class="btn btn-g" onclick="markLearn('${cat}','${id}')">✓ 標記已學會 · +10 XP</button></div>`;
 }
-function markLearn(cat,id){if(!S.learned[cat].includes(id)){S.learned[cat].push(id);SFX.learn();const up=addXP(10);if(!up)toast("已學會 +10 XP ✦");checkClear();}closeModal();render();}
+function markLearn(cat,id){if(!S.learned[cat].includes(id)){S.learned[cat].push(id);SFX.learn();const up=addXP(10);if(!up)toast("已學會 +10 XP ✦");checkClear();questEvent("learn_card",{cat:cat,id:id});}closeModal();render();}
 function unlearn(cat,id){S.learned[cat]=S.learned[cat].filter(x=>x!==id);S.xp=Math.max(0,S.xp-10);save();closeModal();render();}
 function checkClear(){if(totalLearned()>=TOTAL_CARDS&&!S.cleared){S.cleared=true;save();}}
 
@@ -2267,7 +2428,7 @@ function viewQuizHub(){
    <div class="card modecard tap" onclick="startWrongQuiz()" style="${wrongN?'':'opacity:.55'}"><div class="em">🔁</div><div class="info"><h3>錯題重練</h3><p>${wrongN?`複習你答錯的 ${wrongN} 題`:"目前沒有錯題，繼續保持"}</p></div><div class="arrow">›</div></div>
  </div>`;
 }
-function chapterPick(){SFX.tap();const topics=[["宮位","十二宮","🏛️"],["主星","十四主星","⭐"],["四化","祿權科忌","🔮"],["雙星","雙星組合","♊"],["框架","框架與格局","🗺️"],["大限","大限流年","⏳"],["綜合","觀念綜合","🧭"]];
+function chapterPick(){SFX.tap();const topics=[["宮位","十二宮","🏛️"],["主星","十四主星","⭐"],["四化","祿權科忌","🔮"],["輔星","輔星煞曜","✧"],["雙星","雙星組合","♊"],["框架","框架與格局","🗺️"],["大限","大限流年","⏳"],["神煞","神煞十二神","🎖️"],["綜合","觀念綜合","🧭"]];
  view().innerHTML=`<div class="eyebrow">章節測驗</div><h2 class="title">選擇主題</h2>
  <p class="lead">每個章節隨機出最多 10 題。</p>
  <div class="topicpick">${topics.map(([tp,label])=>{const n=QUESTIONS.filter(q=>q.topic===tp).length;return `<button onclick="startQuiz(pickTopic('${tp}',10))">${label}<span>${n} 題題庫</span></button>`;}).join("")}
@@ -2322,7 +2483,7 @@ function submitQ(){
  else if(q.t==="fill"){const el=$("#fillin");el.disabled=true;el.style.borderColor=ok?"var(--ok)":"var(--no)";el.style.color=ok?"var(--ok)":"var(--no)";}
  else if(q.t==="match"){document.querySelectorAll(".matchrow").forEach(r=>{const k=r.dataset.k;const good=Q.match[k]===q.pairs[k];r.classList.add(good?"mok":"mno");r.querySelector("select").disabled=true;});}
 
- if(ok){Q.correct++;SFX.ok();S.quiz.correct++;if(Q.mode==="wrong"&&S.wrong[q.id]){S.wrong[q.id].resolved=true;}}
+ if(ok){Q.correct++;SFX.ok();S.quiz.correct++;if(Q.mode==="wrong"&&S.wrong[q.id]){S.wrong[q.id].resolved=true;}questEvent("quiz_correct",{qid:q.id,topic:q.topic});}
  else{SFX.no();if(!S.wrong[q.id])S.wrong[q.id]={count:0,resolved:false};S.wrong[q.id].count++;S.wrong[q.id].resolved=false;S.wrong[q.id].last=todayStr();}
  S.quiz.answered++;save();
 
@@ -2341,6 +2502,7 @@ function finishQuiz(){
  const done=Math.max(1,Q.list.length);
  const correct=Q.correct;const rate=Math.round(correct/done*100);
  if(rate>S.bestScore){S.bestScore=rate;save();}
+ questEvent("quiz_finish",{total:done,correct:correct});
  SFX.level.call&&null;
  let msg,em;
  if(rate===100){em="🏆";msg="滿分！星盤了然於心";}
@@ -2372,7 +2534,7 @@ function viewWrong(){
  if(!ids.length)return `<div class="eyebrow">複習 · 錯題本</div><h2 class="title">錯題本</h2>
    <div class="empty"><div class="em">🎯</div><p style="font-family:'Noto Serif TC',serif;font-size:18px;color:var(--gold)">目前沒有待複習的錯題</p><p>去測驗練習，答錯的題目會自動收集到這裡，方便你重點加強。</p><div style="max-width:260px;margin:18px auto 0"><button class="btn btn-p" onclick="go('quiz')">前往測驗</button></div></div>`;
  const items=ids.map(id=>{const q=QUESTIONS.find(x=>x.id===id);const w=S.wrong[id];return{q,w};}).filter(x=>x.q);
- const topicChip={"宮位":"purple","主星":"gold","四化":"cyan","綜合":"green","雙星":"rose","框架":"red","大限":"cyan"};
+ const topicChip={"宮位":"purple","主星":"gold","四化":"cyan","綜合":"green","雙星":"rose","框架":"red","大限":"cyan","輔星":"gold","神煞":"purple"};
  return `<div class="eyebrow">複習 · 錯題本</div><h2 class="title">錯題本</h2>
  <p class="lead">共 ${items.length} 題待加強。答對後會自動移出錯題本。</p>
  <div style="margin-bottom:16px"><button class="btn btn-p" onclick="startWrongQuiz()">🔁 重練全部錯題（${items.length} 題）</button></div>
