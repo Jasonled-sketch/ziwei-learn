@@ -493,6 +493,40 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
 @keyframes heartpop{0%{transform:scale(1.7) rotate(0deg)}55%{transform:scale(.6) rotate(-18deg)}100%{transform:scale(1) rotate(0deg)}}
 .hearts .hh.pop{animation:heartpop .5s ease}
 
+/* ===== v5.2 批4：留存系統（每日任務／星籤／圖鑑收服） ===== */
+.signcard{display:flex;align-items:center;gap:11px;padding:13px 15px;margin:12px 0 2px;border-color:var(--gold-d);background:radial-gradient(130% 120% at 50% -30%,var(--gold-glow),var(--panel))}
+.signcard .em{font-size:26px;flex:none}
+.signcard .info{flex:1;min-width:0}
+.signcard h3{font-family:"Noto Serif TC",serif;font-size:15.5px;margin:0 0 2px;color:var(--gold)}
+.signcard p{font-size:11.5px;color:var(--muted);margin:0;line-height:1.5}
+.signcard .arrow{color:var(--muted2);font-size:20px}
+.signface{text-align:center;padding:16px 12px;border:1px solid var(--gold-d);border-radius:14px;background:radial-gradient(120% 100% at 50% -20%,var(--gold-glow),var(--panel));margin-bottom:4px}
+.signpoem{font-family:"Noto Serif TC",serif;font-size:14.5px;color:var(--muted);margin:0 0 10px;line-height:1.8}
+.signstar{font-family:"Noto Serif TC",serif;font-weight:900;font-size:34px;color:var(--gold);letter-spacing:.08em}
+.signmn{font-size:12.5px;color:var(--purple);margin-top:8px;line-height:1.7}
+.dqrow{padding:11px 0;border-top:1px solid var(--line)}
+.dqrow:first-child{border-top:0}
+.dqrow.done{opacity:.72}
+.dqtop{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.dqtop b{flex:1;font-size:13.5px;min-width:0}
+.dqprog{font-size:11px;color:var(--muted2);margin-top:4px;text-align:right}
+.dxrow{border-top:1px solid var(--line)}
+.dxrow:first-child{border-top:0}
+.dxhead{display:flex;align-items:center;gap:7px;padding:10px 0;cursor:pointer}
+.dxhead .spgong{width:auto;flex:none}
+.dxtier{flex:none;font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid var(--line2);color:var(--muted)}
+.dxtier.t3{color:var(--gold);border-color:var(--gold-d);background:var(--gold-glow)}
+.dxtier.t2{color:var(--purple);border-color:var(--purple-d)}
+.dxst{font-size:10.5px;color:var(--muted);margin-left:auto;flex:none}
+.dxst.got{color:var(--gold)}
+.dxst.dim{color:var(--muted2)}
+.dxarr{color:var(--muted2);font-size:12px;flex:none}
+.dxbody{padding:2px 0 13px}
+.dxact{display:flex;align-items:center;gap:10px;margin-top:10px}
+.dxact .btn{flex:none;width:auto;padding:9px 14px;font-size:12.5px}
+.dxtry{font-size:11px;color:var(--muted2)}
+.dxreq{margin-top:10px;font-size:12px;color:var(--muted);border:1px dashed var(--line2);border-radius:11px;padding:9px 11px;line-height:1.7}
+.dxrow.owned .dxhead .spgong{color:var(--gold)}
 @media (max-width:420px){
   .brand{font-size:17px} .brand-sub{display:none}
   .hero h1{font-size:26px} .hero .seal{font-size:96px}
@@ -502,6 +536,7 @@ h2.title{font-family:"Noto Serif TC",serif;font-weight:900;font-size:24px;letter
   .minorgrid{grid-template-columns:1fr}
   .miaogrid{grid-template-columns:repeat(4,1fr)}
   .sppick{grid-template-columns:repeat(4,1fr)}
+  .dxhead{flex-wrap:wrap}
 }
 </style>
 
@@ -803,7 +838,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v5.1";
+const APP_VERSION = "v5.2";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -1783,7 +1818,7 @@ let CUR="home";
 function go(route){CUR=route;SFX.tap();closeModal();window.scrollTo(0,0);document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.route===route));render();}
 document.querySelectorAll("#nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.route)));
 
-function render(){touchStreak();const v=view();
+function render(){touchStreak();retentionTick();const v=view();
  if(CUR==="home")v.innerHTML=viewHome();
  else if(CUR==="learn")v.innerHTML=viewLearnRouter();
  else if(CUR==="palace")v.innerHTML=viewPalace();
@@ -1822,6 +1857,8 @@ function viewHome(){
    <div class="bar"><i style="width:${Math.round(L.prog*100)}%"></i></div>
  </div>
 
+ ${signHomeCard()}
+
  <div class="stats3">
    <div class="stat gold"><b>${totalLearned()}</b><span>已學星曜 / ${TOTAL_CARDS}</span></div>
    <div class="stat purple"><b>${acc}%</b><span>測驗正確率</span></div>
@@ -1836,6 +1873,7 @@ function viewHome(){
  <div class="section-gap"></div>
  <div class="eyebrow">開始學習</div>
  <div class="tiles">
+   ${dailyHomeTile()}
    <div class="tile big" onclick="go('chart')" style="border-color:var(--gold-d);background:radial-gradient(120% 100% at 90% -10%,var(--gold-glow),var(--panel))"><div class="em">🪐</div><div><h3>自動排盤<span class="newdot">NEW</span></h3><p>輸入生日 → 排出你的命盤（主星·廟旺·四化·大限·神煞）</p></div><div class="arrow">›</div></div>
    <div class="tile" onclick="go('palace')"><div class="em">🏛️</div><div><h3>十二宮</h3><p>命盤十二個人生舞台</p></div><div class="bar thin mini"><i style="width:${pct('palace')}%"></i></div></div>
    <div class="tile" onclick="go('star')"><div class="em">⭐</div><div><h3>十四主星</h3><p>星曜性格＋歷史人物</p></div><div class="bar thin mini"><i style="width:${pct('star')}%"></i></div></div>
@@ -1847,7 +1885,7 @@ function viewHome(){
    <div class="tile" onclick="go('shensha')"><div class="em">🎖️</div><div><h3>神煞十二神<span class="newdot">NEW</span></h3><p>青龍長生那類·附例子</p></div><div class="bar thin mini"><i style="width:${pct('shensha')}%"></i></div></div>
    <div class="tile" onclick="go('miao')"><div class="em">🔆</div><div><h3>廟旺利陷</h3><p>星曜在12宮的亮度</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">工具</div></div>
    <div class="tile" onclick="go('feixing')"><div class="em">🌀</div><div><h3>飛星四化</h3><p>宮位互相牽動·自化</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">進階</div></div>
-   <div class="tile" onclick="go('starpalace')"><div class="em">🔢</div><div><h3>星宮組合圖鑑<span class="newdot">NEW</span></h3><p>14主星×12宮全解</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">進階</div></div>
+   <div class="tile" onclick="go('starpalace')"><div class="em">🔢</div><div><h3>星宮組合圖鑑<span class="newdot">NEW</span></h3><p>14主星×12宮全解 · 已收服 ${Object.keys(S.dex.got).length}/168</p></div><div class="chip gold" style="align-self:flex-start;margin-top:6px">收服</div></div>
    <div class="tile big" onclick="go('quiz')"><div class="em">✍️</div><div><h3>開始測驗</h3><p>${QUESTIONS.length} 題題庫 · 章節 · 隨機 · 錯題重練${wrongN?` · 待複習 ${wrongN} 題`:""}</p></div><div class="arrow">›</div></div>
  </div>`;
 }
@@ -2464,17 +2502,38 @@ function viewFeixing(){
 /* ======================= 144 星宮組合圖鑑（v3 功能四） ======================= */
 let STARPALACE_SEL="ziwei";
 function viewStarPalace(){
- return `<div class="eyebrow">進階 · 星宮組合</div><h2 class="title">星宮組合圖鑑</h2>
- <p class="lead">同一顆主星放在不同宮位（人生領域），意義就不同——這就是「<b>星曜是演員、宮位是舞台</b>」。這裡收錄 14 主星 × 12 宮的白話解讀。先點一顆主星：</p>
+ const dc=dexCounts();
+ return `<div class="eyebrow">進階 · 星宮組合 · 收服圖鑑</div><h2 class="title">星宮組合圖鑑</h2>
+ <p class="lead">同一顆主星放在不同宮位（人生領域），意義就不同——這就是「<b>星曜是演員、宮位是舞台</b>」。點開條目閱讀即可展開收服之旅。先點一顆主星：</p>
+ <div class="card" style="padding:12px 15px;margin:0 0 12px">
+   <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><b style="font-family:'Noto Serif TC',serif;font-size:17px;color:var(--gold)">已收服 ${dc.total} / 168</b>
+   <span class="chip gold">👑 傳說 ${dc.t3}/24</span><span class="chip purple">💎 稀有 ${dc.t2}/37</span><span class="chip">⭐ 普通 ${dc.t1}/107</span></div>
+   <div class="bar thin" style="margin-top:8px"><i style="width:${Math.round(dc.total/168*100)}%"></i></div>
+   <p style="font-size:11.5px;color:var(--muted);margin:8px 0 0;line-height:1.65">收服方式：<b>普通</b>＝展開讀過即收｜<b>稀有</b>＝讀過＋快問答對 1 題｜<b>傳說</b>＝讀過＋學會該主星卡與該宮位卡＋快問答對（每格每日最多挑戰 3 次）</p>
+ </div>
  <div class="sppick">${STARS.map(s=>`<button class="spbtn${s.id===STARPALACE_SEL?" on":""}" data-s="${s.id}" onclick="pickSP('${s.id}')">${esc(s.name)}</button>`).join("")}</div>
  <div id="spResult">${renderSP(STARPALACE_SEL)}</div>
  <div class="note">💡 小撇步：先想這顆星的「個性」（演員），再套進宮位的「領域」（舞台），就能自己推——不用死背。搭配「十四主星」「十二宮」單元一起看最快。</div>`;
 }
-function pickSP(id){SFX.tap();STARPALACE_SEL=id;document.querySelectorAll(".spbtn").forEach(b=>b.classList.toggle("on",b.dataset.s===id));const el=document.getElementById("spResult");if(el)el.innerHTML=renderSP(id);}
+function pickSP(id){SFX.tap();STARPALACE_SEL=id;DEXQ=null;document.querySelectorAll(".spbtn").forEach(b=>b.classList.toggle("on",b.dataset.s===id));const el=document.getElementById("spResult");if(el)el.innerHTML=renderSP(id);}
+/* v5.2 批4：圖鑑 12 列預設摺疊，展開全文＝dex_read；三級收服（普通讀過即收／稀有快問／傳說雙卡＋快問） */
 function renderSP(id){
  const s=STARS.find(x=>x.id===id);const arr=STARPALACE[id];if(!arr)return"";
  const hookOf=pn=>{const hk=STARPAL_HOOK.find(h=>h.star===s.name&&h.pal===pn);return hk?`<span style="display:block;margin-top:3px;font-size:12px;color:var(--gold-d)">💡 ${esc(hk.hook)}</span>`:"";};
- return `<div class="card" style="padding:15px;margin-top:8px"><div style="font-family:'Noto Serif TC',serif;font-weight:900;font-size:20px;color:var(--gold);margin-bottom:6px">${esc(s.name)} <span style="font-size:12.5px;color:var(--purple);font-weight:400">${esc(s.core.split("｜")[0])}</span></div><div class="sprows">${PALACES.map((p,i)=>`<div class="sprow"><span class="spgong">${esc(p.name)}</span><span class="sptext">${esc(arr[i])}${hookOf(p.name)}</span></div>`).join("")}</div></div>`;
+ const gotN=PALACES.filter((p,i)=>S.dex.got[dexKey(id,i)]).length;
+ const rows=PALACES.map((p,i)=>{
+  const key=dexKey(id,i),tier=dexTier(id,i),got=S.dex.got[key],read=S.dex.reads[key],open=DEX_OPEN===key;
+  const tierChip=tier===3?`<span class="dxtier t3">👑 傳說</span>`:tier===2?`<span class="dxtier t2">💎 稀有</span>`:`<span class="dxtier t1">⭐ 普通</span>`;
+  const st=got?`<span class="dxst got">✦ 已收服</span>`:read?`<span class="dxst">已讀 · 未收服</span>`:`<span class="dxst dim">未讀</span>`;
+  let body="";
+  if(open){
+   body=`<div class="dxbody"><span class="sptext">${esc(arr[i])}${hookOf(p.name)}</span>${dexCollectArea(id,i)}</div>`;
+  }
+  return `<div class="dxrow${open?' open':''}${got?' owned':''}">
+   <div class="dxhead" onclick="dexToggle('${id}',${i})"><span class="spgong">${PALACE_EMOJI[i]} ${esc(p.name)}</span>${tierChip}${st}<span class="dxarr">${open?"▾":"▸"}</span></div>
+   ${body}</div>`;
+ }).join("");
+ return `<div class="card" style="padding:15px;margin-top:8px"><div style="font-family:'Noto Serif TC',serif;font-weight:900;font-size:20px;color:var(--gold);margin-bottom:6px">${STAR_EMOJI[id]||""} ${esc(s.name)} <span style="font-size:12.5px;color:var(--purple);font-weight:400">${esc(s.core.split("｜")[0])}</span><span class="chip gold" style="float:right">收服 ${gotN}/12</span></div><div class="sprows">${rows}</div></div>`;
 }
 
 /* ======================= 十天干四化查表器 ======================= */
@@ -2892,6 +2951,13 @@ function computeBadges(){
   {n:"百題磨練",d:"累積答題滿 100 題",em:"✍️",got:S.quiz.answered>=100},
   {n:"滿分達人",d:"單次測驗拿到滿分",em:"💯",got:S.bestScore>=100}, /* v5.1：原「星盤大師」改名保留，條件不變（老用戶成就不消失） */
   {n:"星盤大師",d:"通過第八章最終試煉 Boss",em:"👑",got:!!(S.quest.stages.c8_boss&&S.quest.stages.c8_boss.cleared)}, /* v5.1 批3 */
+  /* v5.2 批4 新徽章 6 枚（04§5.3） */
+  {n:"星圖初成",d:"星宮圖鑑收服滿 20 格",em:"🌠",got:Object.keys(S.dex.got).length>=20},
+  {n:"滿天星斗",d:"星宮圖鑑 168 格全收服",em:"🌌",got:Object.keys(S.dex.got).length>=168},
+  {n:"七日連星",d:"連續學習滿 7 天",em:"📿",got:S.streak.count>=7},
+  {n:"籤運亨通",d:"星籤解籤答對累計 30 次",em:"🎐",got:(S.sign.okTotal||0)>=30},
+  {n:"任務達人",d:"完成每日任務累計 100 項",em:"📜",got:(S.counters.questDone||0)>=100},
+  {n:"烈焰連擊",d:"單場連對 8 題以上",em:"🔥",got:(S.counters.comboBest||0)>=8},
  ];
 }
 function toggleSound(el){S.sound=!S.sound;save();el.classList.toggle("on",S.sound);if(S.sound)SFX.ok();}
@@ -2906,6 +2972,370 @@ function ceremony(newLv){const L=LEVELS.find(x=>x.lv===newLv);if(!L)return;SFX.l
  el.innerHTML=`<div class="ray"></div><div class="burst"><div class="up">L E V E L　U P</div><div class="lvbig">Lv.<span>${L.lv}</span></div><div class="ttl">${esc(L.title)}</div><div class="tap">點擊任意處繼續</div></div>`;
  el.querySelector(".burst").classList.add("shake");
  el.onclick=()=>{el.hidden=true;el.className="";el.innerHTML="";};
+}
+
+/* ==========================================================================
+   v5.2 批4：留存系統（每日任務／每日一星籤／圖鑑收服／streak 里程碑）
+   全部只當 questEvent 消費者掛進 QUEST_CONSUMERS；不改 submitQ/questEvent/LEVELS/clearStage（凍結區）
+   ========================================================================== */
+/* ---- 日期種子確定性亂數（04§1 規格版；同日重整結果不變） ---- */
+function seedRand(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}
+ return function(){h=Math.imul(h^h>>>15,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296;};}
+function seededShuffle(arr,rand){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+/* ---- 每次 render 開頭的留存維護（跨日重置／里程碑補發） ---- */
+function retentionTick(){checkStreakMilestones();ensureDaily();if(CUR==="home")ensureSign();}
+
+/* ======================= ① 每日任務 3 槽（04§1） ======================= */
+const DQ_TOPICS=["宮位","主星","四化","輔星","雙星","框架","大限","神煞"];
+const DQ_XP={t_correct5:15,t_topic3:15,t_finish1:10,t_combo3:15,t_wrong1:15,t_learn2:20,t_learncat1:15,t_sign:10,t_chapter:20,t_chart1:10,t_dex3:10,t_collect1:15,t_ganhua:5};
+function unlearnedCount(){return TOTAL_CARDS-totalLearned();}
+function catsWithUnlearned(){const map={palace:PALACES.length,star:STARS.length,sihua:SIHUA.length,aux:AUX.length,duo:DUO.length,frame:FRAME.length,daxian:DAXIAN.length,shensha:SHENSHA.length};return Object.keys(map).filter(c=>S.learned[c].length<map[c]);}
+const DQ_POOL={
+ /* A 練功 */
+ A:[{id:"t_correct5",goal:5,avail:()=>true},
+    {id:"t_topic3",goal:3,avail:()=>true,param:r=>DQ_TOPICS[Math.floor(r()*DQ_TOPICS.length)]},
+    {id:"t_finish1",goal:1,avail:()=>true},
+    {id:"t_combo3",goal:1,avail:()=>true},
+    {id:"t_wrong1",goal:1,avail:()=>unresolvedWrongIds().length>0}],
+ /* B 學習 */
+ B:[{id:"t_learn2",goal:2,avail:()=>unlearnedCount()>=2},
+    {id:"t_learncat1",goal:1,avail:()=>catsWithUnlearned().length>0,param:r=>{const cs=catsWithUnlearned();return cs.length?cs[Math.floor(r()*cs.length)]:null;}},
+    {id:"t_sign",goal:1,avail:()=>true},
+    {id:"t_chapter",goal:1,avail:()=>true}], /* 章節已於批3上線 */
+ /* C 探索 */
+ C:[{id:"t_chart1",goal:1,avail:()=>true},
+    {id:"t_dex3",goal:3,avail:()=>168-Object.keys(S.dex.reads).length>=3},
+    {id:"t_collect1",goal:1,avail:()=>Object.keys(S.dex.got).length<168},
+    {id:"t_ganhua",goal:1,avail:()=>true}] /* 墊底備胎 */
+};
+/* 確定性抽選：dayStr 種子；每桶洗牌取第一個可用者；參數化任務同種子續抽 */
+function dqGen(dateStr){
+ const rand=seedRand("dq@"+dateStr);
+ return [DQ_POOL.A,DQ_POOL.B,DQ_POOL.C].map(bucket=>{
+  const order=seededShuffle(bucket,rand);
+  const t=order.find(x=>x.avail())||order[0];
+  const param=t.param?t.param(rand):null;
+  return {id:t.id,param:param,prog:0,goal:t.goal,done:false};
+ });
+}
+function ensureDaily(){if(S.daily.date!==dayStr()){S.daily={date:dayStr(),quests:dqGen(dayStr()),bonus:false};save();}}
+function dqLabel(q){switch(q.id){
+ case "t_correct5":return "答對 5 題";
+ case "t_topic3":return `在「${q.param}」主題答對 3 題`;
+ case "t_finish1":return "完成一場 10 題測驗";
+ case "t_combo3":return "單場連對 3 題";
+ case "t_wrong1":return "複習答對 1 題錯題";
+ case "t_learn2":return "學會 2 張新卡";
+ case "t_learncat1":return `在「${CAT_NAME[q.param]||q.param}」學會 1 張卡`;
+ case "t_sign":return "完成今日星籤";
+ case "t_chapter":return "通過 1 個關卡";
+ case "t_chart1":return "排盤點看 1 宮飛化";
+ case "t_dex3":return "星宮圖鑑閱讀 3 格";
+ case "t_collect1":return "星宮圖鑑收服 1 格";
+ case "t_ganhua":return "查 1 個天干四化";
+ default:return q.id;}}
+/* 任務消費者：⚠️ quiz_correct 重複題也會發（firstOfDay=false）——答題類計數必查 firstOfDay */
+function dqConsumer(type,p){
+ if(!S.daily||S.daily.date!==dayStr())return; /* 跨日事件不入帳（待 render 重抽） */
+ let changed=false;
+ (S.daily.quests||[]).forEach(q=>{
+  if(q.done)return;
+  let inc=0;
+  switch(q.id){
+   case "t_correct5":if(type==="quiz_correct"&&p.firstOfDay)inc=1;break;
+   case "t_topic3":if(type==="quiz_correct"&&p.firstOfDay&&p.topic===q.param)inc=1;break;
+   case "t_finish1":if(type==="quiz_finish"&&p.total>=10)inc=1;break;
+   case "t_combo3":if(type==="quiz_correct"&&(p.combo||0)>=3)inc=1;break; /* combo 用 payload.combo（批3裁決） */
+   case "t_wrong1":if(type==="quiz_correct"&&p.firstOfDay&&S.wrong[p.qid])inc=1;break;
+   case "t_learn2":if(type==="learn_card")inc=1;break;
+   case "t_learncat1":if(type==="learn_card"&&p.cat===q.param)inc=1;break;
+   case "t_sign":if(type==="sign_answer")inc=1;break;
+   case "t_chapter":if(type==="stageClear"||(type==="bossClear"&&p.firstTime===false))inc=1;break; /* 首通任一關＋Boss重打皆算「通過1關卡」 */
+   case "t_chart1":if(type==="chart_palace")inc=1;break;
+   case "t_dex3":if(type==="dex_read")inc=1;break;
+   case "t_collect1":if(type==="dex_collect")inc=1;break;
+   case "t_ganhua":if(type==="ganhua_query")inc=1;break;
+  }
+  if(inc){
+   q.prog=Math.min(q.goal,q.prog+inc);changed=true; /* 進度只累不減 */
+   if(q.prog>=q.goal&&!q.done){
+    q.done=true;S.counters.questDone=(S.counters.questDone||0)+1;save();
+    SFX.learn();addXP(DQ_XP[q.id]);
+    toast(`任務完成 ✦ ${dqLabel(q)} +${DQ_XP[q.id]} XP`);
+   }
+  }
+ });
+ if(changed){
+  if(S.daily.quests.length===3&&S.daily.quests.every(x=>x.done)&&!S.daily.bonus){
+   S.daily.bonus=true;save();SFX.level();addXP(10);toast("三籤全解 ✦ 今日任務全清 +10 XP");
+  }else save();
+ }
+}
+QUEST_CONSUMERS.push(dqConsumer);
+/* 首頁卡＋bottom sheet */
+function dailyHomeTile(){
+ const qs=(S.daily&&S.daily.quests)||[];const done=qs.filter(q=>q.done).length;
+ return `<div class="tile big" onclick="openDailySheet()" style="border-color:var(--purple-d)"><div class="em">📜</div><div><h3>今日任務 <span class="chip ${done===3?'green':'purple'}" style="margin-left:6px;vertical-align:middle">${done}/3</span></h3><p>${done===3?"三籤全解 ✦ 全數完成，明日再會":"練功·學習·探索各一，全清再 +10 XP"}</p></div><div class="arrow">›</div></div>`;
+}
+function openDailySheet(){
+ SFX.tap();
+ const names=["⚔️ 練功","📖 學習","🧭 探索"];
+ const qs=(S.daily&&S.daily.quests)||[];
+ const rows=qs.map((q,i)=>`
+  <div class="dqrow${q.done?' done':''}">
+   <div class="dqtop"><span class="chip purple">${names[i]||""}</span><b>${dqLabel(q)}</b><span class="chip ${q.done?'green':'gold'}">${q.done?"✓ 完成":`+${DQ_XP[q.id]} XP`}</span></div>
+   <div class="bar thin"><i style="width:${Math.round(Math.min(1,q.prog/q.goal)*100)}%"></i></div>
+   <div class="dqprog">${Math.min(q.prog,q.goal)} / ${q.goal}</div>
+  </div>`).join("");
+ const allDone=qs.length===3&&qs.every(q=>q.done);
+ openSheet(`
+  <div class="head"><div class="glyphL pp">📜</div><div><h2 style="font-size:20px">今日任務</h2><div class="row"><span class="chip purple">${dayStr()}</span><span class="chip ${allDone?'green':''}">${qs.filter(q=>q.done).length} / 3</span></div></div></div>
+  <div class="card" style="padding:4px 15px 8px">${rows||`<p class="qsheet-p" style="padding:10px 0">任務生成中，回首頁再開一次。</p>`}</div>
+  <div class="note" style="margin-top:12px">${allDone?"三籤全解 ✦ 加碼 +10 XP 已入帳，明日任務換新":"每天三格任務（練功／學習／探索各一）。完成自動發獎；三格全清加碼 +10 XP；跨日未完成會換一批新任務。"}</div>`);
+}
+
+/* ======================= ② 每日一星籤（04§4） ======================= */
+const SIGN_TEXTS=["夜觀天象，一星獨明——今日{星}當值。","紫垣垂光，落在{星}。","星移斗轉，今日與{星}有緣。","晨起開盤，{星}臨門。","一籤在手，星在{星}。","天機微動，{星}入籤。","今日星軌，指向{星}。","斗數有云：識星先識性——今日識{星}。","群星隱退，獨留{星}照路。","籤筒輕響，{星}應聲而出。"];
+const SIGN_TOPIC={palace:"宮位",star:"主星",sihua:"四化",duo:"雙星",frame:"框架",daxian:"大限",aux:"綜合",shensha:"綜合"};
+/* 全學習卡池（8 模組）；口訣取該卡 mn／key／mem／rhyme／core 一句 */
+function signCardPool(){
+ const out=[];
+ const push=(cat,arr,nameF,mnF)=>arr.forEach(c=>out.push({cat:cat,id:c.id,name:nameF(c),mn:mnF(c),learned:S.learned[cat].includes(c.id)}));
+ push("palace",PALACES,c=>c.name,c=>c.core);
+ push("star",STARS,c=>c.name,c=>c.mn||c.core);
+ push("sihua",SIHUA,c=>c.name,c=>c.mem||c.core);
+ push("aux",AUX,c=>c.name,c=>c.key||c.core);
+ push("duo",DUO,c=>c.name,c=>c.mn||c.core);
+ push("frame",FRAME,c=>c.name,c=>c.trait||c.note);
+ push("daxian",DAXIAN,c=>c.title,c=>String(c.body||"").split("。")[0]);
+ push("shensha",SHENSHA,c=>c.name,c=>c.rhyme||c.intro);
+ return out;
+}
+/* 抽卡：未學 ×3 權重／已學 ×1 */
+function signPickCard(rand){
+ const pool=signCardPool();
+ let total=0;pool.forEach(c=>{total+=c.learned?1:3;});
+ let r=rand()*total;
+ for(const c of pool){r-=c.learned?1:3;if(r<0)return c;}
+ return pool[pool.length-1];
+}
+/* 解籤題：cat→topic 對映，優先題幹或答案含卡名者，否則同 topic 隨機（單選/情境題，嵌 sheet 內） */
+function signPickQ(card,rand){
+ const topic=SIGN_TOPIC[card.cat]||"綜合";
+ let pool=QUESTIONS.filter(q=>(q.t==="single"||q.t==="scenario")&&q.topic===topic);
+ if(!pool.length)pool=QUESTIONS.filter(q=>q.t==="single"&&q.topic==="綜合");
+ const named=pool.filter(q=>q.q.includes(card.name)||String(q.a).includes(card.name));
+ const list=named.length?named:pool;
+ return list[Math.floor(rand()*list.length)].id;
+}
+function signGen(dateStr){
+ const rand=seedRand("sign@"+dateStr);
+ const card=signPickCard(rand);
+ return {date:dateStr,cat:card.cat,id:card.id,qid:signPickQ(card,rand),opened:false,answered:false,okTotal:(S.sign&&S.sign.okTotal)||0};
+}
+function ensureSign(){if(S.sign.date!==dayStr()){S.sign=signGen(dayStr());save();}}
+function signCardOf(){const pool=signCardPool();return pool.find(c=>c.cat===S.sign.cat&&c.id===S.sign.id)||null;}
+function signText(){
+ const c=signCardOf();if(!c)return "";
+ const rand=seedRand("signtext@"+S.sign.date);
+ return SIGN_TEXTS[Math.floor(rand()*SIGN_TEXTS.length)].replace(/\{星\}/g,c.name);
+}
+function signHomeCard(){
+ if(!S.sign||!S.sign.date)return "";
+ const c=signCardOf();
+ const label=S.sign.answered?`今日籤已解 ✦ ${c?esc(c.name):""}`
+  :(S.sign.opened?`🎐 星籤已開 · ${c?esc(c.name):""} — 解籤答一題 +8 XP`:"🎐 今日星籤未開");
+ const sub=S.sign.answered?"明日又有新籤，記得回來":(S.sign.opened?"點開籤面，答一題把今日星曜記下":"每日一籤 · 開籤 +2 XP，解籤答對 +8 XP");
+ return `<div class="card signcard tap" onclick="openSignSheet()"><div class="em">${S.sign.answered?"✦":"🎐"}</div><div class="info"><h3>${label}</h3><p>${sub}</p></div><div class="arrow">›</div></div>`;
+}
+let SIGNQ=null,SIGNR=null; /* 解籤中的選項狀態／本次結果（不持久化） */
+function openSignSheet(){
+ SFX.tap();
+ const c=signCardOf();if(!c){toast("星籤生成中，請回首頁");return;}
+ const head=`<div class="head"><div class="glyphL pp">🎐</div><div><h2 style="font-size:20px">今日星籤</h2><div class="row"><span class="chip purple">${dayStr()}</span>${S.sign.answered?`<span class="chip green">今日籤已解 ✦</span>`:""}</div></div></div>`;
+ if(!S.sign.opened){
+  openSheet(`${head}
+   <div class="signface"><div class="em" style="font-size:44px">🎐</div><p class="qsheet-p" style="text-align:center">籤筒已備，今日一星入籤。<br>開籤看看今天與哪顆星有緣。</p></div>
+   <div class="actions"><button class="btn btn-g" onclick="drawSign()">🎐 開籤 · +2 XP</button></div>`);
+  return;
+ }
+ const face=`
+  <div class="signface">
+   <p class="signpoem">${esc(signText())}</p>
+   <div class="signstar">${esc(c.name)}</div>
+   <div class="signmn">「${esc(c.mn)}」</div>
+  </div>`;
+ let act="";
+ if(S.sign.answered){
+  act=SIGNR?signResultHTML():`<div class="doneflag">✦ 今日籤已解 · 明日再會</div>`;
+ }else if(SIGNQ){
+  act=signQHTML();
+ }else{
+  act=`<div class="actions"><button class="btn btn-p" onclick="signAsk()">🔮 解籤 · 答一題 +8 XP</button></div>`;
+ }
+ openSheet(head+face+act);
+}
+function drawSign(){
+ if(S.sign.opened){openSignSheet();return;}
+ S.sign.opened=true;save();SFX.learn();addXP(2);toast("開籤 ✦ +2 XP");
+ SIGNQ=null;SIGNR=null;openSignSheet();render();
+}
+function signAsk(){
+ if(S.sign.answered){openSignSheet();return;}
+ const q=QUESTIONS.find(x=>x.id===S.sign.qid);
+ if(!q){toast("題庫異常");return;}
+ SIGNQ={qid:q.id,opts:shuffle(q.o)};SFX.tap();openSignSheet();
+}
+function signQHTML(){
+ const q=QUESTIONS.find(x=>x.id===SIGNQ.qid);
+ return `<div class="qcard" style="margin-top:12px"><div class="qtype">解籤 · ${q.t==="scenario"?"情境題":"單選題"}</div><p class="qtext">${esc(q.q)}</p>
+  <div class="opts">${SIGNQ.opts.map((o,i)=>`<div class="opt" onclick="signAnswer(${i})"><div class="box">✓</div><div>${esc(o)}</div></div>`).join("")}</div></div>`;
+}
+function signAnswer(i){
+ if(!SIGNQ||S.sign.answered)return;
+ const q=QUESTIONS.find(x=>x.id===SIGNQ.qid);const v=SIGNQ.opts[i];const ok=(v===q.a);
+ S.sign.answered=true;
+ if(ok){
+  S.sign.okTotal=(S.sign.okTotal||0)+1;
+  touchQday();if(!S.qday.ids.includes(q.id))S.qday.ids.push(q.id); /* 記入 qday：之後測驗遇同題只 +1，防重複領 */
+  save();SFX.ok();addXP(8);
+ }else{
+  if(!S.wrong[q.id])S.wrong[q.id]={count:0,resolved:false,box:0,last:""};
+  onReviewAnswer(q.id,false); /* 收進錯題本（box 歸 0） */
+  SFX.no();
+ }
+ SIGNR={ok:ok,qid:q.id};SIGNQ=null;
+ questEvent("sign_answer",{ok:ok});
+ openSignSheet();render();
+}
+function signResultHTML(){
+ const c=signCardOf();const q=QUESTIONS.find(x=>x.id===SIGNR.qid);
+ const line=SIGNR.ok?`籤應了 ✦ ${esc(c.name)}記下了 · +8 XP`:`星光未應，${esc(c.name)}明日再會——這題已收進錯題本`;
+ return `<div class="expl ${SIGNR.ok?'ok':'no'}" style="margin-top:12px"><div class="r">${SIGNR.ok?"✓ 答對了":"✗ 答錯了"} · ${line}</div>${SIGNR.ok?"":`<div style="margin-bottom:6px">正確答案：<span class="ans">${esc(q.a)}</span></div>`}<div>${esc(q.e)}</div></div>`;
+}
+
+/* ======================= ③ 圖鑑收服（04§5 邏輯；視覺特效留批5） ======================= */
+/* PALACES 序：命0兄1夫2子3財4疾5遷6友7官8田9福10父11 */
+const LEGEND_EXTRA=[["wuqu",4],["tianfu",9],["taiyin",9],["taiyang",8],["lianzhen",8],["tiantong",10],["tianliang",5],["qisha",6],["tianji",6],["tanlang",7]];
+function dexTier(starId,pIdx){if(pIdx===0)return 3;if(LEGEND_EXTRA.some(([s,p])=>s===starId&&p===pIdx))return 3;if(pIdx===4||pIdx===6||pIdx===8)return 2;return 1;}
+function dexKey(starId,pIdx){return starId+"-"+pIdx;}
+const DEX_XP={1:3,2:8,3:15};
+const DEX_MILES=[[20,20],[60,50],[120,100],[168,200]];
+function dexCounts(){
+ const vals=Object.values(S.dex.got);
+ return {total:vals.length,t3:vals.filter(t=>t===3).length,t2:vals.filter(t=>t===2).length,t1:vals.filter(t=>t===1).length};
+}
+let DEX_OPEN=null,DEXQ=null;
+function dexRefresh(){
+ if(CUR==="starpalace"){render();return;} /* 整頁重繪：頂部 n/168 計數同步更新 */
+ const el=document.getElementById("spResult");if(el)el.innerHTML=renderSP(STARPALACE_SEL);
+}
+function dexToggle(starId,i){
+ SFX.tap();const key=dexKey(starId,i);
+ if(DEX_OPEN===key){DEX_OPEN=null;DEXQ=null;}
+ else{DEX_OPEN=key;DEXQ=null;dexRead(starId,i);}
+ dexRefresh();
+}
+/* 展開全文＝閱讀：首讀記錄＋發 dex_read；普通格讀過即收 */
+function dexRead(starId,i){
+ const key=dexKey(starId,i);
+ if(!S.dex.reads[key]){
+  S.dex.reads[key]=1;save();
+  questEvent("dex_read",{starId:starId,pIdx:i});
+ }
+ if(dexTier(starId,i)===1&&!S.dex.got[key])dexCollect(starId,i);
+}
+function touchDexTries(){const t=dayStr();if(S.dex.tries.date!==t)S.dex.tries={date:t,n:{}};}
+function dexTriesUsed(key){touchDexTries();return S.dex.tries.n[key]||0;}
+function dexLegendNeeds(starId,i){
+ return {star:!S.learned.star.includes(starId),palace:!S.learned.palace.includes(PALACES[i].id)};
+}
+function dexCollectArea(starId,i){
+ const key=dexKey(starId,i),tier=dexTier(starId,i),got=S.dex.got[key];
+ const tName=tier===3?"傳說":tier===2?"稀有":"普通";
+ if(got)return `<div class="doneflag" style="margin-top:10px">✦ 已收服 · ${tName}格</div>`;
+ if(tier===1)return "";
+ if(tier===3){
+  const need=dexLegendNeeds(starId,i);
+  if(need.star||need.palace){
+   const s=STARS.find(x=>x.id===starId),p=PALACES[i];
+   return `<div class="dxreq">👑 傳說格收服條件：${need.star?`先學會主星卡「${esc(s.name)}」`:""}${need.star&&need.palace?"、":""}${need.palace?`先學會宮位卡「${esc(p.name)}」`:""}，再快問一題。</div>`;
+  }
+ }
+ if(DEXQ&&DEXQ.key===key)return dexQHTML();
+ const used=dexTriesUsed(key);
+ if(used>=3)return `<div class="dxreq">今日此格挑戰已達 3 次上限，明日再來 ✦</div>`;
+ return `<div class="dxact"><button class="btn btn-g" onclick="dexAsk('${starId}',${i})">⚔ 收服 · 答一題 +${DEX_XP[tier]} XP</button><span class="dxtry">今日 ${used}/3 次</span></div>`;
+}
+/* 快問選題：主星topic含星名 > 宮位topic含宮名 > 主星隨機（單選/情境，獨立單題流程，不進 startQuiz 主引擎） */
+function dexPickQ(starId,i){
+ const sName=STARS.find(x=>x.id===starId).name,pName=PALACES[i].name;
+ const okT=q=>(q.t==="single"||q.t==="scenario");
+ let pool=QUESTIONS.filter(q=>okT(q)&&q.topic==="主星"&&(q.q.includes(sName)||String(q.a).includes(sName)));
+ if(!pool.length)pool=QUESTIONS.filter(q=>okT(q)&&q.topic==="宮位"&&(q.q.includes(pName)||String(q.a).includes(pName)));
+ if(!pool.length)pool=QUESTIONS.filter(q=>okT(q)&&q.topic==="主星");
+ return pool[Math.floor(Math.random()*pool.length)];
+}
+function dexAsk(starId,i){
+ const key=dexKey(starId,i),tier=dexTier(starId,i);
+ if(S.dex.got[key]||tier===1)return;
+ if(tier===3){const need=dexLegendNeeds(starId,i);if(need.star||need.palace){toast("先學會該主星卡與宮位卡");return;}}
+ if(dexTriesUsed(key)>=3){toast("今日此格挑戰已達 3 次，明日再來");return;}
+ const q=dexPickQ(starId,i);
+ DEXQ={key:key,starId:starId,i:i,qid:q.id,opts:shuffle(q.o),wrong:null};
+ SFX.tap();dexRefresh();
+}
+function dexQHTML(){
+ const q=QUESTIONS.find(x=>x.id===DEXQ.qid);
+ const left=3-dexTriesUsed(DEXQ.key);
+ return `<div class="qcard" style="margin-top:10px"><div class="qtype">收服快問 · ${q.t==="scenario"?"情境題":"單選題"}（今日剩 ${left} 次）</div><p class="qtext">${esc(q.q)}</p>
+  <div class="opts">${DEXQ.opts.map((o,i)=>`<div class="opt${DEXQ.wrong===o?' wrong locked':''}" onclick="dexAnswer(${i})"><div class="box">✓</div><div>${esc(o)}</div></div>`).join("")}</div>
+  ${DEXQ.wrong?`<div class="dxreq">✗ 星光未應，再想想。</div>`:""}</div>`;
+}
+function dexAnswer(i){
+ if(!DEXQ)return;
+ const q=QUESTIONS.find(x=>x.id===DEXQ.qid);const v=DEXQ.opts[i];
+ touchDexTries();S.dex.tries.n[DEXQ.key]=(S.dex.tries.n[DEXQ.key]||0)+1;save();
+ if(v===q.a){
+  const sid=DEXQ.starId,idx=DEXQ.i;DEXQ=null;SFX.ok();
+  dexCollect(sid,idx);
+ }else{
+  DEXQ.wrong=v;SFX.no();
+  if(dexTriesUsed(DEXQ.key)>=3)DEXQ=null; /* 次數用盡收題 */
+ }
+ dexRefresh();
+}
+/* 收服 XP：普 +3／稀 +8／傳 +15（快問答對只給收服 XP，不發答題 +5——獨立流程天然不經 submitQ） */
+function dexCollect(starId,i){
+ const key=dexKey(starId,i);if(S.dex.got[key])return;
+ const tier=dexTier(starId,i);
+ S.dex.got[key]=tier;save();
+ questEvent("dex_collect",{starId:starId,pIdx:i,tier:tier});
+ SFX.learn();addXP(DEX_XP[tier]);
+ const s=STARS.find(x=>x.id===starId);
+ toast(`收服 ✦ ${s.name}·${PALACES[i].name}（${tier===3?"傳說":tier===2?"稀有":"普通"}）+${DEX_XP[tier]} XP`);
+ checkDexMilestones();
+}
+function checkDexMilestones(){
+ const n=Object.keys(S.dex.got).length;
+ DEX_MILES.forEach(m=>{
+  if(n>=m[0]&&!S.milestones.dex.includes(m[0])){
+   S.milestones.dex.push(m[0]);save();
+   addXP(m[1]);toast(`圖鑑里程碑 ✦ 收服 ${m[0]} 格 +${m[1]} XP`);
+  }
+ });
+}
+
+/* ======================= ④ streak 里程碑（3/7/14/30/60/100） ======================= */
+const STREAK_MILES=[[3,10],[7,20],[14,30],[30,50],[60,80],[100,120]];
+function checkStreakMilestones(){
+ STREAK_MILES.forEach(m=>{
+  if(S.streak.count>=m[0]&&!S.milestones.streak.includes(m[0])){
+   S.milestones.streak.push(m[0]);save();
+   addXP(m[1]);toast(`連續學習 ${m[0]} 天 ✦ +${m[1]} XP`);
+  }
+ });
 }
 
 /* ======================= 啟動 ======================= */
