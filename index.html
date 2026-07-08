@@ -1618,12 +1618,13 @@ function questEvent(type,payload){
  try{window.dispatchEvent(new CustomEvent("ziwei:"+type,{detail:payload}));}catch(e){}
 }
 
-/* ---- v5.0 老用戶闖關進度映射（首載一次，migrated 防重；批3 章節地圖上線後直接沿用） ----
-   該章卡片達 GATE → 該章全部關卡 stages 標 cleared+auto；c8＝全學完且最佳分 ≥85 */
-const LEARN_GATE={palace:12,star:14,sihua:4,aux:15,duo:20,frame:11,daxian:11,shensha:4};
+/* ---- v5.0 老用戶闖關進度映射（每次載入都跑的「增量映射」；批3 章節地圖上線後直接沿用） ----
+   該章卡片達 GATE → 該章「尚未存在或尚未 cleared」的關卡補標 {cleared:true,auto:true}；
+   絕不覆蓋已存在的非 auto（真實通關/挑戰中）紀錄、絕不移除任何 stage。
+   migrated 欄位保留作「首跑紀錄」，不再擋門。c8＝全學完且最佳分 ≥85 */
+const LEARN_GATE={palace:12,star:14,sihua:4,aux:15,duo:20,frame:3,daxian:11,shensha:4};
 const CHAPTER_STAGES={c1:["learn","trial","boss"],c2:["learn","trial","boss"],c3:["learn","trial","boss"],c4:["learn","boss"],c5:["learn","trial","boss"],c6:["learn","trial","boss"],c7:["learn","boss"],c8:["review","boss"]};
 function migrateQuest(){
- if(S.quest.migrated)return;
  const L=S.learned;
  const pass={
   c1:L.palace.length>=LEARN_GATE.palace,
@@ -1636,13 +1637,22 @@ function migrateQuest(){
   c8:!!S.cleared&&S.bestScore>=85
  };
  const at=todayStr();
+ let changed=false;
  Object.keys(pass).forEach(c=>{
   if(!pass[c])return;
-  CHAPTER_STAGES[c].forEach(st=>{S.quest.stages[c+"_"+st]={cleared:true,best:0,at:at,auto:true};});
+  CHAPTER_STAGES[c].forEach(st=>{
+   const k=c+"_"+st,cur=S.quest.stages[k];
+   if(cur&&cur.cleared)return;            /* 已通關（不論 auto 與否）→ 不動 */
+   if(cur&&cur.auto===false)return;       /* 已存在的非 auto 真實紀錄 → 絕不覆蓋 */
+   S.quest.stages[k]={cleared:true,best:(cur&&cur.best)||0,at:at,auto:true};
+   changed=true;
+  });
  });
- S.quest.migrated=true;save();
+ if(!S.quest.migrated){S.quest.migrated=true;changed=true;}
+ if(changed)save();
 }
 migrateQuest();
+save(); /* 載入即持久化：merge 補齊的新欄位與映射結果馬上寫回 localStorage */
 
 /* ---- 等級計算 ---- */
 function levelInfo(xp){let cur=LEVELS[0];for(const L of LEVELS)if(xp>=L.xp)cur=L;const idx=LEVELS.indexOf(cur);const next=LEVELS[idx+1]||null;const base=cur.xp;const need=next?next.xp:cur.xp;const prog=next?Math.min(1,(xp-base)/(need-base)):1;return{lv:cur.lv,title:cur.title,next,base,need,prog,max:!next};}
@@ -2502,7 +2512,7 @@ function finishQuiz(){
  const done=Math.max(1,Q.list.length);
  const correct=Q.correct;const rate=Math.round(correct/done*100);
  if(rate>S.bestScore){S.bestScore=rate;save();}
- questEvent("quiz_finish",{total:done,correct:correct});
+ questEvent("quiz_finish",{total:total,planned:Q.list.length,correct:correct});
  SFX.level.call&&null;
  let msg,em;
  if(rate===100){em="🏆";msg="滿分！星盤了然於心";}
