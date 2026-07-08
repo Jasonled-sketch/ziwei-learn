@@ -2204,19 +2204,9 @@ function openStar(id){const s=STARS.find(x=>x.id===id);const dn=S.learned.star.i
     <div class="field"><div class="k">案例故事</div><div class="v" style="line-height:1.85">${esc(s.story)}</div></div>
   </div>
   <div class="tabpane" id="tab_img" hidden>
-    <div class="glancecard">
-      <div class="glance-visual">
-        <img src="img/${s.id}.jpg" alt="${esc(s.fig)}" class="starimg" onerror="this.style.display='none';var t=document.getElementById('gt_${s.id}');if(t)t.style.display='block'">
-        <div id="gt_${s.id}" style="display:none">${svgTotem(s,150)}</div>
-      </div>
-      <div class="glance-name">${esc(s.name)}　${esc(s.core.split("｜")[0])}</div>
-      <div class="glance-rows">
-        <div><span>🎭 代表人物</span><b>${esc(s.fig)}</b></div>
-        <div><span>💼 現代角色</span><b>${esc(s.role)}</b></div>
-        <div><span>🏷️ 關鍵字</span><b>${esc(s.core.split("｜")[1]||"")}</b></div>
-        <div><span>⭐ 一句話</span><b>${esc(oneLine(s))}</b></div>
-      </div>
-    </div>
+    <!-- v5.3 批5（獨立 commit 可單獨 revert）：速覽卡改 .mcard 翻卡，速覽內容搬進卡背 -->
+    <div style="padding:8px 0 2px">${mcardHTML({wx:STAR_WX[s.id],emoji:STAR_EMOJI[s.id]||"",totem:svgTotem(s,96),img:"img/"+s.id+".jpg",name:s.name,chip:s.wx.split("‧")[0]+" · "+s.core.split("｜")[0],mn:s.mn,fig:s.fig,sub:"💼 "+s.role+"　🏷️ "+(s.core.split("｜")[1]||""),oneliner:oneLine(s)})}</div>
+    <p style="text-align:center;font-size:11.5px;color:var(--muted2);margin:10px 0 0">點卡片翻面 · 口訣、人物與一句話都在卡背</p>
   </div>
   ${learnBtn("star",id,dn)}
  `);
