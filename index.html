@@ -917,7 +917,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
 </div></nav>
 <div id="modal"></div>
 <div id="lvup"></div>
-<div id="gacha" hidden></div>
+<div id="gacha" role="dialog" aria-label="開卡動畫" hidden></div>
 <div id="toast" class="toast"></div>
 
 <script>
@@ -3481,19 +3481,26 @@ function dexBigCard(starId,i){
   <div style="padding:10px 0 4px">${dexMcardHTML(starId,i)}</div>
   <p style="text-align:center;font-size:11.5px;color:var(--muted2);margin:10px 0 0">點卡片翻面 · 看星宮解讀與記憶鉤子</p>`);
 }
-/* gacha 開卡全幕動畫：點任意處關閉；關閉後執行 cb（收服 toast 延後到此發） */
-let GACHA_CB=null,JUST_GOT=null;
+/* gacha 開卡全幕動畫：點任意處或 ESC 關閉；關閉後執行 cb（收服 toast 延後到此發）。
+   加固：鎖背景滾動（記原值，與 openSheet 的 overflow:hidden 共存）＋防重入（前一張 callback 不遺失） */
+let GACHA_CB=null,JUST_GOT=null,GACHA_OVF=null;
+function gachaKeydown(e){if(e.key==="Escape")gachaClose();}
 function gachaShow(cardHTML,rarity,label,cb){
  const el=$("#gacha");if(!el){if(cb)cb();return;}
+ if(!el.hidden){const prev=GACHA_CB;GACHA_CB=null;if(prev)prev();} /* 防重入：先結清前一張的 callback（等效立即關閉） */
  GACHA_CB=cb||null;
+ if(GACHA_OVF===null){GACHA_OVF=document.body.style.overflow||"";document.body.style.overflow="hidden";} /* 記原值（sheet 開著時為 hidden） */
  el.className="gacha r-"+(rarity||"normal");
  el.innerHTML=`<div class="glight"></div><div class="gcard">${cardHTML}</div><div class="glabel">${esc(label)}</div><div class="ghint">點任意處繼續</div>`;
  el.hidden=false;
  el.onclick=gachaClose;
+ document.addEventListener("keydown",gachaKeydown);
 }
 function gachaClose(){
  const el=$("#gacha");if(!el)return;
+ document.removeEventListener("keydown",gachaKeydown);
  el.hidden=true;el.innerHTML="";el.className="";el.onclick=null;
+ if(GACHA_OVF!==null){document.body.style.overflow=GACHA_OVF;GACHA_OVF=null;} /* 還原原值而非硬設空字串 */
  const cb=GACHA_CB;GACHA_CB=null;if(cb)cb();
 }
 
