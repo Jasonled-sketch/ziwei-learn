@@ -927,7 +927,7 @@ body.is-admin #admin-fab{display:inline-flex;align-items:center;gap:6px}
    ========================================================================== */
 
 /* ★ 版本序號（每次改版都要 bump） */
-const APP_VERSION = "v5.3";
+const APP_VERSION = "v5.4";
 
 /* ---------- 十二宮 ---------- */
 const PALACES = [
@@ -3012,6 +3012,7 @@ function viewMe(){
    <div class="bar"><i style="width:${Math.round(L.prog*100)}%"></i></div>
    <div class="stats3" style="margin-bottom:0"><div class="stat gold"><b>${totalLearned()}</b><span>已學 /${TOTAL_CARDS}</span></div><div class="stat purple"><b>${S.quiz.answered}</b><span>已答題數</span></div><div class="stat green"><b>${acc}%</b><span>正確率</span></div></div>
  </div>
+ ${(window.USLED_AUTH&&USLED_AUTH.user&&(USLED_AUTH.user.email||'').toLowerCase()==='covernself@gmail.com')?`<a class="card" href="https://jasonled-sketch.github.io/family-ziwei/" style="display:flex;align-items:center;gap:12px;text-decoration:none;margin-bottom:16px;border:1px solid var(--gold-d);background:linear-gradient(160deg,rgba(231,197,125,.08),var(--panel))"><div style="font-size:26px">🏠</div><div style="flex:1"><div style="font-family:'Noto Serif TC',serif;font-weight:700;color:var(--gold)">家庭命盤中心</div><div style="font-size:12px;color:var(--muted)">你的專屬家庭運勢分析 · 每日 06:30 LINE 提醒</div></div><div style="color:var(--muted2);font-size:20px">›</div></a>`:''}
 
  <div class="grouphdr">修習階級</div>
  <div class="rankladder">${LEVELS.map(x=>{const reached=S.xp>=x.xp;const cur=x.lv===L.lv;return `<div class="rl ${cur?'cur':(reached?'reached':'')}"><div class="lv">Lv.${x.lv}</div><div class="nm">${esc(x.title)}</div><div class="st">${cur?"● 目前":(reached?"✓":x.xp+" XP")}</div></div>`;}).join("")}</div>
